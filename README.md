@@ -19,6 +19,9 @@ brew install --cask godot     # 이미 설치됨 (4.7)
 ./run -e                            # Godot 에디터 열기
 ```
 
+VSCode에서 개발할 때 Godot 에디터를 띄워두세요. 자동완성과 문법 에러 빨간 밑줄이 여기서 나옵니다.
+GDScript의 언어 서버(LSP)는 독립 실행되지 않고 Godot 에디터 안에 들어 있습니다(`127.0.0.1:6005`).
+
 ## 테스트
 
 ```bash
