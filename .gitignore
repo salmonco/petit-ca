@@ -1,0 +1,21 @@
+# Godot 4
+.godot/
+/android/
+export_presets.cfg
+*.translation
+
+# Godot .NET (C# 전환 시)
+.mono/
+bin/Debug/
+bin/Release/
+obj/
+*.sln.DotSettings.user
+
+# GdUnit4 리포트
+reports/
+
+# macOS
+.DS_Store
+
+# AI Agent
+.omc/
