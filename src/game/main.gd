@@ -6,14 +6,17 @@ var character: Character = Character.new(Vector2i(10, 6))
 
 func _ready() -> void:
 	character_view.size = Vector2.ONE * Map.CELL_SIZE
-	character_view.position = Map.to_pixel(character.position)
+	_render_character()
 
 func _unhandled_input(event: InputEvent) -> void:
-	if event is InputEventKey and event.is_pressed():
+	if event is InputEventKey and event.is_pressed() and not event.is_echo():
 		var keycode := (event as InputEventKey).keycode
 		handle_key(keycode)
+
+func _render_character() -> void:
+	character_view.position = Map.to_pixel(character.position)
 
 func handle_key(key: Key) -> void:
 	var direction := Direction.from_key(key)
 	character.move(direction)
-	character_view.position = Map.to_pixel(character.position)
+	_render_character()
