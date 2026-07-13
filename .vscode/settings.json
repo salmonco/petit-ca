@@ -1,0 +1,12 @@
+{
+  "godotTools.editorPath.godot4": "/Applications/Godot.app/Contents/MacOS/Godot",
+  "godotTools.lsp.serverPort": 6005,
+  "[gdscript]": {
+    "editor.insertSpaces": false,
+    "editor.detectIndentation": false
+  },
+  "files.associations": {
+    "*.gd": "gdscript"
+  },
+  "editor.renderWhitespace": "all"
+}
