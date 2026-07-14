@@ -1,6 +1,8 @@
 class_name Main
 extends Node2D
 
+const WATER_BALLOON_COLOR := Color.AQUA
+
 var map := Map.new()
 var character := Character.new(Vector2i(10, 6), map)
 @onready var character_view: ColorRect = $CharacterView
@@ -29,7 +31,7 @@ func _render_water_balloons() -> void:
 	for cell in map.water_balloon_positions():
 		var view := ColorRect.new()
 		view.size = Vector2.ONE * Map.PIXELS_PER_CELL
-		view.color = Color.AQUA
+		view.color = WATER_BALLOON_COLOR
 		view.position = Map.to_pixel(cell)
 		water_balloon_views.add_child(view)
 
