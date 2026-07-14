@@ -20,3 +20,7 @@ func has_water_balloon(position: Vector2i) -> bool:
 
 func water_balloon_count() -> int:
 	return _water_balloons.size()
+
+func water_balloon_positions() -> Array[Vector2i]:
+	return _water_balloons.keys()
+	

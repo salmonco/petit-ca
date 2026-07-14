@@ -5,6 +5,8 @@
 [node name="Main" type="Node2D" unique_id=1626530598]
 script = ExtResource("1_o5qli")
 
+[node name="WaterBalloonViews" type="Node2D" parent="." unique_id=1345253768]
+
 [node name="CharacterView" type="ColorRect" parent="." unique_id=2024878780]
 offset_left = 274.0
 offset_top = 136.0
