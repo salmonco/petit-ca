@@ -5,7 +5,7 @@ var character: Character = Character.new(Vector2i(10, 6))
 @onready var character_view: ColorRect = $CharacterView
 
 func _ready() -> void:
-	character_view.size = Vector2.ONE * Map.CELL_SIZE
+	character_view.size = Vector2.ONE * Map.PIXELS_PER_CELL
 	_render_character()
 
 func _unhandled_input(event: InputEvent) -> void:

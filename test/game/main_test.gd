@@ -17,5 +17,5 @@ func test_시작_시_캐릭터가_맵의_시작_칸에_위치한다() -> void:
 func test_키보드_위쪽_방향키를_누르면_캐릭터가_위로_한_칸_이동한다() -> void:
 	var initial_position := _main.character_view.position
 	_main.handle_key(KEY_UP)
-	var expected_position := initial_position + Vector2.UP * Map.CELL_SIZE
+	var expected_position := initial_position + Vector2.UP * Map.PIXELS_PER_CELL
 	assert_vector(_main.character_view.position).is_equal(expected_position)
