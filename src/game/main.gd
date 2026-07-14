@@ -15,6 +15,9 @@ func _unhandled_input(event: InputEvent) -> void:
 		var keycode := (event as InputEventKey).keycode
 		handle_key(keycode)
 
+func _process(delta: float) -> void:
+	tick(delta)
+
 func _render_character() -> void:
 	character_view.position = Map.to_pixel(character.position)
 
@@ -39,3 +42,8 @@ func handle_key(key: Key) -> void:
 		KEY_SPACE:
 			character.place_water_balloon()
 			_render_water_balloons()
+
+func tick(delta: float) -> void:
+	var popped_water_balloons := map.tick(delta)
+	if not popped_water_balloons.is_empty():
+		_render_water_balloons()
