@@ -1,7 +1,8 @@
 class_name Main
 extends Node2D
 
-var character: Character = Character.new(Vector2i(10, 6))
+var map := Map.new()
+var character := Character.new(Vector2i(10, 6), map)
 @onready var character_view: ColorRect = $CharacterView
 
 func _ready() -> void:

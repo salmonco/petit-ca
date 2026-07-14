@@ -1,9 +1,11 @@
 class_name Character
 extends RefCounted
 
+var _map: Map
 var position: Vector2i
 
-func _init(start_position: Vector2i) -> void:
+func _init(start_position: Vector2i, map: Map) -> void:
+	_map = map
 	position = start_position
 
 func move(direction: Vector2i) -> void:
