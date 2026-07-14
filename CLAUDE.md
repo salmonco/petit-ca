@@ -28,6 +28,12 @@ Godot 4.7 / GDScript / GdUnit4 6.1.3. **TDD로 진행합니다.**
   테스트가 사라진 것처럼 보입니다.
 - `--remote-debug tcp://127.0.0.1:0`도 필수입니다. 없으면 파싱 에러 시 Godot이 대화형
   디버거로 진입하면서 **종료 코드를 0으로 뭉갭니다** → CI가 깨진 빌드에 초록불을 줍니다.
+  그래서 테스트 로그 맨 위의 이 두 줄은 **정상입니다. 고치려 들지 마세요.**
+  포트 0은 바인딩되지 않고, 그 **연결 거부가 곧 디버거를 못 붙게 하는 장치**입니다.
+  ```
+  ERROR: The remote port number must be between 1 and 65535 (inclusive).
+  ERROR: Remote Debugger: Unable to connect to host '127.0.0.1:0'.
+  ```
 - headless에서는 `InputEvent`가 전달되지 않습니다. 입력 시뮬레이션 테스트는 `bin/test.sh --gui`로.
   애초에 입력에 직접 의존하는 테스트를 만들지 않는 게 낫습니다.
   → **엔진 의존을 껍데기로 밀어내세요.** `_unhandled_input(event)`는 "키 눌림인지 보고 키코드를
