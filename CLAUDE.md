@@ -1,4 +1,4 @@
-# Crazy Arcade — 작업 규칙
+# Petit Crazy Arcade — 작업 규칙
 
 Godot 4.7 / GDScript / GdUnit4 6.1.3. **TDD로 진행합니다.**
 
