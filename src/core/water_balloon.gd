@@ -1,4 +1,5 @@
 class_name WaterBalloon
+extends RefCounted
 
 var position: Vector2i
 
