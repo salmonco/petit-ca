@@ -15,6 +15,9 @@ func add_water_balloon(water_balloon: WaterBalloon) -> bool:
 	_water_balloons.set(water_balloon.position, water_balloon)
 	return true
 
+func _remove_water_balloon(position: Vector2i) -> void:
+	_water_balloons.erase(position)
+
 func has_water_balloon(position: Vector2i) -> bool:
 	return _water_balloons.has(position)
 
@@ -23,4 +26,11 @@ func water_balloon_count() -> int:
 
 func water_balloon_positions() -> Array[Vector2i]:
 	return _water_balloons.keys()
-	
+
+func tick(delta: float) -> Array[WaterBalloon]:
+	var popped: Array[WaterBalloon] = []
+	for water_balloon: WaterBalloon in _water_balloons.values():
+		if water_balloon.tick(delta):
+			popped.append(water_balloon)
+			_remove_water_balloon(water_balloon.position)
+	return popped
