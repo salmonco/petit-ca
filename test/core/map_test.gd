@@ -59,6 +59,14 @@ func test_물풍선이_터지면_물줄기가_생긴다() -> void:
 	_map.tick(WaterBalloon.POP_AFTER_SECONDS)
 	assert_bool(_map.has_water_stream(Vector2i(4, 2))).is_true()
 
+func test_물풍선은_터지고_나서_제_수명만큼_유지된다() -> void:
+	var water_balloon := WaterBalloon.new(Vector2i(4, 2))
+	_map.add_water_balloon(water_balloon)
+	_map.tick(WaterBalloon.POP_AFTER_SECONDS)
+	_map.tick(0.4)
+	_map.tick(0.4)
+	assert_bool(_map.has_water_stream(Vector2i(4, 2))).is_true()
+
 func test_물풍선이_터질_때만_물줄기가_생긴다() -> void:
 	var water_balloon := WaterBalloon.new(Vector2i(4, 2))
 	_map.add_water_balloon(water_balloon)

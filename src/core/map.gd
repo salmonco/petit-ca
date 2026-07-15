@@ -5,7 +5,7 @@ const GRID_SIZE := Vector2i(15, 13)
 const PIXELS_PER_CELL := 64
 
 var _water_balloons: Dictionary[Vector2i, WaterBalloon] = {}
-var _water_streams: Dictionary[Vector2i, WaterStream] = {}
+var _water_streams: Array[WaterStream] = []
 
 static func to_pixel(grid: Vector2i) -> Vector2:
 	return Vector2(grid) * PIXELS_PER_CELL
@@ -36,24 +36,29 @@ func tick(delta: float) -> void:
 			var water_stream := WaterStream.new(water_balloon.position)
 			new_water_streams.append(water_stream)
 	
-	for water_stream: WaterStream in _water_streams.values():
+	var expired_water_streams: Array[WaterStream] = []
+	for water_stream: WaterStream in _water_streams:
 		if water_stream.tick(delta):
-			_remove_water_stream(water_stream)
-	
+			expired_water_streams.append(water_stream)
+	for water_stream: WaterStream in expired_water_streams:
+		_remove_water_stream(water_stream)
+
 	for new_water_stream in new_water_streams:
 		add_water_stream(new_water_stream)
 
 func add_water_stream(water_stream: WaterStream) -> bool:
-	for cell in water_stream.positions():
-		_water_streams.set(cell, water_stream)
+	_water_streams.append(water_stream)
 	return true
 
 func _remove_water_stream(water_stream: WaterStream) -> void:
-	for cell in water_stream.positions():
-		_water_streams.erase(cell)
+	_water_streams.erase(water_stream)
 
 func has_water_stream(position: Vector2i) -> bool:
-	return _water_streams.has(position)
+	return water_stream_positions().has(position)
 
 func water_stream_positions() -> Array[Vector2i]:
-	return _water_streams.keys()
+	var positions: Array[Vector2i] = []
+	for water_stream in _water_streams:
+		for cell in water_stream.positions():
+			positions.append(cell)
+	return positions
