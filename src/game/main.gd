@@ -1,12 +1,14 @@
 class_name Main
 extends Node2D
 
-const WATER_BALLOON_COLOR := Color.AQUA
+const WATER_BALLOON_COLOR := Color.SKY_BLUE
+const WATER_STREAM_COLOR := Color.AQUA
 
 var map := Map.new()
 var character := Character.new(Vector2i(10, 6), map)
 @onready var character_view: ColorRect = $CharacterView
 @onready var water_balloon_views: Node2D = $WaterBalloonViews
+@onready var water_stream_views: Node2D = $WaterStreamViews
 
 func _ready() -> void:
 	character_view.size = Vector2.ONE * Map.PIXELS_PER_CELL
@@ -35,6 +37,19 @@ func _render_water_balloons() -> void:
 		view.position = Map.to_pixel(cell)
 		water_balloon_views.add_child(view)
 
+func _render_water_streams(popped_water_balloons: Array[WaterBalloon]) -> void:
+	for view in water_stream_views.get_children():
+		water_stream_views.remove_child(view)
+		view.queue_free()
+
+	for water_balloon in popped_water_balloons:
+		for cell in water_balloon.water_stream_positions():
+			var view := ColorRect.new()
+			view.size = Vector2.ONE * Map.PIXELS_PER_CELL
+			view.color = WATER_STREAM_COLOR
+			view.position = Map.to_pixel(cell)
+			water_stream_views.add_child(view)
+
 func handle_key(key: Key) -> void:
 	match key:
 		KEY_UP, KEY_DOWN, KEY_LEFT, KEY_RIGHT:
@@ -49,3 +64,4 @@ func tick(delta: float) -> void:
 	var popped_water_balloons := map.tick(delta)
 	if not popped_water_balloons.is_empty():
 		_render_water_balloons()
+		_render_water_streams(popped_water_balloons)
