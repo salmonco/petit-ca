@@ -1,5 +1,10 @@
 extends GdUnitTestSuite
 
+var _map: Map
+
+func before_test() -> void:
+	_map = Map.new()
+
 func test_그리드를_픽셀로_변환한다() -> void:
 	var grid := Vector2i(2, 3)
 	assert_vector(Map.to_pixel(grid)).is_equal(Vector2(128, 192))
@@ -8,38 +13,62 @@ func test_그리드가_원점이면_픽셀도_원점을_반환한다() -> void:
 	var grid := Vector2i.ZERO
 	assert_vector(Map.to_pixel(grid)).is_equal(Vector2.ZERO)
 
-# 물풍선 터지기
-func test_시간이_다_지나면_터진_물풍선을_반환한다() -> void:
-	var map := Map.new()
-	var water_balloon := WaterBalloon.new(Vector2i(4, 2))
-	map.add_water_balloon(water_balloon)
-	var popped_water_balloons := map.tick(4.0)
-	assert_array(popped_water_balloons).contains_exactly([water_balloon])
+# 물풍선 놓기
+func test_캐릭터가_물풍선을_놓으면_맵에_물풍선이_생긴다() -> void:
+	var character := Character.new(Vector2i(1, 0))
+	character.place_water_balloon(_map)
+	assert_bool(_map.has_water_balloon(Vector2i(1, 0))).is_true()
 
+func test_캐릭터가_물풍선이_있는_칸에_또_물풍선을_놓으면_기존_물풍선을_유지한다() -> void:
+	var character := Character.new(Vector2i(1, 0))
+	character.place_water_balloon(_map)
+	character.place_water_balloon(_map)
+	assert_int(_map.water_balloon_count()).is_equal(1)
+
+# 물풍선 터지기
 func test_터진_물풍선은_맵에서_사라진다() -> void:
-	var map := Map.new()
 	var water_balloon := WaterBalloon.new(Vector2i(4, 2))
-	map.add_water_balloon(water_balloon)
-	map.tick(4.0)
-	assert_int(map.water_balloon_count()).is_equal(0)
+	_map.add_water_balloon(water_balloon)
+	assert_int(_map.water_balloon_count()).is_equal(1)
+	_map.tick(4.0)
+	assert_int(_map.water_balloon_count()).is_equal(0)
 
 func test_물풍선_중에_안_터진_물풍선은_맵에_남아있다() -> void:
-	var map := Map.new()
 	var old_balloon := WaterBalloon.new(Vector2i(4, 2))
-	map.add_water_balloon(old_balloon)
-	map.tick(2.0)
+	_map.add_water_balloon(old_balloon)
+	_map.tick(2.0)
 	var new_balloon := WaterBalloon.new(Vector2i(5, 7))
-	map.add_water_balloon(new_balloon)
-	map.tick(2.0)
-	assert_bool(map.has_water_balloon(Vector2i(4, 2))).is_false()
-	assert_bool(map.has_water_balloon(Vector2i(5, 7))).is_true()
+	_map.add_water_balloon(new_balloon)
+	_map.tick(2.0)
+	assert_bool(_map.has_water_balloon(Vector2i(4, 2))).is_false()
+	assert_bool(_map.has_water_balloon(Vector2i(5, 7))).is_true()
 
 func test_같은_칸에_물풍선을_다시_놓아도_먼저_놓인_물풍선의_시간은_리셋되지_않는다() -> void:
-	var map := Map.new()
 	var old_balloon := WaterBalloon.new(Vector2i(4, 2))
-	map.add_water_balloon(old_balloon)
-	map.tick(2.0)
+	_map.add_water_balloon(old_balloon)
+	_map.tick(2.0)
 	var new_balloon := WaterBalloon.new(Vector2i(4, 2))
-	map.add_water_balloon(new_balloon)
-	map.tick(2.0)
-	assert_bool(map.has_water_balloon(Vector2i(4, 2))).is_false()
+	_map.add_water_balloon(new_balloon)
+	_map.tick(2.0)
+	assert_bool(_map.has_water_balloon(Vector2i(4, 2))).is_false()
+
+# 물줄기 생김
+func test_물풍선이_터지면_물줄기가_생긴다() -> void:
+	var water_balloon := WaterBalloon.new(Vector2i(4, 2))
+	_map.add_water_balloon(water_balloon)
+	_map.tick(WaterBalloon.POP_AFTER_SECONDS)
+	assert_bool(_map.has_water_stream(Vector2i(4, 2))).is_true()
+
+func test_물풍선이_터질_때만_물줄기가_생긴다() -> void:
+	var water_balloon := WaterBalloon.new(Vector2i(4, 2))
+	_map.add_water_balloon(water_balloon)
+	_map.tick(WaterBalloon.POP_AFTER_SECONDS)
+	assert_bool(_map.has_water_stream(Vector2i(4, 2))).is_true()
+	_map.tick(WaterBalloon.POP_AFTER_SECONDS)
+	assert_bool(_map.has_water_stream(Vector2i(4, 2))).is_false()
+
+func test_물풍선이_터지면_물줄기가_중앙과_상하좌우로_한_칸씩_생긴다() -> void:
+	var water_balloon := WaterBalloon.new(Vector2i(4, 2))
+	_map.add_water_balloon(water_balloon)
+	_map.tick(WaterBalloon.POP_AFTER_SECONDS)
+	assert_array(_map.water_stream_positions()).contains_exactly([Vector2i(4, 2), Vector2i(4, 1), Vector2i(4, 3), Vector2i(3, 2), Vector2i(5, 2)])
