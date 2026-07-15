@@ -49,8 +49,3 @@ func test_물풍선_하나가_터질_때_물줄기가_5칸_보인다() -> void:
 	_main.handle_key(KEY_SPACE)
 	_main.tick(WaterBalloon.POP_AFTER_SECONDS)
 	assert_int(_main.water_stream_views.get_child_count()).is_equal(5)
-
-# func test_물풍선이_터지고_충분한_시간이_지난_후에는_물줄기가_보이지_않는다() -> void:
-# 	_main.handle_key(KEY_SPACE)
-# 	_main.tick(WaterBalloon.POP_AFTER_SECONDS * 2.0)
-# 	assert_int(_main.water_stream_views.get_child_count()).is_equal(0)
