@@ -4,6 +4,7 @@ extends RefCounted
 const GRID_SIZE := Vector2i(15, 13)
 const PIXELS_PER_CELL := 64
 
+var _characters: Array[Character] = []
 var _water_balloons: Dictionary[Vector2i, WaterBalloon] = {}
 var _water_streams: Array[WaterStream] = []
 
@@ -62,3 +63,20 @@ func water_stream_positions() -> Array[Vector2i]:
 		for cell in water_stream.positions():
 			positions.append(cell)
 	return positions
+
+func add_character(character: Character) -> void:
+	_characters.append(character)
+
+func character_positions() -> Array[Vector2i]:
+	var positions: Array[Vector2i] = []
+	for character in _characters:
+		positions.append(character.position)
+	return positions
+
+func is_character_trapped(position: Vector2i) -> bool:
+	if character_positions().has(position) and water_stream_positions().has(position):
+		return true
+	return false
+
+func characters() -> Array[Character]:
+	return _characters

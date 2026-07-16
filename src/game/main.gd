@@ -1,18 +1,19 @@
 class_name Main
 extends Node2D
 
+const CHARACTER_COLOR := Color.LIME_GREEN
 const WATER_BALLOON_COLOR := Color.SKY_BLUE
 const WATER_STREAM_COLOR := Color.AQUA
 
 var map := Map.new()
-var character := Character.new(Vector2i(10, 6))
-@onready var character_view: ColorRect = $CharacterView
+@onready var character_views: Node2D = $CharacterViews
 @onready var water_balloon_views: Node2D = $WaterBalloonViews
 @onready var water_stream_views: Node2D = $WaterStreamViews
 
 func _ready() -> void:
-	character_view.size = Vector2.ONE * Map.PIXELS_PER_CELL
-	_render_character()
+	var character := Character.new(Vector2i(10, 6))
+	map.add_character(character)
+	_render_characters()
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventKey and event.is_pressed() and not event.is_echo():
@@ -22,8 +23,17 @@ func _unhandled_input(event: InputEvent) -> void:
 func _process(delta: float) -> void:
 	tick(delta)
 
-func _render_character() -> void:
-	character_view.position = Map.to_pixel(character.position)
+func _render_characters() -> void:
+	for view in character_views.get_children():
+		character_views.remove_child(view)
+		view.queue_free()
+	
+	for cell in map.character_positions():
+		var view := ColorRect.new()
+		view.size = Vector2.ONE * Map.PIXELS_PER_CELL
+		view.color = CHARACTER_COLOR
+		view.position = Map.to_pixel(cell)
+		character_views.add_child(view)
 
 func _render_water_balloons() -> void:
 	for view in water_balloon_views.get_children():
@@ -53,10 +63,12 @@ func handle_key(key: Key) -> void:
 	match key:
 		KEY_UP, KEY_DOWN, KEY_LEFT, KEY_RIGHT:
 			var direction := Direction.from_key(key)
-			character.move(direction)
-			_render_character()
+			for character in map.characters():
+				character.move(direction)
+			_render_characters()
 		KEY_SPACE:
-			character.place_water_balloon(map)
+			for character in map.characters():
+				character.place_water_balloon(map)
 			_render_water_balloons()
 
 func tick(delta: float) -> void:
