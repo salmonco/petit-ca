@@ -71,9 +71,9 @@ func test_물줄기가_있는_동안에_캐릭터가_물줄기_위치에_있지_
 	var map := Map.new()
 	var water_stream := WaterStream.new(Vector2i(3, 4))
 	map.add_water_stream(water_stream)
-	var character := Character.new(Vector2i(3, 4))
+	var character := Character.new(Vector2i(2, 3))
 	map.add_character(character)
-	map.tick(WaterStream.DURATION * 1.5)
+	map.tick(WaterStream.DURATION * 0.5)
 	assert_bool(character.is_trapped).is_false()
 
 func test_물줄기가_있는_동안에_캐릭터가_이전_물줄기_위치로_이동하면_물방울에_갇힌다() -> void:
