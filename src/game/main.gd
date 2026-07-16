@@ -4,6 +4,7 @@ extends Node2D
 const CHARACTER_COLOR := Color.LIME_GREEN
 const WATER_BALLOON_COLOR := Color.SKY_BLUE
 const WATER_STREAM_COLOR := Color.AQUA
+const BUBBLE_COLOR := Color.ORANGE
 
 var map := Map.new()
 @onready var character_views: Node2D = $CharacterViews
@@ -28,11 +29,14 @@ func _render_characters() -> void:
 		character_views.remove_child(view)
 		view.queue_free()
 	
-	for cell in map.character_positions():
+	for character in map.characters():
 		var view := ColorRect.new()
 		view.size = Vector2.ONE * Map.PIXELS_PER_CELL
-		view.color = CHARACTER_COLOR
-		view.position = Map.to_pixel(cell)
+		if character.is_trapped:
+			view.color = BUBBLE_COLOR
+		else:
+			view.color = CHARACTER_COLOR
+		view.position = Map.to_pixel(character.position)
 		character_views.add_child(view)
 
 func _render_water_balloons() -> void:
@@ -75,3 +79,4 @@ func tick(delta: float) -> void:
 	map.tick(delta)
 	_render_water_balloons()
 	_render_water_streams()
+	_render_characters()

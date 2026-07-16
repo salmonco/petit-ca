@@ -2,6 +2,8 @@ class_name Character
 extends RefCounted
 
 var position: Vector2i
+var color: Color
+var is_trapped: bool = false
 
 func _init(start_position: Vector2i) -> void:
 	position = start_position
@@ -13,4 +15,3 @@ func move(direction: Vector2i) -> void:
 func place_water_balloon(map: Map) -> bool:
 	var water_balloon := WaterBalloon.new(position)
 	return map.add_water_balloon(water_balloon)
-	

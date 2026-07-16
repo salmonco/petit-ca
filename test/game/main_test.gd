@@ -49,3 +49,9 @@ func test_물풍선_하나가_터질_때_물줄기가_5칸_보인다() -> void:
 	_main.handle_key(KEY_SPACE)
 	_main.tick(WaterBalloon.POP_AFTER_SECONDS)
 	assert_int(_main.water_stream_views.get_child_count()).is_equal(5)
+
+# 물방울에 갇힘
+func test_캐릭터는_물줄기를_맞으면_물방울에_갇혀_보인다() -> void:
+	_main.handle_key(KEY_SPACE)
+	_main.tick(WaterBalloon.POP_AFTER_SECONDS)
+	assert_that((_main.character_views.get_child(0) as ColorRect).color).is_equal(_main.BUBBLE_COLOR)

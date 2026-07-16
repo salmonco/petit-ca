@@ -41,11 +41,14 @@ func tick(delta: float) -> void:
 	for water_stream: WaterStream in _water_streams:
 		if water_stream.tick(delta):
 			expired_water_streams.append(water_stream)
+		else:
+			check_trap_character_in_bubble(water_stream)
 	for water_stream: WaterStream in expired_water_streams:
 		_remove_water_stream(water_stream)
 
 	for new_water_stream in new_water_streams:
 		add_water_stream(new_water_stream)
+		check_trap_character_in_bubble(new_water_stream)
 
 func add_water_stream(water_stream: WaterStream) -> bool:
 	_water_streams.append(water_stream)
@@ -80,3 +83,8 @@ func is_character_trapped(position: Vector2i) -> bool:
 
 func characters() -> Array[Character]:
 	return _characters
+
+func check_trap_character_in_bubble(water_stream: WaterStream) -> void:
+	for character in _characters:
+		if water_stream.positions().has(character.position):
+			character.is_trapped = true
