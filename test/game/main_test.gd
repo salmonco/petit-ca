@@ -55,3 +55,11 @@ func test_캐릭터는_물줄기를_맞으면_물방울에_갇혀_보인다() ->
 	_main.handle_key(KEY_SPACE)
 	_main.tick(WaterBalloon.POP_AFTER_SECONDS)
 	assert_that((_main.character_views.get_child(0) as ColorRect).color).is_equal(_main.BUBBLE_COLOR)
+
+# 자동 아웃
+func test_캐릭터가_물방울에_갇힌_후_일정_시간이_지나면_화면에서_사라진다() -> void:
+	_main.handle_key(KEY_SPACE)
+	_main.tick(WaterBalloon.POP_AFTER_SECONDS)
+	_main.tick(WaterStream.DURATION * 0.5)
+	_main.tick(Bubble.ALIVE_SECONDS * 5.0)
+	assert_int(_main.character_views.get_child_count()).is_equal(0)
