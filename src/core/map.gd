@@ -50,6 +50,7 @@ func tick(delta: float) -> void:
 		if character.is_trapped:
 			if character.bubble.tick(delta):
 				character.out()
+				_remove_character(character)
 
 	for new_water_stream in new_water_streams:
 		add_water_stream(new_water_stream)
@@ -93,3 +94,9 @@ func check_trap_character_in_bubble(water_stream: WaterStream) -> void:
 	for character in _characters:
 		if character.is_trapped == false and water_stream.positions().has(character.position):
 			character.trapped()
+
+func has_character(position: Vector2i) -> bool:
+	return character_positions().has(position)
+
+func _remove_character(character: Character) -> void:
+	_characters.erase(character)
