@@ -10,3 +10,16 @@ script = ExtResource("1_o5qli")
 [node name="WaterBalloonViews" type="Node2D" parent="." unique_id=1345253768]
 
 [node name="CharacterViews" type="Node2D" parent="." unique_id=988063781]
+
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=186979635]
+
+[node name="GameOverLabel" type="Label" parent="CanvasLayer" unique_id=755147775]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 70
+text = "GAME OVER"
+horizontal_alignment = 1
+vertical_alignment = 1

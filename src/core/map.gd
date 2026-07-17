@@ -100,3 +100,6 @@ func has_character(position: Vector2i) -> bool:
 
 func _remove_character(character: Character) -> void:
 	_characters.erase(character)
+
+func is_game_over() -> bool:
+	return _characters.is_empty()

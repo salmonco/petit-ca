@@ -63,3 +63,12 @@ func test_캐릭터가_물방울에_갇힌_후_일정_시간이_지나면_화면
 	_main.tick(WaterStream.DURATION * 0.5)
 	_main.tick(Bubble.ALIVE_SECONDS * 5.0)
 	assert_int(_main.character_views.get_child_count()).is_equal(0)
+
+# 게임 오버
+func test_게임이_종료되면_게임_오버_텍스트가_표시된다() -> void:
+	_main.handle_key(KEY_SPACE)
+	_main.tick(WaterBalloon.POP_AFTER_SECONDS)
+	_main.tick(WaterStream.DURATION * 0.5)
+	assert_bool(_main.game_over_label.visible).is_false()
+	_main.tick(Bubble.ALIVE_SECONDS * 5.0)
+	assert_bool(_main.game_over_label.visible).is_true()

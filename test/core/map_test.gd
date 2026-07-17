@@ -108,3 +108,14 @@ func test_캐릭터가_물방울에_갇힌_후_일정_시간이_지나면_자동
 	assert_bool(_map.has_character(Vector2i(4, 2))).is_true()
 	_map.tick(Bubble.ALIVE_SECONDS * 1.5)
 	assert_bool(_map.has_character(Vector2i(4, 2))).is_false()
+
+# 게임 오버
+func test_맵에_캐릭터가_남아있지_않으면_게임을_종료한다() -> void:
+	var water_stream := WaterStream.new(Vector2i(4, 2))
+	var character := Character.new(Vector2i(4, 2))
+	_map.add_water_stream(water_stream)
+	_map.add_character(character)
+	_map.tick(WaterStream.DURATION * 0.5)
+	assert_bool(_map.is_game_over()).is_false()
+	_map.tick(Bubble.ALIVE_SECONDS * 1.5)
+	assert_bool(_map.is_game_over()).is_true()
