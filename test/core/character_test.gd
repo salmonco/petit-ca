@@ -97,3 +97,19 @@ func test_물줄기가_사라진_후에_캐릭터가_이전_물줄기_위치로_
 	character.move(Vector2i.RIGHT)
 	map.tick(0.1)
 	assert_bool(character.is_trapped).is_false()
+
+# 자동 아웃
+func test_캐릭터가_물방울에_갇히고_일정_시간이_지나면_자동_아웃된다() -> void:
+	var map := Map.new()
+	var water_stream := WaterStream.new(Vector2i(2, 3))
+	map.add_water_stream(water_stream)
+	var character := Character.new(Vector2i(2, 3))
+	map.add_character(character)
+	map.tick(WaterStream.DURATION * 0.5)
+	assert_bool(character.is_out).is_false()
+	map.tick(WaterStream.DURATION * 0.5)
+	assert_bool(character.is_out).is_false()
+	map.tick(Bubble.ALIVE_SECONDS * 0.5)
+	assert_bool(character.is_out).is_false()
+	map.tick(Bubble.ALIVE_SECONDS * 1.5)
+	assert_bool(character.is_out).is_true()
