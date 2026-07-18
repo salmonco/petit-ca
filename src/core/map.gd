@@ -30,11 +30,12 @@ func water_balloon_positions() -> Array[Vector2i]:
 	return _water_balloons.keys()
 
 func tick(delta: float) -> void:
+	check_pop_water_balloons()
+
 	var new_water_streams: Array[WaterStream] = []
 	for water_balloon: WaterBalloon in _water_balloons.values():
 		if water_balloon.tick(delta):
-			_remove_water_balloon(water_balloon.position)
-			var water_stream := WaterStream.new(water_balloon.position)
+			var water_stream := pop_water_balloon(water_balloon)
 			new_water_streams.append(water_stream)
 	
 	var expired_water_streams: Array[WaterStream] = []
@@ -45,16 +46,18 @@ func tick(delta: float) -> void:
 			check_trap_character_in_bubble(water_stream)
 	for water_stream: WaterStream in expired_water_streams:
 		_remove_water_stream(water_stream)
+
+	for new_water_stream in new_water_streams:
+		add_water_stream(new_water_stream)
+		check_trap_character_in_bubble(new_water_stream)
+	
+	check_pop_water_balloons()
 	
 	for character in _characters:
 		if character.is_trapped:
 			if character.bubble.tick(delta):
 				character.out()
 				_remove_character(character)
-
-	for new_water_stream in new_water_streams:
-		add_water_stream(new_water_stream)
-		check_trap_character_in_bubble(new_water_stream)
 
 func add_water_stream(water_stream: WaterStream) -> bool:
 	_water_streams.append(water_stream)
@@ -103,3 +106,16 @@ func _remove_character(character: Character) -> void:
 
 func is_game_over() -> bool:
 	return _characters.is_empty()
+
+func pop_water_balloon(water_balloon: WaterBalloon) -> WaterStream:
+	_remove_water_balloon(water_balloon.position)
+	var water_stream := WaterStream.new(water_balloon.position)
+	return water_stream
+
+func check_pop_water_balloons() -> Array[WaterStream]:
+	var water_streams: Array[WaterStream] = []
+	for water_balloon: WaterBalloon in _water_balloons.values():
+		if water_stream_positions().has(water_balloon.position):
+			var water_stream := pop_water_balloon(water_balloon)
+			water_streams.append(water_stream)
+	return water_streams

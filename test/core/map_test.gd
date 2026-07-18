@@ -119,3 +119,12 @@ func test_맵에_캐릭터가_남아있지_않으면_게임을_종료한다() ->
 	assert_bool(_map.is_game_over()).is_false()
 	_map.tick(Bubble.ALIVE_SECONDS * 1.5)
 	assert_bool(_map.is_game_over()).is_true()
+
+# 물줄기 전파
+func test_물풍선이_물줄기_위치에_있으면_같이_터진다() -> void:
+	var water_balloon := WaterBalloon.new(Vector2i(4, 2))
+	var water_stream := WaterStream.new(Vector2i(4, 2))
+	_map.add_water_balloon(water_balloon)
+	_map.add_water_stream(water_stream)
+	_map.tick(WaterStream.DURATION * 0.1)
+	assert_bool(_map.has_water_balloon(Vector2i(4, 2))).is_false()
