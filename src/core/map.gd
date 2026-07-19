@@ -59,8 +59,7 @@ func tick(delta: float) -> void:
 	for character in _characters:
 		if character.is_trapped:
 			if character.bubble.tick(delta):
-				character.out()
-				_remove_character(character)
+				let_character_out(character)
 
 func add_water_stream(water_stream: WaterStream) -> bool:
 	_water_streams.append(water_stream)
@@ -123,3 +122,7 @@ func check_pop_water_balloons() -> Array[WaterStream]:
 			var water_stream := pop_water_balloon(water_balloon)
 			water_streams.append(water_stream)
 	return water_streams
+
+func let_character_out(character: Character) -> void:
+	character.out()
+	_remove_character(character)
