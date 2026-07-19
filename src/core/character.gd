@@ -31,3 +31,6 @@ func out() -> void:
 
 func position() -> Vector2i:
 	return Vector2i(continous_position.round())
+
+func pixel_position() -> Vector2:
+	return continous_position * Map.PIXELS_PER_CELL

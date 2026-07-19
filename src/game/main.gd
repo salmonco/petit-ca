@@ -37,7 +37,7 @@ func _render_characters() -> void:
 			view.color = BUBBLE_COLOR
 		else:
 			view.color = CHARACTER_COLOR
-		view.position = character.continous_position * Map.PIXELS_PER_CELL
+		view.position = character.pixel_position()
 		character_views.add_child(view)
 
 func _render_water_balloons() -> void:

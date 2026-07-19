@@ -18,7 +18,7 @@ func test_시작_시_캐릭터가_맵의_시작_칸에_위치한다() -> void:
 func test_캐릭터가_이동하면_격자를_걸쳐서_보인다() -> void:
 	_main.map.characters()[0].move(Vector2i.RIGHT, 0.1)
 	_main.tick(0.1)
-	assert_vector(_main.character_views.get_child(0).position).is_equal(_main.map.characters()[0].continous_position * Map.PIXELS_PER_CELL)
+	assert_vector(_main.character_views.get_child(0).position).is_equal(_main.map.characters()[0].pixel_position())
 
 # 물풍선 놓기
 func test_키보드_스페이스_바를_누르면_캐릭터가_물풍선을_놓는다() -> void:
