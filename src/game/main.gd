@@ -37,7 +37,7 @@ func _render_characters() -> void:
 			view.color = BUBBLE_COLOR
 		else:
 			view.color = CHARACTER_COLOR
-		view.position = Map.to_pixel(character.position)
+		view.position = character.continous_position * Map.PIXELS_PER_CELL
 		character_views.add_child(view)
 
 func _render_water_balloons() -> void:
@@ -72,17 +72,27 @@ func _render_game_over_label() -> void:
 
 func handle_key(key: Key) -> void:
 	match key:
-		KEY_UP, KEY_DOWN, KEY_LEFT, KEY_RIGHT:
-			var direction := Direction.from_key(key)
-			for character in map.characters():
-				character.move(direction)
-			_render_characters()
 		KEY_SPACE:
 			for character in map.characters():
 				character.place_water_balloon(map)
 			_render_water_balloons()
 
+func _read_move_direction() -> Vector2i:
+	if Input.is_key_pressed(KEY_UP):
+		return Direction.from_key(KEY_UP)
+	if Input.is_key_pressed(KEY_DOWN):
+		return Direction.from_key(KEY_DOWN)
+	if Input.is_key_pressed(KEY_LEFT):
+		return Direction.from_key(KEY_LEFT)
+	if Input.is_key_pressed(KEY_RIGHT):
+		return Direction.from_key(KEY_RIGHT)
+	return Vector2i.ZERO
+
 func tick(delta: float) -> void:
+	var direction := _read_move_direction()
+	for character in map.characters():
+		character.move(direction, delta)
+
 	map.tick(delta)
 	_render_water_balloons()
 	_render_water_streams()

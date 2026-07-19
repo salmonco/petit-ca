@@ -1,47 +1,27 @@
 extends GdUnitTestSuite
 
-func test_캐릭터가_위쪽_방향으로_움직인다() -> void:
-	var character := Character.new(Vector2i.ONE)
-	character.move(Vector2i.UP)
-	assert_vector(character.position).is_equal(Vector2i(1, 0))
-
-func test_캐릭터가_아래쪽_방향으로_움직인다() -> void:
-	var character := Character.new(Vector2i.ONE)
-	character.move(Vector2i.DOWN)
-	assert_vector(character.position).is_equal(Vector2i(1, 2))
-
-func test_캐릭터가_왼쪽_방향으로_움직인다() -> void:
-	var character := Character.new(Vector2i.ONE)
-	character.move(Vector2i.LEFT)
-	assert_vector(character.position).is_equal(Vector2i(0, 1))
-
-func test_캐릭터가_오른쪽_방향으로_움직인다() -> void:
-	var character := Character.new(Vector2i.ONE)
-	character.move(Vector2i.RIGHT)
-	assert_vector(character.position).is_equal(Vector2i(2, 1))
-
 # 맵 밖으로 이동 제한
 func test_캐릭터는_위쪽_맵_밖으로_이동하지_못한다() -> void:
 	var character := Character.new(Vector2i(1, 0))
-	character.move(Vector2i.UP)
-	assert_vector(character.position).is_equal(Vector2i(1, 0))
+	character.move(Vector2i.UP, 1.0)
+	assert_vector(character.position()).is_equal(Vector2i(1, 0))
 
 func test_캐릭터는_아래쪽_맵_밖으로_이동하지_못한다() -> void:
 	var bottom_row := Map.GRID_SIZE.y - 1
 	var character := Character.new(Vector2i(1, bottom_row))
-	character.move(Vector2i.DOWN)
-	assert_vector(character.position).is_equal(Vector2i(1, bottom_row))
+	character.move(Vector2i.DOWN, 1.0)
+	assert_vector(character.position()).is_equal(Vector2i(1, bottom_row))
 
 func test_캐릭터는_왼쪽_맵_밖으로_이동하지_못한다() -> void:
 	var character := Character.new(Vector2i(0, 1))
-	character.move(Vector2i.LEFT)
-	assert_vector(character.position).is_equal(Vector2i(0, 1))
+	character.move(Vector2i.LEFT, 1.0)
+	assert_vector(character.position()).is_equal(Vector2i(0, 1))
 
 func test_캐릭터는_오른쪽_맵_밖으로_이동하지_못한다() -> void:
 	var right_column := Map.GRID_SIZE.x - 1
 	var character := Character.new(Vector2i(right_column, 1))
-	character.move(Vector2i.RIGHT)
-	assert_vector(character.position).is_equal(Vector2i(right_column, 1))
+	character.move(Vector2i.RIGHT, 1.0)
+	assert_vector(character.position()).is_equal(Vector2i(right_column, 1))
 
 # 물풍선 놓기
 func test_캐릭터는_물풍선을_놓을_수_있다() -> void:
@@ -83,7 +63,7 @@ func test_물줄기가_있는_동안에_캐릭터가_이전_물줄기_위치로_
 	var character := Character.new(Vector2i(1, 2))
 	map.add_character(character)
 	map.tick(WaterStream.DURATION * 0.5)
-	character.move(Vector2i.RIGHT)
+	character.move(Vector2i.RIGHT, 0.25)
 	map.tick(0.1)
 	assert_bool(character.is_trapped).is_true()
 
@@ -94,7 +74,7 @@ func test_물줄기가_사라진_후에_캐릭터가_이전_물줄기_위치로_
 	var character := Character.new(Vector2i(1, 2))
 	map.add_character(character)
 	map.tick(WaterStream.DURATION * 1.5)
-	character.move(Vector2i.RIGHT)
+	character.move(Vector2i.RIGHT, 0.25)
 	map.tick(0.1)
 	assert_bool(character.is_trapped).is_false()
 
@@ -113,3 +93,14 @@ func test_캐릭터가_물방울에_갇히고_일정_시간이_지나면_자동_
 	assert_bool(character.is_out).is_false()
 	map.tick(Bubble.ALIVE_SECONDS * 1.5)
 	assert_bool(character.is_out).is_true()
+
+# 걸치기
+func test_캐릭터는_격자_사이를_걸쳐서_움직일_수_있다() -> void:
+	var character := Character.new(Vector2i(3, 2))
+	character.move(Vector2i.RIGHT, 0.1)
+	assert_bool(character.position() != Vector2i(4, 2)).is_true()
+
+func test_캐릭터의_격자_위치는_연속된_위치로부터_파생한다() -> void:
+	var character := Character.new(Vector2i(3, 2))
+	character.move(Vector2i.RIGHT, 0.15)
+	assert_vector(character.position()).is_equal(Vector2i(4, 2))

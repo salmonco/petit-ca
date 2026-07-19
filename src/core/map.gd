@@ -85,7 +85,7 @@ func add_character(character: Character) -> void:
 func character_positions() -> Array[Vector2i]:
 	var positions: Array[Vector2i] = []
 	for character in _characters:
-		positions.append(character.position)
+		positions.append(character.position())
 	return positions
 
 func is_character_trapped(position: Vector2i) -> bool:
@@ -98,7 +98,7 @@ func characters() -> Array[Character]:
 
 func check_trap_character_in_bubble(water_stream: WaterStream) -> void:
 	for character in _characters:
-		if character.is_trapped == false and water_stream.positions().has(character.position):
+		if character.is_trapped == false and water_stream.positions().has(character.position()):
 			character.trapped()
 
 func has_character(position: Vector2i) -> bool:
