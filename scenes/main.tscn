@@ -1,9 +1,13 @@
 [gd_scene format=3 uid="uid://c6nenbqmhi32f"]
 
 [ext_resource type="Script" uid="uid://djf8wpol6eu3x" path="res://src/game/main.gd" id="1_o5qli"]
+[ext_resource type="Script" uid="uid://cmdsr0rotu0oi" path="res://src/game/grid_view.gd" id="2_0wfyh"]
 
 [node name="Main" type="Node2D" unique_id=1626530598]
 script = ExtResource("1_o5qli")
+
+[node name="GridView" type="Node2D" parent="." unique_id=1793967474]
+script = ExtResource("2_0wfyh")
 
 [node name="WaterStreamViews" type="Node2D" parent="." unique_id=651358261]
 
