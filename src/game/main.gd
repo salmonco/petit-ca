@@ -33,7 +33,7 @@ func _render_characters() -> void:
 	for character in map.characters():
 		var view := ColorRect.new()
 		view.size = Vector2.ONE * Map.PIXELS_PER_CELL
-		if character.is_trapped:
+		if character.is_trapped():
 			view.color = BUBBLE_COLOR
 		else:
 			view.color = CHARACTER_COLOR

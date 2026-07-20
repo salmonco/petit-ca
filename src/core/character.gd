@@ -5,7 +5,6 @@ const SPEED := 4.0
 
 var continous_position: Vector2
 var color: Color
-var is_trapped: bool = false
 var is_out: bool = false
 var bubble: Bubble = null
 
@@ -32,15 +31,16 @@ func place_water_balloon(map: Map) -> bool:
 
 func trapped() -> void:
 	bubble = Bubble.new()
-	is_trapped = true
 
 func out() -> void:
 	bubble = null
 	is_out = true
-	is_trapped = false
 
 func position() -> Vector2i:
 	return Vector2i(continous_position.round())
 
 func pixel_position() -> Vector2:
 	return continous_position * Map.PIXELS_PER_CELL
+
+func is_trapped() -> bool:
+	return bubble != null

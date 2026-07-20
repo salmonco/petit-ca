@@ -58,7 +58,7 @@ func tick(delta: float) -> void:
 			check_trap_character_in_bubble(water_stream)
 
 	for character in _characters:
-		if character.is_trapped:
+		if character.is_trapped():
 			if character.bubble.tick(delta):
 				let_character_out(character)
 
@@ -94,7 +94,7 @@ func characters() -> Array[Character]:
 
 func check_trap_character_in_bubble(water_stream: WaterStream) -> void:
 	for character in _characters:
-		if character.is_trapped:
+		if character.is_trapped():
 			continue
 		for cell in water_stream.positions():
 			if abs(character.continous_position.x - cell.x) < TRAP_MARGIN and abs(character.continous_position.y - cell.y) < TRAP_MARGIN:
