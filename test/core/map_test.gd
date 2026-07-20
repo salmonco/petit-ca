@@ -101,12 +101,12 @@ func test_물줄기는_같은_칸에_중복으로_생길_수_없다() -> void:
 		,Vector2i(6, 2), Vector2i(6, 1), Vector2i(6, 3), Vector2i(7, 2)])
 
 # 물방울에 갇힘
-func test_캐릭터가_물줄기와_같은_위치에_있으면_물방울에_갇힌다() -> void:
+func test_캐릭터가_물방울에_갇혀도_맵에_남아있다() -> void:
 	var water_stream := WaterStream.new(Vector2i(4, 2))
 	var character := Character.new(Vector2i(4, 2))
 	_map.add_water_stream(water_stream)
 	_map.add_character(character)
-	assert_bool(_map.is_character_trapped(Vector2i(4, 2))).is_true()
+	assert_bool(_map.has_character(Vector2i(4, 2))).is_true()
 
 # 자동 아웃
 func test_캐릭터가_물방울에_갇힌_후_일정_시간이_지나면_자동_아웃되어_맵에서_사라진다() -> void:

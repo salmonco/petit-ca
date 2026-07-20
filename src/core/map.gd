@@ -88,11 +88,6 @@ func character_positions() -> Array[Vector2i]:
 		positions.append(character.position())
 	return positions
 
-func is_character_trapped(position: Vector2i) -> bool:
-	if character_positions().has(position) and water_stream_positions().has(position):
-		return true
-	return false
-
 func characters() -> Array[Character]:
 	return _characters
 
