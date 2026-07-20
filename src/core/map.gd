@@ -3,6 +3,7 @@ extends RefCounted
 
 const GRID_SIZE := Vector2i(15, 13)
 const PIXELS_PER_CELL := 64
+const TRAP_MARGIN := 0.35
 
 var _characters: Array[Character] = []
 var _water_balloons: Dictionary[Vector2i, WaterBalloon] = {}
@@ -93,8 +94,11 @@ func characters() -> Array[Character]:
 
 func check_trap_character_in_bubble(water_stream: WaterStream) -> void:
 	for character in _characters:
-		if character.is_trapped == false and water_stream.positions().has(character.position()):
-			character.trapped()
+		if character.is_trapped:
+			continue
+		for cell in water_stream.positions():
+			if abs(character.continous_position.x - cell.x) < TRAP_MARGIN and abs(character.continous_position.y - cell.y) < TRAP_MARGIN:
+				character.trapped()
 
 func has_character(position: Vector2i) -> bool:
 	return character_positions().has(position)

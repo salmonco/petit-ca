@@ -105,6 +105,16 @@ func test_캐릭터의_격자_위치는_연속된_위치로부터_파생한다()
 	character.move(Vector2i.RIGHT, 0.15, [])
 	assert_vector(character.position()).is_equal(Vector2i(4, 2))
 
+func test_캐릭터는_칸에_걸쳐져_있는_상태에서_물줄기를_맞으면_물방울에_갇히지_않는다() -> void:
+	var map := Map.new()
+	var character := Character.new(Vector2i(3, 4))
+	map.add_character(character)
+	character.place_water_balloon(map)
+	character.move(Vector2i.DOWN, 0.25, map.water_balloon_positions())
+	character.move(Vector2i.LEFT, 0.125, map.water_balloon_positions())
+	map.tick(WaterBalloon.POP_AFTER_SECONDS * 1.5)
+	assert_bool(character.is_trapped).is_false()
+
 # 가두기
 func test_캐릭터는_다른_칸에_있는_물풍선_위치로_이동할_수_없다() -> void:
 	var map := Map.new()
