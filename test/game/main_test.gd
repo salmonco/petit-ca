@@ -24,7 +24,7 @@ func test_캐릭터가_이동하면_격자를_걸쳐서_보인다() -> void:
 func test_키보드_스페이스_바를_누르면_캐릭터가_물풍선을_놓는다() -> void:
 	_main.handle_key(KEY_SPACE)
 	var views := _main.water_balloon_views.get_children()
-	assert_vector((views[0] as ColorRect).position).is_equal(Map.to_pixel(_main.map.character_positions()[0]))
+	assert_vector((views[0] as Sprite2D).position).is_equal(Map.to_pixel(_main.map.character_positions()[0]))
 
 func test_서로_다른_두_칸에_물풍선을_놓으면_물풍선이_두_개_그려진다() -> void:
 	_main.handle_key(KEY_SPACE)

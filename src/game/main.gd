@@ -2,9 +2,9 @@ class_name Main
 extends Node2D
 
 const CHARACTER_COLOR := Color.LIME_GREEN
-const WATER_BALLOON_COLOR := Color.SKY_BLUE
 const WATER_STREAM_COLOR := Color.AQUA
 const BUBBLE_COLOR := Color.ORANGE
+const WATER_BALLOON_TEXTURE: Texture2D = preload("res://assets/water_balloons/water_melon.png")
 
 var map := Map.new()
 @onready var character_views: Node2D = $CharacterViews
@@ -46,10 +46,11 @@ func _render_water_balloons() -> void:
 		view.queue_free()
 
 	for cell in map.water_balloon_positions():
-		var view := ColorRect.new()
-		view.size = Vector2.ONE * Map.PIXELS_PER_CELL
-		view.color = WATER_BALLOON_COLOR
+		var view := Sprite2D.new()
+		view.texture = WATER_BALLOON_TEXTURE
+		view.scale = Vector2.ONE * (Map.PIXELS_PER_CELL / 42.0)
 		view.position = Map.to_pixel(cell)
+		view.centered = false
 		water_balloon_views.add_child(view)
 
 func _render_water_streams() -> void:
