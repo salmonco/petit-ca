@@ -11,14 +11,25 @@ func before_test() -> void:
 
 # 캐릭터 이동
 func test_시작_시_캐릭터가_맵의_시작_칸에_위치한다() -> void:
-	var start_position := _main.map.character_positions()[0]
-	var start_pixel := Map.to_pixel(start_position)
-	assert_vector(_main.character_views.get_child(0).position).is_equal(start_pixel)
+	var start_cell := _main.map.character_positions()[0]
+	var start_pixel := Map.to_pixel(start_cell)
+	var view: Sprite2D = _main.character_views.get_child(0)
+	var pixel_bounds: Rect2 = view.global_transform * view.get_rect()
+	assert_float(pixel_bounds.end.y).is_equal(start_pixel.y + Map.PIXELS_PER_CELL)
+	assert_float(pixel_bounds.get_center().x).is_equal(start_pixel.x + Map.PIXELS_PER_CELL / 2.0)
 
-func test_캐릭터가_이동하면_격자를_걸쳐서_보인다() -> void:
-	_main.map.characters()[0].move(Vector2i.RIGHT, 0.1, [])
-	_main.tick(0.1)
-	assert_vector(_main.character_views.get_child(0).position).is_equal(_main.map.characters()[0].pixel_position())
+func test_캐릭터가_이동하면_뷰가_새_칸을_따라온다() -> void:
+	var character := _main.map.characters()[0]
+	var start_cell := character.position()
+	character.move(Vector2i.RIGHT, 0.25, [])
+	_main.tick(0.25)
+	var moved_cell := character.position()
+	assert_vector(moved_cell).is_not_equal(start_cell)
+	var cell_pixel := Map.to_pixel(moved_cell)
+	var view: Sprite2D = _main.character_views.get_child(0)
+	var pixel_bounds: Rect2 = view.global_transform * view.get_rect()
+	assert_float(pixel_bounds.end.y).is_equal(cell_pixel.y + Map.PIXELS_PER_CELL)
+	assert_float(pixel_bounds.get_center().x).is_equal(cell_pixel.x + Map.PIXELS_PER_CELL / 2.0)
 
 # 물풍선 놓기
 func test_키보드_스페이스_바를_누르면_캐릭터가_물풍선을_놓는다() -> void:
@@ -53,7 +64,7 @@ func test_물풍선_하나가_터질_때_물줄기가_5칸_보인다() -> void:
 func test_캐릭터는_물줄기를_맞으면_물방울에_갇혀_보인다() -> void:
 	_main.handle_key(KEY_SPACE)
 	_main.tick(WaterBalloon.POP_AFTER_SECONDS)
-	assert_that((_main.character_views.get_child(0) as ColorRect).color).is_equal(_main.BUBBLE_COLOR)
+	assert_that((_main.character_views.get_child(0) as Sprite2D).texture).is_equal(_main.BUBBLE_TEXTURE)
 
 # 자동 아웃
 func test_캐릭터가_물방울에_갇힌_후_일정_시간이_지나면_화면에서_사라진다() -> void:

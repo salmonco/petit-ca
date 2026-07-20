@@ -1,10 +1,10 @@
 class_name Main
 extends Node2D
 
-const CHARACTER_COLOR := Color.LIME_GREEN
 const WATER_STREAM_COLOR := Color.AQUA
-const BUBBLE_COLOR := Color.ORANGE
 const WATER_BALLOON_TEXTURE: Texture2D = preload("res://assets/water_balloons/water_melon.png")
+const CHARACTER_TEXTURE: Texture2D = preload("res://assets/characters/bazzi.png")
+const BUBBLE_TEXTURE: Texture2D = preload("res://assets/characters/bazzi_bubble.png")
 
 var map := Map.new()
 @onready var character_views: Node2D = $CharacterViews
@@ -31,13 +31,17 @@ func _render_characters() -> void:
 		view.queue_free()
 	
 	for character in map.characters():
-		var view := ColorRect.new()
-		view.size = Vector2.ONE * Map.PIXELS_PER_CELL
+		var view := Sprite2D.new()
 		if character.is_trapped():
-			view.color = BUBBLE_COLOR
+			view.texture = BUBBLE_TEXTURE
+			view.scale = Vector2.ONE * (Map.PIXELS_PER_CELL / 135.0)
+			view.position = character.pixel_position()
 		else:
-			view.color = CHARACTER_COLOR
-		view.position = character.pixel_position()
+			view.texture = CHARACTER_TEXTURE
+			view.scale = Vector2.ONE * (Map.PIXELS_PER_CELL / 220.0)
+			view.position = character.pixel_position() + Vector2(Map.PIXELS_PER_CELL / 2.0, Map.PIXELS_PER_CELL)
+			view.offset = Vector2(-110, -280) # (-w/2, -h)
+		view.centered = false
 		character_views.add_child(view)
 
 func _render_water_balloons() -> void:
