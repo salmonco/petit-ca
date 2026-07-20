@@ -91,7 +91,7 @@ func _read_move_direction() -> Vector2i:
 func tick(delta: float) -> void:
 	var direction := _read_move_direction()
 	for character in map.characters():
-		character.move(direction, delta)
+		character.move(direction, delta, map.water_balloon_positions())
 
 	map.tick(delta)
 	_render_water_balloons()

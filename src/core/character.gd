@@ -12,9 +12,19 @@ var bubble: Bubble = null
 func _init(start_position: Vector2i) -> void:
 	continous_position = start_position
 
-func move(direction: Vector2i, delta: float) -> void:
+func move(direction: Vector2i, delta: float, water_balloon_positions: Array[Vector2i]) -> bool:
+	var water_balloon_positions_except_character_position: Array[Vector2i] = []
+	for cell in water_balloon_positions:
+		if cell != position():
+			water_balloon_positions_except_character_position.append(cell)
+	
 	var new_position := continous_position + direction * SPEED * delta
-	continous_position = new_position.clamp(Vector2i.ZERO, Map.GRID_SIZE - Vector2i.ONE)
+	var clamped_position := new_position.clamp(Vector2i.ZERO, Map.GRID_SIZE - Vector2i.ONE)
+	var cell := Vector2i(clamped_position.round())
+	if water_balloon_positions_except_character_position.has(cell):
+		return false
+	continous_position = clamped_position
+	return true
 
 func place_water_balloon(map: Map) -> bool:
 	var water_balloon := WaterBalloon.new(position())
