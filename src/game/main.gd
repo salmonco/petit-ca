@@ -5,7 +5,7 @@ const WATER_STREAM_COLOR := Color.AQUA
 const WATER_BALLOON_TEXTURE: Texture2D = preload("res://assets/water_balloons/water_melon.png")
 const CHARACTER_TEXTURE: Texture2D = preload("res://assets/characters/bazzi.png")
 const BUBBLE_TEXTURE: Texture2D = preload("res://assets/characters/bazzi_bubble.png")
-const WHITE_POTION_TEXTURE: Texture2D = preload("res://assets/game_items/white_potion.png")
+const GAME_ITEM_WATER_BALLOON_TEXTURE: Texture2D = preload("res://assets/game_items/water_balloon.png")
 
 var map := Map.new()
 @onready var character_views: Node2D = $CharacterViews
@@ -86,10 +86,10 @@ func _render_game_items() -> void:
 		var view := Sprite2D.new()
 		match game_item.type:
 			GameItem.INCREASE_WATER_BALLOON_COUNT:
-				view.texture = WHITE_POTION_TEXTURE
-				view.scale = Vector2.ONE * (Map.PIXELS_PER_CELL / 152.0)
+				view.texture = GAME_ITEM_WATER_BALLOON_TEXTURE
+				view.scale = Vector2.ONE * (Map.PIXELS_PER_CELL / 100.0)
 				view.position = Map.to_pixel(game_item.position) + Vector2(Map.PIXELS_PER_CELL / 2.0, Map.PIXELS_PER_CELL)
-				view.offset = Vector2(-76, -176) # (-w/2, -h)
+				view.offset = Vector2(-50, -106) # (-w/2, -h)
 		view.centered = false
 		game_item_views.add_child(view)
 

@@ -85,4 +85,4 @@ func test_게임이_종료되면_게임_오버_텍스트가_표시된다() -> vo
 	assert_bool(_main.game_over_label.visible).is_true()
 
 func test_게임_시작_시_맵의_특정_위치에_게임_아이템이_표시된다() -> void:
-	assert_that((_main.game_item_views.get_child(0) as Sprite2D).texture).is_equal(_main.WHITE_POTION_TEXTURE)
+	assert_that((_main.game_item_views.get_child(0) as Sprite2D).texture).is_equal(_main.GAME_ITEM_WATER_BALLOON_TEXTURE)
