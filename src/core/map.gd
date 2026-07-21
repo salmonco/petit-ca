@@ -71,6 +71,11 @@ func tick(delta: float) -> void:
 			if character.position() == game_item.position:
 				character.get_game_item(game_item.type)
 				_remove_game_item(game_item)
+	
+	# 물줄기를 맞은 게임 아이템 제거
+	for game_item in game_items():
+		if water_stream_positions().has(game_item.position):
+			_remove_game_item(game_item)
 
 func add_water_stream(water_stream: WaterStream) -> bool:
 	_water_streams.append(water_stream)
@@ -154,3 +159,6 @@ func _remove_game_item(game_item: GameItem) -> void:
 
 func game_items() -> Array[GameItem]:
 	return _game_items
+
+func has_game_item(cell: Vector2i) -> bool:
+	return game_items_positions().has(cell)

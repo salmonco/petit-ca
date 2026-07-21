@@ -182,3 +182,11 @@ func test_캐릭터가_게임_아이템의_위치에_있으면_아이템을_먹�
 	character.move(Vector2i.DOWN, 0.25, _map.water_balloon_positions())
 	_map.tick(0.25)
 	assert_int(character.water_balloon_count).is_equal(2)
+
+func test_게임_아이템은_물줄기를_맞으면_제거된다() -> void:
+	_map.add_game_item(GameItem.INCREASE_WATER_BALLOON_COUNT, Vector2i(5, 2))
+	assert_bool(_map.has_game_item(Vector2i(5, 2))).is_true()
+	var water_stream := WaterStream.new(Vector2i(6, 2))
+	_map.add_water_stream(water_stream)
+	_map.tick(0.1)
+	assert_bool(_map.has_game_item(Vector2i(5, 2))).is_false()
