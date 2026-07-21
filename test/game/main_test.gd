@@ -40,6 +40,7 @@ func test_키보드_스페이스_바를_누르면_캐릭터가_물풍선을_놓�
 func test_서로_다른_두_칸에_물풍선을_놓으면_물풍선이_두_개_그려진다() -> void:
 	_main.handle_key(KEY_SPACE)
 	_main.map.characters()[0].move(Vector2i.RIGHT, 0.25, [])
+	_main.map.characters()[0].get_game_item(GameItem.INCREASE_WATER_BALLOON_COUNT)
 	_main.handle_key(KEY_SPACE)
 	assert_int(_main.water_balloon_views.get_child_count()).is_equal(2)
 
@@ -82,3 +83,6 @@ func test_게임이_종료되면_게임_오버_텍스트가_표시된다() -> vo
 	assert_bool(_main.game_over_label.visible).is_false()
 	_main.tick(Bubble.ALIVE_SECONDS * 5.0)
 	assert_bool(_main.game_over_label.visible).is_true()
+
+func test_게임_시작_시_맵의_특정_위치에_게임_아이템이_표시된다() -> void:
+	assert_that((_main.game_item_views.get_child(0) as Sprite2D).texture).is_equal(_main.WHITE_POTION_TEXTURE)

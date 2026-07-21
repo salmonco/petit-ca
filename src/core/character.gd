@@ -7,6 +7,7 @@ var continous_position: Vector2
 var color: Color
 var is_out: bool = false
 var bubble: Bubble = null
+var water_balloon_count := 1
 
 func _init(start_position: Vector2i) -> void:
 	continous_position = start_position
@@ -26,6 +27,8 @@ func move(direction: Vector2i, delta: float, water_balloon_positions: Array[Vect
 	return true
 
 func place_water_balloon(map: Map) -> bool:
+	if map.water_balloon_count() >= water_balloon_count:
+		return false
 	var water_balloon := WaterBalloon.new(position())
 	return map.add_water_balloon(water_balloon)
 
@@ -44,3 +47,8 @@ func pixel_position() -> Vector2:
 
 func is_trapped() -> bool:
 	return bubble != null
+
+func get_game_item(type: int) -> void:
+	match type:
+		GameItem.INCREASE_WATER_BALLOON_COUNT:
+			water_balloon_count += 1

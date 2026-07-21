@@ -8,6 +8,7 @@ const TRAP_MARGIN := 0.35
 var _characters: Array[Character] = []
 var _water_balloons: Dictionary[Vector2i, WaterBalloon] = {}
 var _water_streams: Array[WaterStream] = []
+var _game_items: Array[GameItem] = []
 
 static func to_pixel(grid: Vector2i) -> Vector2:
 	return Vector2(grid) * PIXELS_PER_CELL
@@ -57,10 +58,19 @@ func tick(delta: float) -> void:
 			add_water_stream(water_stream)
 			check_trap_character_in_bubble(water_stream)
 
+	# 캐릭터 갇힘
 	for character in _characters:
 		if character.is_trapped():
 			if character.bubble.tick(delta):
 				let_character_out(character)
+	
+	# 게임 아이템 먹음
+	var original_game_items := game_items()
+	for character in _characters:
+		for game_item in original_game_items:
+			if character.position() == game_item.position:
+				character.get_game_item(game_item.type)
+				_remove_game_item(game_item)
 
 func add_water_stream(water_stream: WaterStream) -> bool:
 	_water_streams.append(water_stream)
@@ -125,3 +135,22 @@ func check_pop_water_balloons() -> Array[WaterStream]:
 func let_character_out(character: Character) -> void:
 	character.out()
 	_remove_character(character)
+
+func game_items_positions() -> Array[Vector2i]:
+	var positions: Array[Vector2i] = []
+	for game_item in _game_items:
+		positions.append(game_item.position)
+	return positions
+
+func add_game_item(type: int, cell: Vector2i) -> bool:
+	if game_items_positions().has(cell):
+		return false
+	var game_item := GameItem.new(type, cell)
+	_game_items.append(game_item)
+	return true
+
+func _remove_game_item(game_item: GameItem) -> void:
+	_game_items.erase(game_item)
+
+func game_items() -> Array[GameItem]:
+	return _game_items

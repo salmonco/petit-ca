@@ -165,3 +165,20 @@ func test_물풍선_하나가_터지면_물줄기_위치에_있는_물풍선도_
 	assert_array(_map.water_stream_positions()).contains(
 		[Vector2i(4, 2), Vector2i(4, 1), Vector2i(4, 3), Vector2i(3, 2), Vector2i(5, 2)
 		,Vector2i(5, 1), Vector2i(5, 3), Vector2i(6, 2)])
+
+# 게임 아이템
+func test_맵의_특정_위치에_게임_아이템을_배치할_수_있다() -> void:
+	assert_bool(_map.add_game_item(GameItem.INCREASE_WATER_BALLOON_COUNT, Vector2i(3, 2))).is_true()
+
+func test_게임_아이템은_맵의_중복된_위치에_배치할_수_없다() -> void:
+	assert_bool(_map.add_game_item(GameItem.INCREASE_WATER_BALLOON_COUNT, Vector2i(3, 2))).is_true()
+	assert_bool(_map.add_game_item(GameItem.INCREASE_WATER_BALLOON_COUNT, Vector2i(3, 2))).is_false()
+
+func test_캐릭터가_게임_아이템의_위치에_있으면_아이템을_먹을_수_있다() -> void:
+	var character := Character.new(Vector2i(5, 1))
+	_map.add_character(character)
+	assert_int(character.water_balloon_count).is_equal(1)
+	_map.add_game_item(GameItem.INCREASE_WATER_BALLOON_COUNT, Vector2i(5, 2))
+	character.move(Vector2i.DOWN, 0.25, _map.water_balloon_positions())
+	_map.tick(0.25)
+	assert_int(character.water_balloon_count).is_equal(2)

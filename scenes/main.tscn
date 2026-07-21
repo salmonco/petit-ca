@@ -13,6 +13,8 @@ script = ExtResource("2_0wfyh")
 
 [node name="WaterBalloonViews" type="Node2D" parent="." unique_id=1345253768]
 
+[node name="GameItemViews" type="Node2D" parent="." unique_id=1902110163]
+
 [node name="CharacterViews" type="Node2D" parent="." unique_id=988063781]
 
 [node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=186979635]
