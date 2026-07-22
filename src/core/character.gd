@@ -15,8 +15,9 @@ func _init(start_position: Vector2i) -> void:
 	continuous_position = start_position
 
 func move(direction: Vector2i, delta: float, water_balloon_positions: Array[Vector2i]) -> bool:
-	facing = direction
-	
+	if direction != Vector2i.ZERO:
+		facing = direction
+
 	var water_balloon_positions_except_character_position: Array[Vector2i] = []
 	for cell in water_balloon_positions:
 		if cell != position():
