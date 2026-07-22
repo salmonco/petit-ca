@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://brifflvl7mg2i"
-path="res://.godot/imported/bazzi_bubble.png-1e428efe83cc8f31e7d5f96f417af504.ctex"
+uid="uid://thul2d0osxo0"
+path="res://.godot/imported/bazzi_down.png-1141bf74637228823956bbabd29c2d32.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/characters/bazzi_bubble.png"
-dest_files=["res://.godot/imported/bazzi_bubble.png-1e428efe83cc8f31e7d5f96f417af504.ctex"]
+source_file="res://assets/characters/bazzi_down.png"
+dest_files=["res://.godot/imported/bazzi_down.png-1141bf74637228823956bbabd29c2d32.ctex"]
 
 [params]
 

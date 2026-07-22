@@ -1,3 +1,4 @@
+class_name GridView
 extends Node2D
 
 const LINE_COLOR := Color(1, 1, 1, 0.15)

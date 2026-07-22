@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bimps7ml1cok7"
-path="res://.godot/imported/bazzi.png-aa1f372fc2d90391cf0f353b6def4a50.ctex"
+uid="uid://cakfp2ogqe5ab"
+path="res://.godot/imported/bazzi_up.png-b0b4f227107ea475e3db85bf9a700bb6.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/characters/bazzi.png"
-dest_files=["res://.godot/imported/bazzi.png-aa1f372fc2d90391cf0f353b6def4a50.ctex"]
+source_file="res://assets/characters/bazzi_up.png"
+dest_files=["res://.godot/imported/bazzi_up.png-b0b4f227107ea475e3db85bf9a700bb6.ctex"]
 
 [params]
 

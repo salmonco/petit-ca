@@ -3,9 +3,10 @@ extends Node2D
 
 const WATER_STREAM_COLOR := Color.AQUA
 const WATER_BALLOON_TEXTURE: Texture2D = preload("res://assets/water_balloons/water_melon.png")
-const CHARACTER_TEXTURE: Texture2D = preload("res://assets/characters/bazzi.png")
-const BUBBLE_TEXTURE: Texture2D = preload("res://assets/characters/bazzi_bubble.png")
 const GAME_ITEM_WATER_BALLOON_TEXTURE: Texture2D = preload("res://assets/game_items/water_balloon.png")
+
+const CHARACTER_VIEW := preload("res://scenes/character_view.tscn")
+var _character_views: Dictionary[Character, CharacterView] = {}
 
 var map := Map.new()
 @onready var character_views: Node2D = $CharacterViews
@@ -34,23 +35,22 @@ func _process(delta: float) -> void:
 	tick(delta)
 
 func _render_characters() -> void:
-	for view in character_views.get_children():
-		character_views.remove_child(view)
-		view.queue_free()
-	
+	# 사라진 캐릭터의 뷰 정리
+	for character in _character_views.keys():
+		if character not in map.characters():
+			var view: CharacterView = _character_views[character]
+			_character_views.erase(character)
+			character_views.remove_child(view)
+			view.queue_free()
+	# 새 캐릭터 뷰 생성
 	for character in map.characters():
-		var view := Sprite2D.new()
-		if character.is_trapped():
-			view.texture = BUBBLE_TEXTURE
-			view.scale = Vector2.ONE * (Map.PIXELS_PER_CELL / 135.0)
-			view.position = character.pixel_position()
-		else:
-			view.texture = CHARACTER_TEXTURE
-			view.scale = Vector2.ONE * (Map.PIXELS_PER_CELL / 220.0)
-			view.position = character.pixel_position() + Vector2(Map.PIXELS_PER_CELL / 2.0, Map.PIXELS_PER_CELL)
-			view.offset = Vector2(-110, -280) # (-w/2, -h)
-		view.centered = false
-		character_views.add_child(view)
+		if character not in _character_views:
+			var view: CharacterView = CHARACTER_VIEW.instantiate()
+			_character_views[character] = view
+			character_views.add_child(view)
+	# sync하여 position 갱신
+	for character in map.characters():
+		_character_views[character].sync(character)
 
 func _render_water_balloons() -> void:
 	for view in water_balloon_views.get_children():
