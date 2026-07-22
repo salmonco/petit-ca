@@ -27,6 +27,8 @@ func move(direction: Vector2i, delta: float, water_balloon_positions: Array[Vect
 	return true
 
 func place_water_balloon(map: Map) -> bool:
+	if is_trapped():
+		return false
 	if map.water_balloon_count() >= water_balloon_count:
 		return false
 	var water_balloon := WaterBalloon.new(position())

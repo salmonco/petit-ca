@@ -109,6 +109,18 @@ func test_캐릭터가_물방울에_갇혀도_맵에_남아있다() -> void:
 	_map.tick(0.1)
 	assert_bool(_map.has_character(Vector2i(4, 2))).is_true()
 
+func test_물방울에_갇힌_상태의_캐릭터가_물풍선을_놓아도_맵에_물풍선이_추가되지_않는다() -> void:
+	var character := Character.new(Vector2i(1, 5))
+	character.water_balloon_count = 2
+	_map.add_character(character)
+	character.place_water_balloon(_map)
+	assert_int(_map.water_balloon_count()).is_equal(1)
+	character.trapped()
+	character.move(Vector2i.DOWN, 0.25, _map.water_balloon_positions())
+	_map.tick(0.25)
+	character.place_water_balloon(_map)
+	assert_int(_map.water_balloon_count()).is_equal(1)
+
 # 자동 아웃
 func test_캐릭터가_물방울에_갇힌_후_일정_시간이_지나면_자동_아웃되어_맵에서_사라진다() -> void:
 	var water_stream := WaterStream.new(Vector2i(4, 2))
