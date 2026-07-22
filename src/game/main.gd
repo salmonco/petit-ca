@@ -12,7 +12,8 @@ const WATER_STREAM_TEXTURES: Dictionary[Vector2i, Texture2D] = {
 const WATER_BALLOON_TEXTURE: Texture2D = preload("res://assets/water_balloons/water_melon.png")
 const GAME_ITEM_WATER_BALLOON_TEXTURE: Texture2D = preload("res://assets/game_items/water_balloon.png")
 
-const CHARACTER_VIEW := preload("res://scenes/character_view.tscn")
+const ZOMKKAN_VIEW := preload("res://scenes/zomkkan_view.tscn")
+const BAZZI_VIEW := preload("res://scenes/bazzi_view.tscn")
 var view_by_character: Dictionary[Character, CharacterView] = {}
 
 var map := Map.new()
@@ -56,7 +57,11 @@ func _render_characters() -> void:
 	# 새 캐릭터 뷰 생성
 	for character in map.characters():
 		if character not in view_by_character:
-			var view: CharacterView = CHARACTER_VIEW.instantiate()
+			var view: CharacterView
+			if character is Npc:
+				view = ZOMKKAN_VIEW.instantiate()
+			else:
+				view = BAZZI_VIEW.instantiate()
 			view_by_character[character] = view
 			character_views.add_child(view)
 	# sync하여 position 갱신

@@ -1,0 +1,47 @@
+[gd_scene format=3 uid="uid://dvfey8ho6l5op"]
+
+[ext_resource type="Script" uid="uid://dyvc3d5gac1ca" path="res://src/game/character_view.gd" id="1_lek68"]
+[ext_resource type="Texture2D" uid="uid://dxl8615vet2v6" path="res://assets/npcs/zomkkan_bubble.png" id="1_pkdc6"]
+[ext_resource type="Texture2D" uid="uid://lgd0qjypgmuh" path="res://assets/npcs/zomkkan_down.png" id="2_rvyx0"]
+[ext_resource type="Texture2D" uid="uid://bs2r2xv871f2w" path="res://assets/npcs/zomkkan_right.png" id="3_gamaw"]
+[ext_resource type="Texture2D" uid="uid://m2c6q8gwl08g" path="res://assets/npcs/zomkkan_up.png" id="4_i010c"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_ov4ug"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_pkdc6")
+}],
+"loop": 1,
+"name": &"bubble",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_rvyx0")
+}],
+"loop": 1,
+"name": &"walk_down",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("3_gamaw")
+}],
+"loop": 1,
+"name": &"walk_side",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("4_i010c")
+}],
+"loop": 1,
+"name": &"walk_up",
+"speed": 5.0
+}]
+
+[node name="ZomkkanView" type="AnimatedSprite2D" unique_id=1174227929]
+sprite_frames = SubResource("SpriteFrames_ov4ug")
+animation = &"walk_up"
+script = ExtResource("1_lek68")

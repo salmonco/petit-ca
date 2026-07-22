@@ -4,7 +4,7 @@
 [ext_resource type="Texture2D" uid="uid://thul2d0osxo0" path="res://assets/characters/bazzi_down.png" id="2_qywg8"]
 [ext_resource type="Texture2D" uid="uid://dc07c1xwwqrg4" path="res://assets/characters/bazzi_right.png" id="3_o7bpo"]
 [ext_resource type="Texture2D" uid="uid://cakfp2ogqe5ab" path="res://assets/characters/bazzi_up.png" id="4_ng54h"]
-[ext_resource type="Script" uid="uid://eu8xrb6oykxw" path="res://src/game/character_view.gd" id="5_qywg8"]
+[ext_resource type="Script" uid="uid://dyvc3d5gac1ca" path="res://src/game/character_view.gd" id="5_qywg8"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_vp4hr"]
 animations = [{
@@ -41,7 +41,7 @@ animations = [{
 "speed": 5.0
 }]
 
-[node name="CharacterView" type="AnimatedSprite2D" unique_id=547970677]
+[node name="BazziView" type="AnimatedSprite2D" unique_id=547970677]
 sprite_frames = SubResource("SpriteFrames_vp4hr")
 animation = &"walk_up"
 centered = false
