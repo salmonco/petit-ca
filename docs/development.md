@@ -69,6 +69,7 @@ addons/gdUnit4/  테스트 프레임워크 (v6.1.3, 커밋에 포함)
 | 칸 | `Vector2i` | 격자 좌표(칸 번호). 화면 좌표는 `Vector2`(픽셀) |
 | 맵 | `Map` | 격자와 그 위에 놓인 것들 |
 | 캐릭터 | `Character` | 칸 단위로 움직이고 물풍선을 놓는다 |
+| NPC | `Npc` | 컴퓨터가 조종하는 캐릭터. 스스로 다음 칸 방향을 정한다 (크아 협공배틀의 좀깡 같은) |
 | 물풍선 | `WaterBalloon` | 캐릭터가 칸에 놓는 것. 시간이 지나면 터진다 |
 | 터지다 | `pop` | `POP_AFTER_SECONDS`, `popped` |
 | 물줄기 | `WaterStream` | 물줄기의 한 칸(타일). `DURATION` 동안 남는다 |
