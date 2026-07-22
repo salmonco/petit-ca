@@ -148,7 +148,7 @@ func test_캐릭터는_기본적으로_물풍선_하나밖에_놓지_못한다()
 	character.move(Vector2i.RIGHT, 0.25, map.water_balloon_positions())
 	assert_bool(character.place_water_balloon(map)).is_false()
 
-func test_캐릭터는_물풍선_아이템을_먹으면_자신이_놓을_수_있는_물풍선의_개수가_하나_증가한다() -> void:
+func test_캐릭터는_물풍선_아이템을_먹으면_물풍선을_하나_더_놓을_수_있다() -> void:
 	var map := Map.new()
 	var character := Character.new(Vector2i(3, 4))
 	map.add_character(character)
@@ -157,3 +157,25 @@ func test_캐릭터는_물풍선_아이템을_먹으면_자신이_놓을_수_있
 	assert_bool(character.place_water_balloon(map)).is_false()
 	character.get_game_item(GameItem.INCREASE_WATER_BALLOON_COUNT)
 	assert_bool(character.place_water_balloon(map)).is_true()
+	assert_bool(character.place_water_balloon(map)).is_false()
+
+func test_캐릭터가_게임_아이템의_위치에_있으면_아이템을_먹을_수_있다() -> void:
+	var map := Map.new()
+	var character := Character.new(Vector2i(5, 1))
+	map.add_character(character)
+	assert_int(character.water_balloon_count).is_equal(1)
+	map.add_game_item(GameItem.INCREASE_WATER_BALLOON_COUNT, Vector2i(5, 2))
+	character.move(Vector2i.DOWN, 0.25, map.water_balloon_positions())
+	map.tick(0.25)
+	assert_int(character.water_balloon_count).is_equal(2)
+
+func test_캐릭터는_물방울에_갇힌_상태에서는_게임_아이템을_먹을_수_없다() -> void:
+	var map := Map.new()
+	var character := Character.new(Vector2i(3, 4))
+	map.add_character(character)
+	character.trapped()
+	assert_int(character.water_balloon_count).is_equal(1)
+	map.add_game_item(GameItem.INCREASE_WATER_BALLOON_COUNT, Vector2i(4, 4))
+	character.move(Vector2i.RIGHT, 0.25, map.water_balloon_positions())
+	map.tick(0.25)
+	assert_int(character.water_balloon_count).is_equal(1)

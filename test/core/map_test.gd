@@ -176,15 +176,6 @@ func test_게임_아이템은_맵의_중복된_위치에_배치할_수_없다() 
 	assert_bool(_map.add_game_item(GameItem.INCREASE_WATER_BALLOON_COUNT, Vector2i(3, 2))).is_true()
 	assert_bool(_map.add_game_item(GameItem.INCREASE_WATER_BALLOON_COUNT, Vector2i(3, 2))).is_false()
 
-func test_캐릭터가_게임_아이템의_위치에_있으면_아이템을_먹을_수_있다() -> void:
-	var character := Character.new(Vector2i(5, 1))
-	_map.add_character(character)
-	assert_int(character.water_balloon_count).is_equal(1)
-	_map.add_game_item(GameItem.INCREASE_WATER_BALLOON_COUNT, Vector2i(5, 2))
-	character.move(Vector2i.DOWN, 0.25, _map.water_balloon_positions())
-	_map.tick(0.25)
-	assert_int(character.water_balloon_count).is_equal(2)
-
 func test_게임_아이템은_물줄기를_맞으면_제거된다() -> void:
 	_map.add_game_item(GameItem.INCREASE_WATER_BALLOON_COUNT, Vector2i(5, 2))
 	assert_bool(_map.has_game_item(Vector2i(5, 2))).is_true()
@@ -192,3 +183,22 @@ func test_게임_아이템은_물줄기를_맞으면_제거된다() -> void:
 	_map.add_water_stream(water_stream)
 	_map.tick(0.1)
 	assert_bool(_map.has_game_item(Vector2i(5, 2))).is_false()
+
+func test_캐릭터가_게임_아이템_위치로_이동하면_아이템이_먹혀_맵에서_사라진다() -> void:
+	var character := Character.new(Vector2i(4, 7))
+	_map.add_character(character)
+	_map.add_game_item(GameItem.INCREASE_WATER_BALLOON_COUNT, Vector2i(4, 8))
+	assert_bool(_map.has_game_item(Vector2i(4, 8))).is_true()
+	character.move(Vector2i.DOWN, 0.25, _map.water_balloon_positions())
+	_map.tick(0.25)
+	assert_bool(_map.has_game_item(Vector2i(4, 8))).is_false()
+
+func test_물방울에_갇힌_캐릭터가_게임_아이템_위치로_이동하면_아이템이_사라지지_않는다() -> void:
+	var character := Character.new(Vector2i(4, 7))
+	_map.add_character(character)
+	_map.add_game_item(GameItem.INCREASE_WATER_BALLOON_COUNT, Vector2i(4, 8))
+	assert_bool(_map.has_game_item(Vector2i(4, 8))).is_true()
+	character.trapped()
+	character.move(Vector2i.DOWN, 0.25, _map.water_balloon_positions())
+	_map.tick(0.25)
+	assert_bool(_map.has_game_item(Vector2i(4, 8))).is_true()

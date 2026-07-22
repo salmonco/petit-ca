@@ -66,6 +66,8 @@ func tick(delta: float) -> void:
 	
 	# 게임 아이템 먹음
 	for character in _characters:
+		if character.is_trapped():
+			continue
 		for game_item in _game_items.duplicate():
 			if character.position() == game_item.position:
 				character.get_game_item(game_item.type)
