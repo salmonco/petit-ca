@@ -81,8 +81,6 @@ func tick(delta: float) -> void:
 func add_water_streams(center_cell: Vector2i) -> void:
 	for direction in WaterStream.DIRECTION:
 		var cell := center_cell + direction
-		if cell in water_stream_positions():
-			continue
 		var water_stream := WaterStream.new(cell, direction)
 		add_water_stream(water_stream)
 
