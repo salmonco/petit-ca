@@ -89,6 +89,14 @@ func test_물방울에_갇힌_상태의_캐릭터는_물풍선을_놓을_수_없
 	map.tick(0.25)
 	assert_bool(character.place_water_balloon(map)).is_false()
 
+func test_물방울에_갇힌_상태의_캐릭터는_이동_속도가_느려진다() -> void:
+	var map := Map.new()
+	var character := Character.new(Vector2i(1, 5))
+	map.add_character(character)
+	assert_float(character.speed).is_not_equal(Character.SPEED_IN_BUBBLE)
+	character.trapped()
+	assert_float(character.speed).is_equal(Character.SPEED_IN_BUBBLE)
+
 # 자동 아웃
 func test_캐릭터가_물방울에_갇히고_일정_시간이_지나면_자동_아웃된다() -> void:
 	var map := Map.new()
