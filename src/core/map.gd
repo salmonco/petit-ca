@@ -59,27 +59,25 @@ func tick(delta: float) -> void:
 			check_trap_character_in_bubble(water_stream)
 
 	# 캐릭터 갇힘
-	for character in _characters:
+	for character in _characters.duplicate():
 		if character.is_trapped():
 			if character.bubble.tick(delta):
 				let_character_out(character)
 	
 	# 게임 아이템 먹음
-	var original_game_items := game_items()
 	for character in _characters:
-		for game_item in original_game_items:
+		for game_item in _game_items.duplicate():
 			if character.position() == game_item.position:
 				character.get_game_item(game_item.type)
 				_remove_game_item(game_item)
 	
 	# 물줄기를 맞은 게임 아이템 제거
-	for game_item in game_items():
+	for game_item in _game_items.duplicate():
 		if water_stream_positions().has(game_item.position):
 			_remove_game_item(game_item)
 
-func add_water_stream(water_stream: WaterStream) -> bool:
+func add_water_stream(water_stream: WaterStream) -> void:
 	_water_streams.append(water_stream)
-	return true
 
 func _remove_water_stream(water_stream: WaterStream) -> void:
 	_water_streams.erase(water_stream)
@@ -112,7 +110,7 @@ func check_trap_character_in_bubble(water_stream: WaterStream) -> void:
 		if character.is_trapped():
 			continue
 		for cell in water_stream.positions():
-			if abs(character.continous_position.x - cell.x) < TRAP_MARGIN and abs(character.continous_position.y - cell.y) < TRAP_MARGIN:
+			if abs(character.continuous_position.x - cell.x) < TRAP_MARGIN and abs(character.continuous_position.y - cell.y) < TRAP_MARGIN:
 				character.trapped()
 
 func has_character(position: Vector2i) -> bool:
