@@ -1,7 +1,14 @@
 class_name Main
 extends Node2D
 
-const WATER_STREAM_COLOR := Color.AQUA
+const WATER_STREAM_TEXTURES: Dictionary[Vector2i, Texture2D] = {
+	Vector2i.ZERO: preload("res://assets/water_streams/center.png"),
+	Vector2i.UP: preload("res://assets/water_streams/up.png"),
+	Vector2i.DOWN: preload("res://assets/water_streams/down.png"),
+	Vector2i.LEFT: preload("res://assets/water_streams/left.png"),
+	Vector2i.RIGHT: preload("res://assets/water_streams/right.png")
+}
+
 const WATER_BALLOON_TEXTURE: Texture2D = preload("res://assets/water_balloons/water_melon.png")
 const GAME_ITEM_WATER_BALLOON_TEXTURE: Texture2D = preload("res://assets/game_items/water_balloon.png")
 
@@ -70,11 +77,12 @@ func _render_water_streams() -> void:
 		water_stream_views.remove_child(view)
 		view.queue_free()
 
-	for cell in map.water_stream_positions():
-		var view := ColorRect.new()
-		view.size = Vector2.ONE * Map.PIXELS_PER_CELL
-		view.color = WATER_STREAM_COLOR
-		view.position = Map.to_pixel(cell)
+	for water_stream in map.water_streams():
+		var view := Sprite2D.new()
+		view.texture = WATER_STREAM_TEXTURES[water_stream.direction]
+		view.scale = Vector2.ONE * (Map.PIXELS_PER_CELL / 42.0)
+		view.position = Map.to_pixel(water_stream.position)
+		view.centered = false
 		water_stream_views.add_child(view)
 
 func _render_game_items() -> void:
