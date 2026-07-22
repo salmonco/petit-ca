@@ -13,9 +13,10 @@ const WATER_BALLOON_TEXTURE: Texture2D = preload("res://assets/water_balloons/wa
 const GAME_ITEM_WATER_BALLOON_TEXTURE: Texture2D = preload("res://assets/game_items/water_balloon.png")
 
 const CHARACTER_VIEW := preload("res://scenes/character_view.tscn")
-var _character_views: Dictionary[Character, CharacterView] = {}
+var view_by_character: Dictionary[Character, CharacterView] = {}
 
 var map := Map.new()
+var player: Character
 @onready var character_views: Node2D = $CharacterViews
 @onready var water_balloon_views: Node2D = $WaterBalloonViews
 @onready var water_stream_views: Node2D = $WaterStreamViews
@@ -23,9 +24,12 @@ var map := Map.new()
 @onready var game_over_label: Label = $CanvasLayer/GameOverLabel
 
 func _ready() -> void:
+	var npc := Npc.new(Vector2i(1, 4))
 	var character := Character.new(Vector2i(10, 6))
+	map.add_character(npc)
 	map.add_character(character)
 	_render_characters()
+	player = character
 	map.add_game_item(GameItem.INCREASE_WATER_BALLOON_COUNT, Vector2i(5, 4))
 	map.add_game_item(GameItem.INCREASE_WATER_BALLOON_COUNT, Vector2i(1, 7))
 	map.add_game_item(GameItem.INCREASE_WATER_BALLOON_COUNT, Vector2i(8, 5))
@@ -43,21 +47,21 @@ func _process(delta: float) -> void:
 
 func _render_characters() -> void:
 	# 사라진 캐릭터의 뷰 정리
-	for character in _character_views.keys():
+	for character in view_by_character.keys():
 		if character not in map.characters():
-			var view: CharacterView = _character_views[character]
-			_character_views.erase(character)
+			var view: CharacterView = view_by_character[character]
+			view_by_character.erase(character)
 			character_views.remove_child(view)
 			view.queue_free()
 	# 새 캐릭터 뷰 생성
 	for character in map.characters():
-		if character not in _character_views:
+		if character not in view_by_character:
 			var view: CharacterView = CHARACTER_VIEW.instantiate()
-			_character_views[character] = view
+			view_by_character[character] = view
 			character_views.add_child(view)
 	# sync하여 position 갱신
 	for character in map.characters():
-		_character_views[character].sync(character)
+		view_by_character[character].sync(character)
 
 func _render_water_balloons() -> void:
 	for view in water_balloon_views.get_children():
@@ -110,8 +114,7 @@ func _render_game_over_label() -> void:
 func handle_key(key: Key) -> void:
 	match key:
 		KEY_SPACE:
-			for character in map.characters():
-				character.place_water_balloon(map)
+			player.place_water_balloon(map)
 			_render_water_balloons()
 
 func _read_move_direction() -> Vector2i:
@@ -126,9 +129,12 @@ func _read_move_direction() -> Vector2i:
 	return Vector2i.ZERO
 
 func tick(delta: float) -> void:
-	var direction := _read_move_direction()
 	for character in map.characters():
-		character.move(direction, delta, map.water_balloon_positions())
+		if character is Npc:
+			character.move(character.decide_move_direction(map), delta, map.water_balloon_positions())
+		else:
+			var direction := _read_move_direction()
+			character.move(direction, delta, map.water_balloon_positions())
 
 	map.tick(delta)
 	_render_water_balloons()

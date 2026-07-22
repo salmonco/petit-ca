@@ -128,7 +128,14 @@ func _remove_character(character: Character) -> void:
 	_characters.erase(character)
 
 func is_game_over() -> bool:
-	return _characters.is_empty()
+	var humans: Array[Character] = []
+	var npcs: Array[Npc] = []
+	for character in _characters:
+		if character is Npc:
+			npcs.append(character)
+		else:
+			humans.append(character)
+	return humans.is_empty() or npcs.is_empty()
 
 func pop_water_balloon(water_balloon: WaterBalloon) -> Vector2i:
 	_remove_water_balloon(water_balloon.position)
@@ -167,3 +174,10 @@ func game_items() -> Array[GameItem]:
 
 func has_game_item(cell: Vector2i) -> bool:
 	return game_items_positions().has(cell)
+
+func water_balloon_count_by_character(character: Character) -> int:
+	var count := 0
+	for water_balloon in _water_balloons.values():
+		if water_balloon.placed_by == character:
+			count += 1
+	return count

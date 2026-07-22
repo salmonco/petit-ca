@@ -8,7 +8,7 @@ var is_out: bool = false
 var bubble: Bubble = null
 var facing: Vector2i = Vector2i.DOWN
 
-var water_balloon_count := 1
+var max_water_balloon_count := 1
 var speed := 4.0
 
 func _init(start_position: Vector2i) -> void:
@@ -34,9 +34,9 @@ func move(direction: Vector2i, delta: float, water_balloon_positions: Array[Vect
 func place_water_balloon(map: Map) -> bool:
 	if is_trapped():
 		return false
-	if map.water_balloon_count() >= water_balloon_count:
+	if map.water_balloon_count_by_character(self) == max_water_balloon_count:
 		return false
-	var water_balloon := WaterBalloon.new(position())
+	var water_balloon := WaterBalloon.new(position(), self)
 	return map.add_water_balloon(water_balloon)
 
 func trapped() -> void:
@@ -59,4 +59,4 @@ func is_trapped() -> bool:
 func get_game_item(type: int) -> void:
 	match type:
 		GameItem.INCREASE_WATER_BALLOON_COUNT:
-			water_balloon_count += 1
+			max_water_balloon_count += 1
