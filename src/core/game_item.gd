@@ -1,4 +1,5 @@
 class_name GameItem
+extends RefCounted
 
 const INCREASE_WATER_BALLOON_COUNT := 1
 

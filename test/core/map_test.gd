@@ -106,6 +106,7 @@ func test_캐릭터가_물방울에_갇혀도_맵에_남아있다() -> void:
 	var character := Character.new(Vector2i(4, 2))
 	_map.add_water_stream(water_stream)
 	_map.add_character(character)
+	_map.tick(0.1)
 	assert_bool(_map.has_character(Vector2i(4, 2))).is_true()
 
 # 자동 아웃
@@ -135,6 +136,7 @@ func test_맵에_캐릭터가_모두_아웃되면_게임을_종료한다() -> vo
 	_map.add_character(character)
 	_map.let_character_out(character)
 	assert_bool(_map.has_character(Vector2i(4, 2))).is_false()
+	assert_bool(_map.is_game_over()).is_true()
 
 # 물줄기 전파
 func test_물풍선이_물줄기_위치에_있으면_같이_터진다() -> void:

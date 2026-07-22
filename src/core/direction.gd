@@ -1,4 +1,5 @@
 class_name Direction
+extends RefCounted
 
 const _DIRECTION: Dictionary[Key, Vector2i] = {
 	KEY_UP: Vector2i.UP,
