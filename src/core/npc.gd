@@ -18,3 +18,17 @@ func decide_move_direction(map: Map) -> Vector2i:
 	if delta_y > 0:
 		return Vector2i.UP
 	return Vector2i.DOWN
+
+func should_place_water_balloon(map: Map) -> bool:
+	var target: Character
+	for character in map.characters():
+		if character != self:
+			target = character
+			break
+	if target == null:
+		return false
+	var delta_x: int = position().x - target.position().x
+	var delta_y: int = position().y - target.position().y
+	if abs(delta_x) <= 1 and abs(delta_y) <= 1:
+		return true
+	return false

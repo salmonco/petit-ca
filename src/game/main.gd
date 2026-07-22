@@ -137,6 +137,8 @@ func tick(delta: float) -> void:
 	for character in map.characters():
 		if character is Npc:
 			character.move(character.decide_move_direction(map), delta, map.water_balloon_positions())
+			if character.should_place_water_balloon(map):
+				character.place_water_balloon(map)
 		else:
 			var direction := _read_move_direction()
 			character.move(direction, delta, map.water_balloon_positions())
