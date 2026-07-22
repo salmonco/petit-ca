@@ -4,9 +4,10 @@ extends RefCounted
 const SPEED_IN_BUBBLE := 1.5
 
 var continuous_position: Vector2
-var color: Color
 var is_out: bool = false
 var bubble: Bubble = null
+var facing: Vector2i = Vector2i.DOWN
+
 var water_balloon_count := 1
 var speed := 4.0
 
@@ -14,6 +15,8 @@ func _init(start_position: Vector2i) -> void:
 	continuous_position = start_position
 
 func move(direction: Vector2i, delta: float, water_balloon_positions: Array[Vector2i]) -> bool:
+	facing = direction
+	
 	var water_balloon_positions_except_character_position: Array[Vector2i] = []
 	for cell in water_balloon_positions:
 		if cell != position():
