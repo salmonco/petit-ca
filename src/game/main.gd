@@ -23,7 +23,9 @@ var player: Character
 @onready var water_balloon_views: Node2D = $WaterBalloonViews
 @onready var water_stream_views: Node2D = $WaterStreamViews
 @onready var game_item_views: Node2D = $GameItemViews
-@onready var game_over_label: Label = $CanvasLayer/GameOverLabel
+@onready var win_label: Label = $CanvasLayer/WinLabel
+@onready var lose_label: Label = $CanvasLayer/LoseLabel
+@onready var draw_label: Label = $CanvasLayer/DrawLabel
 
 func _ready() -> void:
 	var npc := Npc.new(Vector2i(1, 4))
@@ -112,10 +114,9 @@ func _render_game_items() -> void:
 		game_item_views.add_child(view)
 
 func _render_game_over_label() -> void:
-	if battle.is_game_over():
-		game_over_label.visible = true
-	else:
-		game_over_label.visible = false
+	win_label.visible = battle.is_win()
+	lose_label.visible = battle.is_lose()
+	draw_label.visible = battle.is_draw()
 
 func handle_key(key: Key) -> void:
 	match key:

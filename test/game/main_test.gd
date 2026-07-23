@@ -91,13 +91,14 @@ func test_캐릭터가_물방울에_갇힌_후_일정_시간이_지나면_화면
 	assert_int(_main.character_views.get_child_count()).is_equal(original_count - 1)
 
 # 게임 오버
-func test_게임이_종료되면_게임_오버_텍스트가_표시된다() -> void:
+func test_게임에서_지면_졌다는_텍스트가_표시된다() -> void:
 	_main.handle_key(KEY_SPACE)
 	_main.tick(WaterBalloon.POP_AFTER_SECONDS)
 	_main.tick(WaterStream.DURATION * 0.5)
-	assert_bool(_main.game_over_label.visible).is_false()
+	assert_bool(_main.lose_label.visible).is_false()
 	_main.tick(Bubble.ALIVE_SECONDS * 5.0)
-	assert_bool(_main.game_over_label.visible).is_true()
+	assert_bool(_main.lose_label.visible).is_true()
 
+# 게임 아이템
 func test_게임_시작_시_맵의_특정_위치에_게임_아이템이_표시된다() -> void:
 	assert_that((_main.game_item_views.get_child(0) as Sprite2D).texture).is_equal(_main.GAME_ITEM_WATER_BALLOON_TEXTURE)

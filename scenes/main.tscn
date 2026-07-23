@@ -19,13 +19,38 @@ script = ExtResource("2_0wfyh")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=186979635]
 
-[node name="GameOverLabel" type="Label" parent="CanvasLayer" unique_id=755147775]
+[node name="LoseLabel" type="Label" parent="CanvasLayer" unique_id=755147775]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_colors/font_color = Color(0.74509805, 0.74509805, 0.74509805, 1)
 theme_override_font_sizes/font_size = 70
-text = "GAME OVER"
+text = "LOSE!!"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="WinLabel" type="Label" parent="CanvasLayer" unique_id=1026451551]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0, 0, 1, 1)
+theme_override_font_sizes/font_size = 70
+text = "WIN!!"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="DrawLabel" type="Label" parent="CanvasLayer" unique_id=718997148]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0, 1, 0, 1)
+theme_override_font_sizes/font_size = 70
+text = "DRAW!!"
 horizontal_alignment = 1
 vertical_alignment = 1
