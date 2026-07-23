@@ -49,6 +49,13 @@ func tick(delta: float) -> void:
 			add_water_streams(cell)
 			check_trap_character_in_bubble(cell)
 
+	# 물방울 tick
+	for character in _characters.duplicate():
+		if character.is_trapped():
+			if character.bubble.tick(delta):
+				# 자동 아웃
+				let_character_out(character)
+	
 	# 물줄기 연쇄
 	while true:
 		var cells := check_pop_water_balloons()
@@ -57,13 +64,32 @@ func tick(delta: float) -> void:
 		for cell: Vector2i in cells:
 			add_water_streams(cell)
 			check_trap_character_in_bubble(cell)
-
-	# 캐릭터 갇힘
-	for character in _characters.duplicate():
-		if character.is_trapped():
-			if character.bubble.tick(delta):
-				let_character_out(character)
 	
+	# 상대방 킬
+	var trapped_humans: Array[Character] = []
+	var alive_humans: Array[Character] = []
+	var trapped_npcs: Array[Npc] = []
+	var alive_npcs: Array[Npc] = []
+	for character in _characters:
+		if character is Npc:
+			if character.is_trapped():
+				trapped_npcs.append(character)
+			else:
+				alive_npcs.append(character)
+		else:
+			if character.is_trapped():
+				trapped_humans.append(character)
+			else:
+				alive_humans.append(character)
+	for trapped_human in trapped_humans:
+		for alive_npc in alive_npcs:
+			if trapped_human.position() == alive_npc.position():
+				let_character_out(trapped_human)
+	for trapped_npc in trapped_npcs:
+		for alive_human in alive_humans:
+			if trapped_npc.position() == alive_human.position():
+				let_character_out(trapped_npc)
+
 	# 게임 아이템 먹음
 	for character in _characters:
 		if character.is_trapped():
