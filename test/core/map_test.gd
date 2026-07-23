@@ -122,25 +122,6 @@ func test_캐릭터가_물방울에_갇힌_후_일정_시간이_지나면_자동
 	_map.tick(Bubble.ALIVE_SECONDS * 1.5)
 	assert_bool(_map.has_character(Vector2i(4, 2))).is_false()
 
-# 게임 오버
-func test_맵에_인간_캐릭터가_아웃되면_게임을_종료한다() -> void:
-	var npc := Npc.new(Vector2i(9, 10))
-	var character := Character.new(Vector2i(4, 2))
-	_map.add_character(npc)
-	_map.add_character(character)
-	assert_bool(_map.is_game_over()).is_false()
-	_map.let_character_out(character)
-	assert_bool(_map.is_game_over()).is_true()
-
-func test_맵에_NPC가_아웃되면_게임을_종료한다() -> void:
-	var npc := Npc.new(Vector2i(9, 10))
-	var character := Character.new(Vector2i(4, 2))
-	_map.add_character(npc)
-	_map.add_character(character)
-	assert_bool(_map.is_game_over()).is_false()
-	_map.let_character_out(npc)
-	assert_bool(_map.is_game_over()).is_true()
-
 # 물줄기 전파
 func test_물풍선이_물줄기_위치에_있으면_같이_터진다() -> void:
 	var water_balloon := WaterBalloon.new(Vector2i(4, 2), null)

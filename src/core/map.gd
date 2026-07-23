@@ -153,16 +153,6 @@ func has_character(position: Vector2i) -> bool:
 func _remove_character(character: Character) -> void:
 	_characters.erase(character)
 
-func is_game_over() -> bool:
-	var humans: Array[Character] = []
-	var npcs: Array[Npc] = []
-	for character in _characters:
-		if character is Npc:
-			npcs.append(character)
-		else:
-			humans.append(character)
-	return humans.is_empty() or npcs.is_empty()
-
 func pop_water_balloon(water_balloon: WaterBalloon) -> Vector2i:
 	_remove_water_balloon(water_balloon.position)
 	return water_balloon.position

@@ -17,6 +17,7 @@ const BAZZI_VIEW := preload("res://scenes/bazzi_view.tscn")
 var view_by_character: Dictionary[Character, CharacterView] = {}
 
 var map := Map.new()
+var battle := Battle.new(map)
 var player: Character
 @onready var character_views: Node2D = $CharacterViews
 @onready var water_balloon_views: Node2D = $WaterBalloonViews
@@ -111,7 +112,7 @@ func _render_game_items() -> void:
 		game_item_views.add_child(view)
 
 func _render_game_over_label() -> void:
-	if map.is_game_over():
+	if battle.is_game_over():
 		game_over_label.visible = true
 	else:
 		game_over_label.visible = false
