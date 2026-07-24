@@ -1,13 +1,56 @@
 [gd_scene format=3 uid="uid://c6nenbqmhi32f"]
 
 [ext_resource type="Script" uid="uid://djf8wpol6eu3x" path="res://src/game/main.gd" id="1_o5qli"]
+[ext_resource type="Script" uid="uid://cmdsr0rotu0oi" path="res://src/game/grid_view.gd" id="2_0wfyh"]
 
 [node name="Main" type="Node2D" unique_id=1626530598]
 script = ExtResource("1_o5qli")
 
-[node name="CharacterView" type="ColorRect" parent="." unique_id=2024878780]
-offset_left = 274.0
-offset_top = 136.0
-offset_right = 338.0
-offset_bottom = 200.0
-color = Color(0.6136402, 0.9997677, 0.65927935, 1)
+[node name="GridView" type="Node2D" parent="." unique_id=1793967474]
+script = ExtResource("2_0wfyh")
+
+[node name="WaterStreamViews" type="Node2D" parent="." unique_id=651358261]
+
+[node name="WaterBalloonViews" type="Node2D" parent="." unique_id=1345253768]
+
+[node name="GameItemViews" type="Node2D" parent="." unique_id=1902110163]
+
+[node name="CharacterViews" type="Node2D" parent="." unique_id=988063781]
+
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=186979635]
+
+[node name="LoseLabel" type="Label" parent="CanvasLayer" unique_id=755147775]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.74509805, 0.74509805, 0.74509805, 1)
+theme_override_font_sizes/font_size = 70
+text = "LOSE!!"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="WinLabel" type="Label" parent="CanvasLayer" unique_id=1026451551]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0, 0, 1, 1)
+theme_override_font_sizes/font_size = 70
+text = "WIN!!"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="DrawLabel" type="Label" parent="CanvasLayer" unique_id=718997148]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0, 1, 0, 1)
+theme_override_font_sizes/font_size = 70
+text = "DRAW!!"
+horizontal_alignment = 1
+vertical_alignment = 1
