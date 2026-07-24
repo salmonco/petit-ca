@@ -9,6 +9,7 @@ var bubble: Bubble = null
 var facing: Vector2i = Vector2i.DOWN
 
 var max_water_balloon_count := 1
+var max_water_stream_length := 1
 var speed := 4.0
 
 func _init(start_position: Vector2i) -> void:
@@ -60,3 +61,5 @@ func get_game_item(type: int) -> void:
 	match type:
 		GameItem.INCREASE_WATER_BALLOON_COUNT:
 			max_water_balloon_count += 1
+		GameItem.INCREASE_WATER_STREAM_LENGTH:
+			max_water_stream_length += 1

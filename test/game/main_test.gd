@@ -53,14 +53,6 @@ func test_물풍선_하나가_터질_때_물줄기가_5칸_보인다() -> void:
 	_main.tick(WaterBalloon.POP_AFTER_SECONDS)
 	assert_int(_main.water_stream_views.get_child_count()).is_equal(5)
 
-func test_물줄기_5칸_마다_텍스쳐가_다르게_보인다() -> void:
-	_main.handle_key(KEY_SPACE)
-	_main.tick(WaterBalloon.POP_AFTER_SECONDS)
-	var textures := {}
-	for view: Sprite2D in _main.water_stream_views.get_children():
-		textures[view.texture] = true
-	assert_int(textures.size()).is_equal(5)
-
 func test_물줄기_방향에_맞는_텍스쳐가_보인다() -> void:
 	_main.handle_key(KEY_SPACE)
 	_main.tick(WaterBalloon.POP_AFTER_SECONDS)
@@ -68,11 +60,11 @@ func test_물줄기_방향에_맞는_텍스쳐가_보인다() -> void:
 	for view: Sprite2D in _main.water_stream_views.get_children():
 		cells[view.position] = view.texture
 	var center_cell := _main.player.position()
-	assert_that(cells[Map.to_pixel(center_cell)]).is_equal(_main.WATER_STREAM_TEXTURES[Vector2i.ZERO])
-	assert_that(cells[Map.to_pixel(center_cell + Vector2i.UP)]).is_equal(_main.WATER_STREAM_TEXTURES[Vector2i.UP])
-	assert_that(cells[Map.to_pixel(center_cell + Vector2i.DOWN)]).is_equal(_main.WATER_STREAM_TEXTURES[Vector2i.DOWN])
-	assert_that(cells[Map.to_pixel(center_cell + Vector2i.LEFT)]).is_equal(_main.WATER_STREAM_TEXTURES[Vector2i.LEFT])
-	assert_that(cells[Map.to_pixel(center_cell + Vector2i.RIGHT)]).is_equal(_main.WATER_STREAM_TEXTURES[Vector2i.RIGHT])
+	assert_that(cells[Map.to_pixel_center(center_cell)]).is_equal(_main.WATER_STREAM_TEXTURES["center"])
+	assert_that(cells[Map.to_pixel_center(center_cell + Vector2i.UP)]).is_equal(_main.WATER_STREAM_TEXTURES["end"])
+	assert_that(cells[Map.to_pixel_center(center_cell + Vector2i.DOWN)]).is_equal(_main.WATER_STREAM_TEXTURES["end"])
+	assert_that(cells[Map.to_pixel_center(center_cell + Vector2i.LEFT)]).is_equal(_main.WATER_STREAM_TEXTURES["end"])
+	assert_that(cells[Map.to_pixel_center(center_cell + Vector2i.RIGHT)]).is_equal(_main.WATER_STREAM_TEXTURES["end"])
 
 # 물방울에 갇힘
 func test_캐릭터는_물줄기를_맞으면_물방울에_갇혀_보인다() -> void:

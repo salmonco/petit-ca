@@ -10,8 +10,11 @@ var _water_balloons: Dictionary[Vector2i, WaterBalloon] = {}
 var _water_streams: Array[WaterStream] = []
 var _game_items: Array[GameItem] = []
 
-static func to_pixel(grid: Vector2i) -> Vector2:
-	return Vector2(grid) * PIXELS_PER_CELL
+static func to_pixel(cell: Vector2i) -> Vector2:
+	return Vector2(cell) * PIXELS_PER_CELL
+
+static func to_pixel_center(cell: Vector2i) -> Vector2:
+	return to_pixel(cell) + Vector2.ONE * (Map.PIXELS_PER_CELL / 2.0)
 
 func add_water_balloon(water_balloon: WaterBalloon) -> bool:
 	if has_water_balloon(water_balloon.position):
@@ -45,9 +48,9 @@ func tick(delta: float) -> void:
 	# 물풍선 tick
 	for water_balloon: WaterBalloon in _water_balloons.values():
 		if water_balloon.tick(delta):
-			var cell := pop_water_balloon(water_balloon)
-			add_water_streams(cell)
-			check_trap_character_in_bubble(cell)
+			_remove_water_balloon(water_balloon.position)
+			add_water_streams(water_balloon.position, water_balloon.stream_length)
+			check_trap_character_in_bubble(water_balloon.position)
 
 	# 물방울 tick
 	for character in _characters.duplicate():
@@ -58,12 +61,12 @@ func tick(delta: float) -> void:
 	
 	# 물줄기 연쇄
 	while true:
-		var cells := check_pop_water_balloons()
-		if cells.is_empty():
+		var popped_water_balloons := check_pop_water_balloons()
+		if popped_water_balloons.is_empty():
 			break
-		for cell: Vector2i in cells:
-			add_water_streams(cell)
-			check_trap_character_in_bubble(cell)
+		for water_balloon: WaterBalloon in popped_water_balloons:
+			add_water_streams(water_balloon.position, water_balloon.stream_length)
+			check_trap_character_in_bubble(water_balloon.position)
 	
 	# 상대방 킬
 	var trapped_humans: Array[Character] = []
@@ -104,11 +107,19 @@ func tick(delta: float) -> void:
 		if water_stream_positions().has(game_item.position):
 			_remove_game_item(game_item)
 
-func add_water_streams(center_cell: Vector2i) -> void:
-	for direction in WaterStream.DIRECTION:
-		var cell := center_cell + direction
-		var water_stream := WaterStream.new(cell, direction)
-		add_water_stream(water_stream)
+func add_water_streams(center_cell: Vector2i, length: int) -> void:
+	var center_water_stream := WaterStream.new(center_cell, Vector2i.ZERO, "center")
+	add_water_stream(center_water_stream)
+	for depth in range(1, length + 1):
+		for direction in WaterStream.DIRECTION:
+			var cell := center_cell + direction * depth
+			var position_type: String
+			if depth == length:
+				position_type = "end"
+			else:
+				position_type = "straight"
+			var water_stream := WaterStream.new(cell, direction, position_type)
+			add_water_stream(water_stream)
 
 func add_water_stream(water_stream: WaterStream) -> void:
 	_water_streams.append(water_stream)
@@ -153,17 +164,13 @@ func has_character(position: Vector2i) -> bool:
 func _remove_character(character: Character) -> void:
 	_characters.erase(character)
 
-func pop_water_balloon(water_balloon: WaterBalloon) -> Vector2i:
-	_remove_water_balloon(water_balloon.position)
-	return water_balloon.position
-
-func check_pop_water_balloons() -> Array[Vector2i]:
-	var cells: Array[Vector2i] = []
+func check_pop_water_balloons() -> Array[WaterBalloon]:
+	var popped_water_balloons: Array[WaterBalloon] = []
 	for water_balloon: WaterBalloon in _water_balloons.values():
-		if water_stream_positions().has(water_balloon.position):
-			var cell := pop_water_balloon(water_balloon)
-			cells.append(cell)
-	return cells
+		if water_balloon.position in water_stream_positions():
+			_remove_water_balloon(water_balloon.position)
+			popped_water_balloons.append(water_balloon)
+	return popped_water_balloons
 
 func let_character_out(character: Character) -> void:
 	character.out()

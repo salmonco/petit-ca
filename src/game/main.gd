@@ -1,16 +1,14 @@
 class_name Main
 extends Node2D
 
-const WATER_STREAM_TEXTURES: Dictionary[Vector2i, Texture2D] = {
-	Vector2i.ZERO: preload("res://assets/water_streams/center.png"),
-	Vector2i.UP: preload("res://assets/water_streams/up.png"),
-	Vector2i.DOWN: preload("res://assets/water_streams/down.png"),
-	Vector2i.LEFT: preload("res://assets/water_streams/left.png"),
-	Vector2i.RIGHT: preload("res://assets/water_streams/right.png")
+const WATER_STREAM_TEXTURES: Dictionary[String, Texture2D] = {
+	"center": preload("res://assets/water_streams/center.png"),
+	"straight": preload("res://assets/water_streams/straight_up.png"),
+	"end": preload("res://assets/water_streams/end_up.png"),
 }
-
 const WATER_BALLOON_TEXTURE: Texture2D = preload("res://assets/water_balloons/water_melon.png")
 const GAME_ITEM_WATER_BALLOON_TEXTURE: Texture2D = preload("res://assets/game_items/water_balloon.png")
+const GAME_ITEM_WHITE_POTION_TEXTURE: Texture2D = preload("res://assets/game_items/white_potion.png")
 
 const ZOMKKAN_VIEW := preload("res://scenes/zomkkan_view.tscn")
 const BAZZI_VIEW := preload("res://scenes/bazzi_view.tscn")
@@ -34,11 +32,17 @@ func _ready() -> void:
 	map.add_character(character)
 	_render_characters()
 	player = character
+	# 물풍선 아이템 배치
 	map.add_game_item(GameItem.INCREASE_WATER_BALLOON_COUNT, Vector2i(5, 4))
 	map.add_game_item(GameItem.INCREASE_WATER_BALLOON_COUNT, Vector2i(1, 7))
 	map.add_game_item(GameItem.INCREASE_WATER_BALLOON_COUNT, Vector2i(8, 5))
 	map.add_game_item(GameItem.INCREASE_WATER_BALLOON_COUNT, Vector2i(13, 12))
 	map.add_game_item(GameItem.INCREASE_WATER_BALLOON_COUNT, Vector2i(12, 6))
+	# 물줄기 아이템 배치
+	map.add_game_item(GameItem.INCREASE_WATER_STREAM_LENGTH, Vector2i(11, 6))
+	map.add_game_item(GameItem.INCREASE_WATER_STREAM_LENGTH, Vector2i(1, 3))
+	map.add_game_item(GameItem.INCREASE_WATER_STREAM_LENGTH, Vector2i(15, 13))
+	map.add_game_item(GameItem.INCREASE_WATER_STREAM_LENGTH, Vector2i(10, 9))
 	_render_game_items()
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -91,10 +95,16 @@ func _render_water_streams() -> void:
 
 	for water_stream in map.water_streams():
 		var view := Sprite2D.new()
-		view.texture = WATER_STREAM_TEXTURES[water_stream.direction]
+		view.texture = WATER_STREAM_TEXTURES[water_stream.position_type]
+		match water_stream.direction:
+			Vector2i.DOWN:
+				view.flip_v = true
+			Vector2i.LEFT:
+				view.rotation_degrees = -90
+			Vector2i.RIGHT:
+				view.rotation_degrees = 90
 		view.scale = Vector2.ONE * (Map.PIXELS_PER_CELL / 42.0)
-		view.position = Map.to_pixel(water_stream.position)
-		view.centered = false
+		view.position = Map.to_pixel(water_stream.position) + Vector2.ONE * (Map.PIXELS_PER_CELL / 2.0)
 		water_stream_views.add_child(view)
 
 func _render_game_items() -> void:
@@ -107,9 +117,11 @@ func _render_game_items() -> void:
 		match game_item.type:
 			GameItem.INCREASE_WATER_BALLOON_COUNT:
 				view.texture = GAME_ITEM_WATER_BALLOON_TEXTURE
-				view.scale = Vector2.ONE * (Map.PIXELS_PER_CELL / 100.0)
-				view.position = Map.to_pixel(game_item.position) + Vector2(Map.PIXELS_PER_CELL / 2.0, Map.PIXELS_PER_CELL)
-				view.offset = Vector2(-50, -106) # (-w/2, -h)
+			GameItem.INCREASE_WATER_STREAM_LENGTH:
+				view.texture = GAME_ITEM_WHITE_POTION_TEXTURE
+		view.scale = Vector2.ONE * (Map.PIXELS_PER_CELL / 64.0)
+		view.position = Map.to_pixel(game_item.position) + Vector2(Map.PIXELS_PER_CELL / 2.0, Map.PIXELS_PER_CELL)
+		view.offset = Vector2(-32, -96) # (-w/2, -h)
 		view.centered = false
 		game_item_views.add_child(view)
 
