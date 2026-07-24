@@ -94,3 +94,16 @@ func test_게임에서_지면_졌다는_텍스트가_표시된다() -> void:
 # 게임 아이템
 func test_게임_시작_시_맵의_특정_위치에_게임_아이템이_표시된다() -> void:
 	assert_that((_main.game_item_views.get_child(0) as Sprite2D).texture).is_equal(_main.GAME_ITEM_WATER_BALLOON_TEXTURE)
+
+# 물풍선 비주얼
+func test_NPC가_놓은_물풍선은_플레이어의_것과_다른_텍스처로_보인다() -> void:
+	_main.handle_key(KEY_SPACE)
+	var npc_cell := _main.npc.position()
+	var player_cell := _main.player.position()
+	_main.npc.place_water_balloon(_main.map)
+	_main.tick(0.1)
+	var textures := {}
+	for view: Sprite2D in _main.water_balloon_views.get_children():
+		textures[view.position] = view.texture
+	assert_that(textures[Map.to_pixel(player_cell)]).is_equal(_main.PLAYER_WATER_BALLOON_TEXTURE)
+	assert_that(textures[Map.to_pixel(npc_cell)]).is_equal(_main.NPC_WATER_BALLOON_TEXTURE)

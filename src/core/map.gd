@@ -34,6 +34,9 @@ func water_balloon_count() -> int:
 func water_balloon_positions() -> Array[Vector2i]:
 	return _water_balloons.keys()
 
+func water_balloons() -> Array[WaterBalloon]:
+	return _water_balloons.values()
+
 func tick(delta: float) -> void:
 	# 물줄기 tick
 	var expired_water_streams: Array[WaterStream] = []

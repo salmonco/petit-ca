@@ -6,7 +6,10 @@ const WATER_STREAM_TEXTURES: Dictionary[String, Texture2D] = {
 	"straight": preload("res://assets/water_streams/straight_up.png"),
 	"end": preload("res://assets/water_streams/end_up.png"),
 }
-const WATER_BALLOON_TEXTURE: Texture2D = preload("res://assets/water_balloons/water_melon.png")
+const WATER_BALLOON_WATER_MELON_TEXTURE: Texture2D = preload("res://assets/water_balloons/water_melon.png")
+const WATER_BALLOON_NIGHTMARE_TEXTURE: Texture2D = preload("res://assets/water_balloons/nightmare.png")
+const PLAYER_WATER_BALLOON_TEXTURE := WATER_BALLOON_WATER_MELON_TEXTURE
+const NPC_WATER_BALLOON_TEXTURE := WATER_BALLOON_NIGHTMARE_TEXTURE
 const GAME_ITEM_WATER_BALLOON_TEXTURE: Texture2D = preload("res://assets/game_items/water_balloon.png")
 const GAME_ITEM_WHITE_POTION_TEXTURE: Texture2D = preload("res://assets/game_items/white_potion.png")
 
@@ -17,6 +20,7 @@ var view_by_character: Dictionary[Character, CharacterView] = {}
 var map := Map.new()
 var battle := Battle.new(map)
 var player: Character
+var npc: Npc
 @onready var character_views: Node2D = $CharacterViews
 @onready var water_balloon_views: Node2D = $WaterBalloonViews
 @onready var water_stream_views: Node2D = $WaterStreamViews
@@ -26,12 +30,13 @@ var player: Character
 @onready var draw_label: Label = $CanvasLayer/DrawLabel
 
 func _ready() -> void:
-	var npc := Npc.new(Vector2i(1, 4))
-	var character := Character.new(Vector2i(10, 6))
-	map.add_character(npc)
-	map.add_character(character)
+	var monster := Npc.new(Vector2i(1, 4))
+	var human := Character.new(Vector2i(10, 6))
+	map.add_character(monster)
+	map.add_character(human)
 	_render_characters()
-	player = character
+	player = human
+	npc = monster
 	# 물풍선 아이템 배치
 	map.add_game_item(GameItem.INCREASE_WATER_BALLOON_COUNT, Vector2i(5, 4))
 	map.add_game_item(GameItem.INCREASE_WATER_BALLOON_COUNT, Vector2i(1, 7))
@@ -80,11 +85,14 @@ func _render_water_balloons() -> void:
 		water_balloon_views.remove_child(view)
 		view.queue_free()
 
-	for cell in map.water_balloon_positions():
+	for water_balloon in map.water_balloons():
 		var view := Sprite2D.new()
-		view.texture = WATER_BALLOON_TEXTURE
+		if water_balloon.placed_by is Npc:
+			view.texture = NPC_WATER_BALLOON_TEXTURE
+		else:
+			view.texture = PLAYER_WATER_BALLOON_TEXTURE
 		view.scale = Vector2.ONE * (Map.PIXELS_PER_CELL / 42.0)
-		view.position = Map.to_pixel(cell)
+		view.position = Map.to_pixel(water_balloon.position)
 		view.centered = false
 		water_balloon_views.add_child(view)
 
