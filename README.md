@@ -24,4 +24,6 @@
 
 ---
 
+플레이 링크: https://petit-ca.vercel.app/
+
 개발에 참여하시려면 [개발 가이드](docs/development.md)를 보세요.
