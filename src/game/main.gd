@@ -134,9 +134,9 @@ func _render_game_items() -> void:
 		game_item_views.add_child(view)
 
 func _render_game_over_label() -> void:
-	win_label.visible = battle.is_win()
-	lose_label.visible = battle.is_lose()
-	draw_label.visible = battle.is_draw()
+	win_label.visible = battle.is_game_over() and battle.result_type == "win"
+	lose_label.visible = battle.is_game_over() and battle.result_type == "lose"
+	draw_label.visible = battle.is_game_over() and battle.result_type == "draw"
 
 func handle_key(key: Key) -> void:
 	match key:
@@ -165,7 +165,7 @@ func tick(delta: float) -> void:
 			var direction := _read_move_direction()
 			character.move(direction, delta, map.water_balloon_positions())
 
-	map.tick(delta)
+	battle.tick(delta)
 	_render_water_balloons()
 	_render_water_streams()
 	_render_characters()

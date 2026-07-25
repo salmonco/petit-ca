@@ -2,12 +2,26 @@ class_name Battle
 extends RefCounted
 
 var _map: Map
+var result_type: String = "" # "win" | "lose" | "draw"
 
 func _init(map: Map) -> void:
 	_map = map
 
+func tick(delta: float) -> void:
+	_map.tick(delta)
+	if not is_game_over():
+		check_game_over()
+
 func is_game_over() -> bool:
-	return not _has_human() or not _has_npc()
+	return result_type != ""
+
+func check_game_over() -> void:
+	if is_win():
+		result_type = "win"
+	if is_lose():
+		result_type = "lose"
+	if is_draw():
+		result_type = "draw"
 
 func is_win() -> bool:
 	return _has_human() and not _has_npc()
