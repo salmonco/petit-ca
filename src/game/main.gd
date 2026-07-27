@@ -12,6 +12,7 @@ const PLAYER_WATER_BALLOON_TEXTURE := WATER_BALLOON_WATER_MELON_TEXTURE
 const NPC_WATER_BALLOON_TEXTURE := WATER_BALLOON_NIGHTMARE_TEXTURE
 const GAME_ITEM_WATER_BALLOON_TEXTURE: Texture2D = preload("res://assets/game_items/water_balloon.png")
 const GAME_ITEM_WHITE_POTION_TEXTURE: Texture2D = preload("res://assets/game_items/white_potion.png")
+const GAME_ITEM_SPEED_TEXTURE: Texture2D = preload("res://assets/game_items/speed.png")
 
 const ZOMKKAN_VIEW := preload("res://scenes/zomkkan_view.tscn")
 const BAZZI_VIEW := preload("res://scenes/bazzi_view.tscn")
@@ -48,6 +49,11 @@ func _ready() -> void:
 	map.add_game_item(GameItem.INCREASE_WATER_STREAM_LENGTH, Vector2i(1, 3))
 	map.add_game_item(GameItem.INCREASE_WATER_STREAM_LENGTH, Vector2i(15, 13))
 	map.add_game_item(GameItem.INCREASE_WATER_STREAM_LENGTH, Vector2i(10, 9))
+	# 스피드 아이템 배치
+	map.add_game_item(GameItem.INCREASE_SPEED, Vector2i(9, 9))
+	map.add_game_item(GameItem.INCREASE_SPEED, Vector2i(5, 9))
+	map.add_game_item(GameItem.INCREASE_SPEED, Vector2i(1, 1))
+	map.add_game_item(GameItem.INCREASE_SPEED, Vector2i(14, 1))
 	_render_game_items()
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -127,6 +133,8 @@ func _render_game_items() -> void:
 				view.texture = GAME_ITEM_WATER_BALLOON_TEXTURE
 			GameItem.INCREASE_WATER_STREAM_LENGTH:
 				view.texture = GAME_ITEM_WHITE_POTION_TEXTURE
+			GameItem.INCREASE_SPEED:
+				view.texture = GAME_ITEM_SPEED_TEXTURE
 		view.scale = Vector2.ONE * (Map.PIXELS_PER_CELL / 64.0)
 		view.position = Map.to_pixel(game_item.position) + Vector2(Map.PIXELS_PER_CELL / 2.0, Map.PIXELS_PER_CELL)
 		view.offset = Vector2(-32, -96) # (-w/2, -h)

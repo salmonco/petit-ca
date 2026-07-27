@@ -1,7 +1,7 @@
 class_name Character
 extends RefCounted
 
-const SPEED_IN_BUBBLE := 1.5
+const SPEED_IN_BUBBLE := 1.0
 
 var continuous_position: Vector2
 var is_out: bool = false
@@ -24,7 +24,12 @@ func move(direction: Vector2i, delta: float, water_balloon_positions: Array[Vect
 		if cell != position():
 			water_balloon_positions_except_character_position.append(cell)
 	
-	var new_position := continuous_position + direction * speed * delta
+	var character_speed: float
+	if is_trapped():
+		character_speed = SPEED_IN_BUBBLE
+	else:
+		character_speed = speed
+	var new_position := continuous_position + direction * character_speed * delta
 	var clamped_position := new_position.clamp(Vector2i.ZERO, Map.GRID_SIZE - Vector2i.ONE)
 	var cell := Vector2i(clamped_position.round())
 	if water_balloon_positions_except_character_position.has(cell):
@@ -42,7 +47,9 @@ func place_water_balloon(map: Map) -> bool:
 
 func trapped() -> void:
 	bubble = Bubble.new()
-	speed = SPEED_IN_BUBBLE
+
+func rescued() -> void:
+	bubble = null
 
 func out() -> void:
 	bubble = null
@@ -63,3 +70,5 @@ func get_game_item(type: int) -> void:
 			max_water_balloon_count += 1
 		GameItem.INCREASE_WATER_STREAM_LENGTH:
 			max_water_stream_length += 1
+		GameItem.INCREASE_SPEED:
+			speed += 0.5

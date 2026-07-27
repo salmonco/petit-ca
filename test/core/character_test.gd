@@ -92,9 +92,12 @@ func test_물방울에_갇힌_상태의_캐릭터는_이동_속도가_느려진�
 	var map := Map.new()
 	var character := Character.new(Vector2i(1, 5))
 	map.add_character(character)
-	assert_float(character.speed).is_not_equal(Character.SPEED_IN_BUBBLE)
+	assert_vector(character.position()).is_equal(Vector2i(1, 5))
+	character.move(Vector2i.RIGHT, 0.25, map.water_balloon_positions())
+	assert_vector(character.position()).is_equal(Vector2i(2, 5))
 	character.trapped()
-	assert_float(character.speed).is_equal(Character.SPEED_IN_BUBBLE)
+	character.move(Vector2i.RIGHT, 0.25, map.water_balloon_positions())
+	assert_vector(character.position()).is_not_equal(Vector2i(3, 5))
 
 # 자동 아웃
 func test_캐릭터가_물방울에_갇히고_일정_시간이_지나면_자동_아웃된다() -> void:
@@ -205,6 +208,28 @@ func test_캐릭터가_물줄기_아이템을_먹으면_물줄기가_한_칸_증
 	assert_int(character.max_water_stream_length).is_equal(1)
 	character.get_game_item(GameItem.INCREASE_WATER_STREAM_LENGTH)
 	assert_int(character.max_water_stream_length).is_equal(2)
+
+func test_캐릭터가_스피드_아이템을_먹으면_스피드가_증가한다() -> void:
+	var map := Map.new()
+	var character := Character.new(Vector2i(3, 4))
+	map.add_character(character)
+	assert_float(character.speed).is_equal(4.0)
+	character.get_game_item(GameItem.INCREASE_SPEED)
+	assert_float(character.speed).is_equal(4.5)
+
+func test_캐릭터가_물방울에_갇혔다가_풀려나면_원래의_스피드로_돌아온다() -> void:
+	var map := Map.new()
+	var character := Character.new(Vector2i(3, 4))
+	map.add_character(character)
+	character.move(Vector2i.RIGHT, 0.25, map.water_balloon_positions())
+	assert_vector(character.position()).is_equal(Vector2i(4, 4))
+	character.trapped()
+	character.move(Vector2i.RIGHT, 0.25, map.water_balloon_positions())
+	var position := Vector2(4, 4) + Vector2.RIGHT * Character.SPEED_IN_BUBBLE * 0.25
+	assert_vector(character.continuous_position).is_equal(position)
+	character.rescued()
+	character.move(Vector2i.RIGHT, 0.25, map.water_balloon_positions())
+	assert_vector(character.continuous_position).is_equal(position + Vector2.RIGHT * character.speed * 0.25)
 
 # 얼굴 방향
 func test_캐릭터가_위쪽으로_이동하면_얼굴_방향이_위쪽이_된다() -> void:

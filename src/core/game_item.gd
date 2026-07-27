@@ -3,6 +3,7 @@ extends RefCounted
 
 const INCREASE_WATER_BALLOON_COUNT := 1
 const INCREASE_WATER_STREAM_LENGTH := 2
+const INCREASE_SPEED := 3
 
 var type: int
 var position: Vector2i
