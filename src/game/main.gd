@@ -31,8 +31,8 @@ var npc: Npc
 @onready var draw_label: Label = $CanvasLayer/DrawLabel
 
 func _ready() -> void:
-	var monster := Npc.new(Vector2i(1, 4))
-	var human := Character.new(Vector2i(10, 6))
+	var monster := Npc.new(Vector2i(1, 6))
+	var human := Character.new(Vector2i(13, 6))
 	map.add_character(monster)
 	map.add_character(human)
 	_render_characters()
@@ -44,16 +44,22 @@ func _ready() -> void:
 	map.add_game_item(GameItem.INCREASE_WATER_BALLOON_COUNT, Vector2i(8, 5))
 	map.add_game_item(GameItem.INCREASE_WATER_BALLOON_COUNT, Vector2i(13, 12))
 	map.add_game_item(GameItem.INCREASE_WATER_BALLOON_COUNT, Vector2i(12, 6))
+	map.add_game_item(GameItem.INCREASE_WATER_BALLOON_COUNT, Vector2i(15, 1))
+	map.add_game_item(GameItem.INCREASE_WATER_BALLOON_COUNT, Vector2i(0, 11))
+	map.add_game_item(GameItem.INCREASE_WATER_BALLOON_COUNT, Vector2i(11, 11))
+	map.add_game_item(GameItem.INCREASE_WATER_BALLOON_COUNT, Vector2i(2, 2))
 	# 물줄기 아이템 배치
 	map.add_game_item(GameItem.INCREASE_WATER_STREAM_LENGTH, Vector2i(11, 6))
 	map.add_game_item(GameItem.INCREASE_WATER_STREAM_LENGTH, Vector2i(1, 3))
 	map.add_game_item(GameItem.INCREASE_WATER_STREAM_LENGTH, Vector2i(15, 13))
 	map.add_game_item(GameItem.INCREASE_WATER_STREAM_LENGTH, Vector2i(10, 9))
+	map.add_game_item(GameItem.INCREASE_WATER_STREAM_LENGTH, Vector2i(10, 0))
 	# 스피드 아이템 배치
 	map.add_game_item(GameItem.INCREASE_SPEED, Vector2i(9, 9))
 	map.add_game_item(GameItem.INCREASE_SPEED, Vector2i(5, 9))
-	map.add_game_item(GameItem.INCREASE_SPEED, Vector2i(1, 1))
+	map.add_game_item(GameItem.INCREASE_SPEED, Vector2i(8, 10))
 	map.add_game_item(GameItem.INCREASE_SPEED, Vector2i(14, 1))
+	map.add_game_item(GameItem.INCREASE_SPEED, Vector2i(0, 1))
 	_render_game_items()
 
 func _unhandled_input(event: InputEvent) -> void:
