@@ -61,6 +61,7 @@ func _ready() -> void:
 	map.add_game_item(GameItem.INCREASE_SPEED, Vector2i(14, 1))
 	map.add_game_item(GameItem.INCREASE_SPEED, Vector2i(0, 1))
 	_render_game_items()
+	_render_game_over_label()
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventKey and event.is_pressed() and not event.is_echo():
