@@ -77,7 +77,7 @@ func tick(delta: float) -> void:
 	_render_game_over_label()
 
 func _ready() -> void:
-	start_battle(BattleMode.MONSTER)
+	start_battle(BattleMode.LOCAL_MULTI)
 	# 물풍선 아이템 배치	
 	battle.get_map().add_game_item(GameItem.INCREASE_WATER_BALLOON_COUNT, Vector2i(5, 4))
 	battle.get_map().add_game_item(GameItem.INCREASE_WATER_BALLOON_COUNT, Vector2i(1, 7))

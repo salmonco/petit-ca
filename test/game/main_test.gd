@@ -45,12 +45,14 @@ func test_캐릭터는_방향을_바꿔도_연속으로_이동할_수_있다() -
 
 # 물풍선 놓기
 func test_키보드_스페이스_바를_누르면_캐릭터가_물풍선을_놓는다() -> void:
+	_main.start_battle(BattleMode.MONSTER)
 	_main.handle_key_pressed(KEY_SPACE)
 	_main.tick(0.1)
 	var views := _main.water_balloon_views.get_children()
 	assert_vector((views[0] as Sprite2D).position).is_equal(_main.second_character.pixel_position())
 
 func test_서로_다른_두_칸에_물풍선을_놓으면_물풍선이_두_개_그려진다() -> void:
+	_main.start_battle(BattleMode.MONSTER)
 	_main.handle_key_pressed(KEY_SPACE)
 	_main.tick(0.1)
 	_main.second_character.move(Vector2i.RIGHT, 0.25, [])
@@ -61,22 +63,26 @@ func test_서로_다른_두_칸에_물풍선을_놓으면_물풍선이_두_개_�
 
 # 물풍선 터지기
 func test_시간이_다_지나면_물풍선이_화면에서_사라진다() -> void:
+	_main.start_battle(BattleMode.MONSTER)
 	_main.handle_key_pressed(KEY_SPACE)
 	_main.tick(WaterBalloon.POP_AFTER_SECONDS * 1.5)
 	assert_int(_main.water_balloon_views.get_child_count()).is_equal(0)
 
 func test_시간이_다_지나지_않으면_물풍선이_화면에서_사라지지_않는다() -> void:
+	_main.start_battle(BattleMode.MONSTER)
 	_main.handle_key_pressed(KEY_SPACE)
 	_main.tick(WaterBalloon.POP_AFTER_SECONDS * 0.5)
 	assert_int(_main.water_balloon_views.get_child_count()).is_equal(1)
 
 # 물줄기 보이기
 func test_물풍선_하나가_터질_때_물줄기가_5칸_보인다() -> void:
+	_main.start_battle(BattleMode.MONSTER)
 	_main.handle_key_pressed(KEY_SPACE)
 	_main.tick(WaterBalloon.POP_AFTER_SECONDS)
 	assert_int(_main.water_stream_views.get_child_count()).is_equal(5)
 
 func test_물줄기_방향에_맞는_텍스쳐가_보인다() -> void:
+	_main.start_battle(BattleMode.MONSTER)
 	_main.handle_key_pressed(KEY_SPACE)
 	_main.tick(WaterBalloon.POP_AFTER_SECONDS)
 	var cells := {}
@@ -91,6 +97,7 @@ func test_물줄기_방향에_맞는_텍스쳐가_보인다() -> void:
 
 # 물방울에 갇힘
 func test_캐릭터는_물줄기를_맞으면_물방울에_갇혀_보인다() -> void:
+	_main.start_battle(BattleMode.MONSTER)
 	_main.handle_key_pressed(KEY_SPACE)
 	_main.tick(WaterBalloon.POP_AFTER_SECONDS)
 	var view: CharacterView = _main.view_by_character[_main.second_character]
@@ -105,6 +112,7 @@ func test_아웃된_캐릭터는_화면에서_사라진다() -> void:
 
 # 게임 오버
 func test_게임에서_지면_졌다는_텍스트가_표시된다() -> void:
+	_main.start_battle(BattleMode.MONSTER)
 	assert_bool(_main.lose_label.visible).is_false()
 	_main.battle.get_map().let_character_out(_main.second_character)
 	_main.tick(0.1)
@@ -116,6 +124,7 @@ func test_게임_시작_시_맵의_특정_위치에_게임_아이템이_표시�
 
 # 물풍선 비주얼
 func test_NPC가_놓은_물풍선은_플레이어의_것과_다른_텍스처로_보인다() -> void:
+	_main.start_battle(BattleMode.MONSTER)
 	var npc_cell := _main.first_character.position()
 	var player_cell := _main.second_character.position()
 	_main.first_character.place_water_balloon(_main.battle.get_map())
@@ -130,10 +139,30 @@ func test_NPC가_놓은_물풍선은_플레이어의_것과_다른_텍스처로_
 # 로컬 멀티플레이어
 func test_키보드_위쪽_방향키를_누르면_2P_플레이어가_위쪽_방향으로_보인다() -> void:
 	_main.start_battle(BattleMode.LOCAL_MULTI)
-	assert_vector(_main.second_character.facing).is_equal(Vector2i.DOWN)
+	assert_vector(_main.second_character.facing).is_not_equal(Vector2i.UP)
 	_main.handle_key_pressed(KEY_UP)
 	_main.tick(0.1)
 	assert_vector(_main.second_character.facing).is_equal(Vector2i.UP)
+
+func test_키보드_아래쪽_방향키를_누르면_2P_플레이어가_아래쪽_방향으로_보인다() -> void:
+	_main.start_battle(BattleMode.LOCAL_MULTI)
+	_main.handle_key_pressed(KEY_DOWN)
+	_main.tick(0.1)
+	assert_vector(_main.second_character.facing).is_equal(Vector2i.DOWN)
+
+func test_키보드_왼쪽_방향키를_누르면_2P_플레이어가_왼쪽_방향으로_보인다() -> void:
+	_main.start_battle(BattleMode.LOCAL_MULTI)
+	assert_vector(_main.second_character.facing).is_not_equal(Vector2i.LEFT)
+	_main.handle_key_pressed(KEY_LEFT)
+	_main.tick(0.1)
+	assert_vector(_main.second_character.facing).is_equal(Vector2i.LEFT)
+
+func test_키보드_오른쪽_방향키를_누르면_2P_플레이어가_오른쪽_방향으로_보인다() -> void:
+	_main.start_battle(BattleMode.LOCAL_MULTI)
+	assert_vector(_main.second_character.facing).is_not_equal(Vector2i.RIGHT)
+	_main.handle_key_pressed(KEY_RIGHT)
+	_main.tick(0.1)
+	assert_vector(_main.second_character.facing).is_equal(Vector2i.RIGHT)
 
 func 키보드_오른쪽_시프트_키를_누르면_2P_플레이어가_물풍선을_놓도록_보인다() -> void:
 	return
