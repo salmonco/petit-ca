@@ -1,11 +1,13 @@
 class_name Battle
 extends RefCounted
 
-var _map: Map
 var result_type: String = "" # "win" | "lose" | "draw"
+var _map: Map
+var _mode: StringName
 
-func _init(map: Map) -> void:
+func _init(map: Map, mode: StringName) -> void:
 	_map = map
+	_mode = mode
 
 func tick(delta: float) -> void:
 	_map.tick(delta)
@@ -45,3 +47,9 @@ func _has_npc() -> bool:
 		if character is Npc:
 			npcs.append(character)
 	return not npcs.is_empty()
+
+func get_map() -> Map:
+	return _map
+
+func get_mode() -> StringName:
+	return _mode
