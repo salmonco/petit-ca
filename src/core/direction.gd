@@ -10,3 +10,6 @@ const _DIRECTION: Dictionary[Key, Vector2i] = {
 
 static func from_key(key: Key) -> Vector2i:
 	return _DIRECTION.get(key, Vector2i.ZERO)
+
+static func has(key: Key) -> bool:
+	return _DIRECTION.has(key)

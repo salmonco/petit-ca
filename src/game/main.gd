@@ -50,14 +50,11 @@ func start_battle(mode: StringName) -> void:
 	second_character = battle.get_map().characters()[1]
 
 func handle_key_pressed(key: Key) -> void:
-	match key:
-		KEY_SPACE:
-			if battle.get_mode() == BattleMode.MONSTER:
-				second_character.place_water_balloon(battle.get_map())
-				_render_water_balloons()
-		KEY_UP, KEY_DOWN, KEY_LEFT, KEY_RIGHT:
-			if key not in pressed_move_keys:
-				pressed_move_keys.append(key)
+	if key == KEY_SPACE and battle.get_mode() == BattleMode.MONSTER:
+		second_character.place_water_balloon(battle.get_map())
+		_render_water_balloons()
+	if Direction.has(key) and key not in pressed_move_keys:
+		pressed_move_keys.append(key)
 
 func handle_key_released(key: Key) -> void:
 	pressed_move_keys.erase(key)
