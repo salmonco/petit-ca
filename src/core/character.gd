@@ -7,6 +7,7 @@ var continuous_position: Vector2
 var is_out: bool = false
 var bubble: Bubble = null
 var facing: Vector2i = Vector2i.DOWN
+var move_direction: Vector2i = Vector2i.ZERO
 
 var max_water_balloon_count := 1
 var max_water_stream_length := 1

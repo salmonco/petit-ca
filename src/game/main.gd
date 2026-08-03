@@ -27,6 +27,8 @@ var view_by_character: Dictionary[Character, CharacterView] = {}
 @onready var draw_label: Label = $CanvasLayer/DrawLabel
 
 var battle: Battle
+var first_character: Character
+var second_character: Character
 
 func start_battle(mode: StringName) -> void:
 	var map := Map.new()
@@ -43,13 +45,28 @@ func start_battle(mode: StringName) -> void:
 			battle.get_map().add_character(human1)
 			battle.get_map().add_character(human2)
 	_render_characters()
+	first_character = battle.get_map().characters()[0]
+	second_character = battle.get_map().characters()[1]
 
-func handle_key(key: Key) -> void:
+func handle_key_pressed(key: Key) -> void:
 	match key:
 		KEY_SPACE:
 			if battle.get_mode() == BattleMode.MONSTER:
-				battle.get_map().characters()[1].place_water_balloon(battle.get_map())
+				second_character.place_water_balloon(battle.get_map())
 				_render_water_balloons()
+		KEY_UP:
+			second_character.move_direction = Direction.from_key(KEY_UP)
+		KEY_DOWN:
+			second_character.move_direction = Direction.from_key(KEY_DOWN)
+		KEY_LEFT:
+			second_character.move_direction = Direction.from_key(KEY_LEFT)
+		KEY_RIGHT:
+			second_character.move_direction = Direction.from_key(KEY_RIGHT)
+
+func handle_key_released(key: Key) -> void:
+	match key:
+		KEY_UP, KEY_DOWN, KEY_LEFT, KEY_RIGHT:
+			second_character.move_direction = Vector2i.ZERO
 
 func tick(delta: float) -> void:
 	for character in battle.get_map().characters():
@@ -58,8 +75,7 @@ func tick(delta: float) -> void:
 			if character.should_place_water_balloon(battle.get_map()):
 				character.place_water_balloon(battle.get_map())
 		else:
-			var direction := _read_move_direction()
-			character.move(direction, delta, battle.get_map().water_balloon_positions())
+			character.move(character.move_direction, delta, battle.get_map().water_balloon_positions())
 
 	battle.tick(delta)
 	_render_water_balloons()
@@ -96,9 +112,12 @@ func _ready() -> void:
 	_render_game_over_label()
 
 func _unhandled_input(event: InputEvent) -> void:
-	if event is InputEventKey and event.is_pressed() and not event.is_echo():
+	if event is InputEventKey and not event.is_echo():
 		var keycode := (event as InputEventKey).keycode
-		handle_key(keycode)
+		if event.is_pressed():
+			handle_key_pressed(keycode)
+		else:
+			handle_key_released(keycode)
 
 func _process(delta: float) -> void:
 	tick(delta)
@@ -184,14 +203,3 @@ func _render_game_over_label() -> void:
 	win_label.visible = battle.is_game_over() and battle.result_type == "win"
 	lose_label.visible = battle.is_game_over() and battle.result_type == "lose"
 	draw_label.visible = battle.is_game_over() and battle.result_type == "draw"
-
-func _read_move_direction() -> Vector2i:
-	if Input.is_key_pressed(KEY_UP):
-		return Direction.from_key(KEY_UP)
-	if Input.is_key_pressed(KEY_DOWN):
-		return Direction.from_key(KEY_DOWN)
-	if Input.is_key_pressed(KEY_LEFT):
-		return Direction.from_key(KEY_LEFT)
-	if Input.is_key_pressed(KEY_RIGHT):
-		return Direction.from_key(KEY_RIGHT)
-	return Vector2i.ZERO
