@@ -185,7 +185,7 @@ func game_items_positions() -> Array[Vector2i]:
 		positions.append(game_item.position)
 	return positions
 
-func add_game_item(type: int, cell: Vector2i) -> bool:
+func add_game_item(type: StringName, cell: Vector2i) -> bool:
 	if game_items_positions().has(cell):
 		return false
 	var game_item := GameItem.new(type, cell)

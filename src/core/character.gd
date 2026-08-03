@@ -64,7 +64,7 @@ func pixel_position() -> Vector2:
 func is_trapped() -> bool:
 	return bubble != null
 
-func get_game_item(type: int) -> void:
+func get_game_item(type: StringName) -> void:
 	match type:
 		GameItem.INCREASE_WATER_BALLOON_COUNT:
 			max_water_balloon_count += 1
