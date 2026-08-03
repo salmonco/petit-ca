@@ -29,6 +29,7 @@ var view_by_character: Dictionary[Character, CharacterView] = {}
 var battle: Battle
 var first_character: Character
 var second_character: Character
+var pressed_move_keys: Array[Key] = []
 
 func start_battle(mode: StringName) -> void:
 	var map := Map.new()
@@ -54,19 +55,12 @@ func handle_key_pressed(key: Key) -> void:
 			if battle.get_mode() == BattleMode.MONSTER:
 				second_character.place_water_balloon(battle.get_map())
 				_render_water_balloons()
-		KEY_UP:
-			second_character.move_direction = Direction.from_key(KEY_UP)
-		KEY_DOWN:
-			second_character.move_direction = Direction.from_key(KEY_DOWN)
-		KEY_LEFT:
-			second_character.move_direction = Direction.from_key(KEY_LEFT)
-		KEY_RIGHT:
-			second_character.move_direction = Direction.from_key(KEY_RIGHT)
+		KEY_UP, KEY_DOWN, KEY_LEFT, KEY_RIGHT:
+			if key not in pressed_move_keys:
+				pressed_move_keys.append(key)
 
 func handle_key_released(key: Key) -> void:
-	match key:
-		KEY_UP, KEY_DOWN, KEY_LEFT, KEY_RIGHT:
-			second_character.move_direction = Vector2i.ZERO
+	pressed_move_keys.erase(key)
 
 func tick(delta: float) -> void:
 	for character in battle.get_map().characters():
@@ -75,7 +69,8 @@ func tick(delta: float) -> void:
 			if character.should_place_water_balloon(battle.get_map()):
 				character.place_water_balloon(battle.get_map())
 		else:
-			character.move(character.move_direction, delta, battle.get_map().water_balloon_positions())
+			var direction := _read_move_direction()
+			character.move(direction, delta, battle.get_map().water_balloon_positions())
 
 	battle.tick(delta)
 	_render_water_balloons()
@@ -203,3 +198,8 @@ func _render_game_over_label() -> void:
 	win_label.visible = battle.is_game_over() and battle.result_type == "win"
 	lose_label.visible = battle.is_game_over() and battle.result_type == "lose"
 	draw_label.visible = battle.is_game_over() and battle.result_type == "draw"
+
+func _read_move_direction() -> Vector2i:
+	if pressed_move_keys.is_empty():
+		return Vector2i.ZERO
+	return Direction.from_key(pressed_move_keys.back())

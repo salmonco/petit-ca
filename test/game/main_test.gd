@@ -23,17 +23,40 @@ func test_캐릭터가_이동하면_뷰가_새_칸을_따라온다() -> void:
 	var view: CharacterView = _main.view_by_character[_main.second_character]
 	assert_vector(view.position).is_equal(Map.to_pixel(moved_cell))
 
+func test_키보드_방향키_입력을_떼면_캐릭터가_이동하지_않는다() -> void:
+	var start_cell := _main.second_character.position()
+	var view: CharacterView = _main.view_by_character[_main.second_character]
+	_main.handle_key_pressed(KEY_LEFT)
+	_main.tick(0.25)
+	_main.handle_key_released(KEY_LEFT)
+	_main.tick(0.25)
+	assert_vector(view.position).is_equal(Map.to_pixel(start_cell + Vector2i.LEFT))
+
+func test_캐릭터는_방향을_바꿔도_연속으로_이동할_수_있다() -> void:
+	var start_cell := _main.second_character.position()
+	var view: CharacterView = _main.view_by_character[_main.second_character]
+	_main.handle_key_pressed(KEY_LEFT)
+	_main.tick(0.25)
+	_main.handle_key_pressed(KEY_DOWN)
+	_main.tick(0.25)
+	_main.handle_key_released(KEY_LEFT)
+	_main.tick(0.25)
+	assert_vector(view.position).is_equal(Map.to_pixel(start_cell + Vector2i.LEFT + Vector2i.DOWN * 2))
+
 # 물풍선 놓기
 func test_키보드_스페이스_바를_누르면_캐릭터가_물풍선을_놓는다() -> void:
 	_main.handle_key_pressed(KEY_SPACE)
+	_main.tick(0.1)
 	var views := _main.water_balloon_views.get_children()
 	assert_vector((views[0] as Sprite2D).position).is_equal(_main.second_character.pixel_position())
 
 func test_서로_다른_두_칸에_물풍선을_놓으면_물풍선이_두_개_그려진다() -> void:
 	_main.handle_key_pressed(KEY_SPACE)
+	_main.tick(0.1)
 	_main.second_character.move(Vector2i.RIGHT, 0.25, [])
 	_main.second_character.get_game_item(GameItem.INCREASE_WATER_BALLOON_COUNT)
 	_main.handle_key_pressed(KEY_SPACE)
+	_main.tick(0.1)
 	assert_int(_main.water_balloon_views.get_child_count()).is_equal(2)
 
 # 물풍선 터지기
