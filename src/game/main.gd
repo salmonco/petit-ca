@@ -50,8 +50,15 @@ func start_battle(mode: StringName) -> void:
 	first_character = battle.get_map().characters()[0]
 	second_character = battle.get_map().characters()[1]
 
-func handle_key_pressed(key: Key) -> void:
-	if (key == KEY_SPACE and battle.get_mode() == BattleMode.MONSTER) or (key == KEY_SHIFT and battle.get_mode() == BattleMode.LOCAL_MULTI):
+func handle_key_pressed(key: Key, location: KeyLocation = KEY_LOCATION_UNSPECIFIED) -> void:
+	var game_key := GameKey.from_key(key, location)
+	if game_key == GameKey.SPACE and battle.get_mode() == BattleMode.MONSTER:
+		second_character.place_water_balloon(battle.get_map())
+		_render_water_balloons()
+	if game_key == GameKey.SHIFT_LEFT and battle.get_mode() == BattleMode.LOCAL_MULTI:
+		first_character.place_water_balloon(battle.get_map())
+		_render_water_balloons()
+	if game_key == GameKey.SHIFT_RIGHT and battle.get_mode() == BattleMode.LOCAL_MULTI:
 		second_character.place_water_balloon(battle.get_map())
 		_render_water_balloons()
 	if Direction.has(key) and key not in pressed_move_keys:
@@ -103,11 +110,11 @@ func _ready() -> void:
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventKey and not event.is_echo():
-		var keycode := (event as InputEventKey).keycode
-		if event.is_pressed():
-			handle_key_pressed(keycode)
+		var key_event := (event as InputEventKey)
+		if key_event.is_pressed():
+			handle_key_pressed(key_event.keycode, key_event.location)
 		else:
-			handle_key_released(keycode)
+			handle_key_released(key_event.keycode)
 
 func _process(delta: float) -> void:
 	tick(delta)

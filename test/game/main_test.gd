@@ -64,7 +64,7 @@ func test_서로_다른_두_칸에_물풍선을_놓으면_물풍선이_두_개_�
 # 물풍선 터지기
 func test_시간이_다_지나면_물풍선이_화면에서_사라진다() -> void:
 	_main.start_battle(BattleMode.LOCAL_MULTI)
-	_main.handle_key_pressed(KEY_SHIFT)
+	_main.handle_key_pressed(KEY_SHIFT, KEY_LOCATION_RIGHT)
 	_main.tick(0.1)
 	assert_int(_main.water_balloon_views.get_child_count()).is_equal(1)
 	_main.tick(WaterBalloon.POP_AFTER_SECONDS * 1.5)
@@ -72,7 +72,7 @@ func test_시간이_다_지나면_물풍선이_화면에서_사라진다() -> vo
 
 func test_시간이_다_지나지_않으면_물풍선이_화면에서_사라지지_않는다() -> void:
 	_main.start_battle(BattleMode.LOCAL_MULTI)
-	_main.handle_key_pressed(KEY_SHIFT)
+	_main.handle_key_pressed(KEY_SHIFT, KEY_LOCATION_RIGHT)
 	_main.tick(0.1)
 	assert_int(_main.water_balloon_views.get_child_count()).is_equal(1)
 	_main.tick(WaterBalloon.POP_AFTER_SECONDS * 0.5)
@@ -171,7 +171,7 @@ func test_키보드_오른쪽_방향키를_누르면_2P_플레이어가_오른�
 func test_키보드_오른쪽_시프트_키를_누르면_2P_플레이어가_물풍선을_놓도록_보인다() -> void:
 	_main.start_battle(BattleMode.LOCAL_MULTI)
 	assert_int(_main.water_balloon_views.get_child_count()).is_equal(0)
-	_main.handle_key_pressed(KEY_SHIFT)
+	_main.handle_key_pressed(KEY_SHIFT, KEY_LOCATION_RIGHT)
 	_main.tick(0.1)
 	assert_int(_main.water_balloon_views.get_child_count()).is_equal(1)
 
@@ -182,14 +182,29 @@ func test_키보드_R_키를_누르면_1P_플레이어가_위쪽_방향으로_�
 	_main.tick(0.1)
 	assert_vector(_main.first_character.facing).is_equal(Vector2i.UP)
 
-func 키보드_F_키를_누르면_1P_플레이어가_아래쪽_방향으로_보인다() -> void:
-	return
+func test_키보드_F_키를_누르면_1P_플레이어가_아래쪽_방향으로_보인다() -> void:
+	_main.start_battle(BattleMode.LOCAL_MULTI)
+	_main.handle_key_pressed(KEY_F)
+	_main.tick(0.1)
+	assert_vector(_main.first_character.facing).is_equal(Vector2i.DOWN)
 
-func 키보드_D_키를_누르면_1P_플레이어가_왼쪽_방향으로_보인다() -> void:
-	return
+func test_키보드_D_키를_누르면_1P_플레이어가_왼쪽_방향으로_보인다() -> void:
+	_main.start_battle(BattleMode.LOCAL_MULTI)
+	assert_vector(_main.first_character.facing).is_not_equal(Vector2i.LEFT)
+	_main.handle_key_pressed(KEY_D)
+	_main.tick(0.1)
+	assert_vector(_main.first_character.facing).is_equal(Vector2i.LEFT)
 
-func 키보드_G_키를_누르면_1P_플레이어가_오른쪽_방향으로_보인다() -> void:
-	return
+func test_키보드_G_키를_누르면_1P_플레이어가_오른쪽_방향으로_보인다() -> void:
+	_main.start_battle(BattleMode.LOCAL_MULTI)
+	assert_vector(_main.first_character.facing).is_not_equal(Vector2i.RIGHT)
+	_main.handle_key_pressed(KEY_G)
+	_main.tick(0.1)
+	assert_vector(_main.first_character.facing).is_equal(Vector2i.RIGHT)
 
-func 키보드_왼쪽_시프트_키를_누르면_1P_플레이어가_물풍선을_놓도록_보인다() -> void:
-	return
+func test_키보드_왼쪽_시프트_키를_누르면_1P_플레이어가_물풍선을_놓도록_보인다() -> void:
+	_main.start_battle(BattleMode.LOCAL_MULTI)
+	assert_int(_main.water_balloon_views.get_child_count()).is_equal(0)
+	_main.handle_key_pressed(KEY_SHIFT, KEY_LOCATION_LEFT)
+	_main.tick(0.1)
+	assert_int(_main.water_balloon_views.get_child_count()).is_equal(1)
