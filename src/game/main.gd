@@ -30,6 +30,7 @@ var battle: Battle
 var first_character: Character
 var second_character: Character
 var pressed_move_keys: Array[Key] = []
+var pressed_move_keys_local_multi: Array[Key] = []
 
 func start_battle(mode: StringName) -> void:
 	var map := Map.new()
@@ -41,8 +42,8 @@ func start_battle(mode: StringName) -> void:
 			battle.get_map().add_character(monster)
 			battle.get_map().add_character(human)
 		BattleMode.LOCAL_MULTI:
-			var human1 := Character.new(Vector2i(1, 6))
-			var human2 := Character.new(Vector2i(13, 6))
+			var human1 := Character.new(Vector2i(1, 6), 1)
+			var human2 := Character.new(Vector2i(13, 6), 2)
 			battle.get_map().add_character(human1)
 			battle.get_map().add_character(human2)
 	_render_characters()
@@ -50,26 +51,23 @@ func start_battle(mode: StringName) -> void:
 	second_character = battle.get_map().characters()[1]
 
 func handle_key_pressed(key: Key) -> void:
-	if key == KEY_SPACE and battle.get_mode() == BattleMode.MONSTER:
+	if (key == KEY_SPACE and battle.get_mode() == BattleMode.MONSTER) or (key == KEY_SHIFT and battle.get_mode() == BattleMode.LOCAL_MULTI):
 		second_character.place_water_balloon(battle.get_map())
 		_render_water_balloons()
 	if Direction.has(key) and key not in pressed_move_keys:
 		pressed_move_keys.append(key)
+	if Direction.has_local_multi(key) and key not in pressed_move_keys_local_multi:
+		pressed_move_keys_local_multi.append(key)
 
 func handle_key_released(key: Key) -> void:
-	pressed_move_keys.erase(key)
+	if Direction.has(key):
+		pressed_move_keys.erase(key)
+	if Direction.has_local_multi(key):
+		pressed_move_keys_local_multi.erase(key)
 
 func tick(delta: float) -> void:
-	for character in battle.get_map().characters():
-		if character is Npc:
-			character.move(character.decide_move_direction(battle.get_map()), delta, battle.get_map().water_balloon_positions())
-			if character.should_place_water_balloon(battle.get_map()):
-				character.place_water_balloon(battle.get_map())
-		else:
-			var direction := _read_move_direction()
-			character.move(direction, delta, battle.get_map().water_balloon_positions())
-
 	battle.tick(delta)
+	_handle_characters(delta)
 	_render_water_balloons()
 	_render_water_streams()
 	_render_characters()
@@ -113,6 +111,20 @@ func _unhandled_input(event: InputEvent) -> void:
 
 func _process(delta: float) -> void:
 	tick(delta)
+
+func _handle_characters(delta: float) -> void:
+	for character in battle.get_map().characters():
+		if character is Npc:
+			character.move(character.decide_move_direction(battle.get_map()), delta, battle.get_map().water_balloon_positions())
+			if character.should_place_water_balloon(battle.get_map()):
+				character.place_water_balloon(battle.get_map())
+		else:
+			var direction: Vector2i
+			if character.number == 1:
+				direction = _read_move_direction_local_multi()
+			else:
+				direction = _read_move_direction()
+			character.move(direction, delta, battle.get_map().water_balloon_positions())
 
 func _render_characters() -> void:
 	# 사라진 캐릭터의 뷰 정리
@@ -200,3 +212,8 @@ func _read_move_direction() -> Vector2i:
 	if pressed_move_keys.is_empty():
 		return Vector2i.ZERO
 	return Direction.from_key(pressed_move_keys.back())
+
+func _read_move_direction_local_multi() -> Vector2i:
+	if pressed_move_keys_local_multi.is_empty():
+		return Vector2i.ZERO
+	return Direction.from_key_local_multi(pressed_move_keys_local_multi.back())

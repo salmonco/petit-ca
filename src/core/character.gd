@@ -7,13 +7,15 @@ var continuous_position: Vector2
 var is_out: bool = false
 var bubble: Bubble = null
 var facing: Vector2i = Vector2i.DOWN
+var number: int
 
 var max_water_balloon_count := 1
 var max_water_stream_length := 1
 var speed := 4.0
 
-func _init(start_position: Vector2i) -> void:
+func _init(start_position: Vector2i, seat_number: int = 0) -> void:
 	continuous_position = start_position
+	number = seat_number
 
 func move(direction: Vector2i, delta: float, water_balloon_positions: Array[Vector2i]) -> bool:
 	if direction != Vector2i.ZERO:
