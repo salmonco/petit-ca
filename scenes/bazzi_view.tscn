@@ -1,10 +1,20 @@
 [gd_scene format=3 uid="uid://b2vcft5cjrp6c"]
 
+[ext_resource type="Shader" uid="uid://cnjhnjfh1msfw" path="res://src/game/character_recolor.gdshader" id="1_e2o2i"]
 [ext_resource type="Texture2D" uid="uid://brifflvl7mg2i" path="res://assets/characters/bazzi_bubble.png" id="1_ynlos"]
 [ext_resource type="Texture2D" uid="uid://thul2d0osxo0" path="res://assets/characters/bazzi_down.png" id="2_qywg8"]
 [ext_resource type="Texture2D" uid="uid://dc07c1xwwqrg4" path="res://assets/characters/bazzi_right.png" id="3_o7bpo"]
 [ext_resource type="Texture2D" uid="uid://cakfp2ogqe5ab" path="res://assets/characters/bazzi_up.png" id="4_ng54h"]
 [ext_resource type="Script" uid="uid://dyvc3d5gac1ca" path="res://src/game/character_view.gd" id="5_qywg8"]
+[ext_resource type="Texture2D" uid="uid://chr1qagbkosgc" path="res://assets/characters/bazzi_bubble_mask.png" id="7_3vago"]
+[ext_resource type="Texture2D" uid="uid://p3cbc64jeum8" path="res://assets/characters/bazzi_down_mask.png" id="8_5vdf5"]
+[ext_resource type="Texture2D" uid="uid://dci2ltlo8pf0y" path="res://assets/characters/bazzi_right_mask.png" id="9_1ki16"]
+[ext_resource type="Texture2D" uid="uid://damc0u0xnibqb" path="res://assets/characters/bazzi_up_mask.png" id="10_5vdf5"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_e2o2i"]
+resource_local_to_scene = true
+shader = ExtResource("1_e2o2i")
+shader_parameter/color = Color(1, 0, 0, 1)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_vp4hr"]
 animations = [{
@@ -42,8 +52,15 @@ animations = [{
 }]
 
 [node name="BazziView" type="AnimatedSprite2D" unique_id=547970677]
+material = SubResource("ShaderMaterial_e2o2i")
 sprite_frames = SubResource("SpriteFrames_vp4hr")
 animation = &"walk_up"
 centered = false
 offset = Vector2(0, -32)
 script = ExtResource("5_qywg8")
+masks = Dictionary[StringName, Texture2D]({
+&"bubble": ExtResource("7_3vago"),
+&"walk_down": ExtResource("8_5vdf5"),
+&"walk_side": ExtResource("9_1ki16"),
+&"walk_up": ExtResource("10_5vdf5")
+})

@@ -229,3 +229,20 @@ func test_키보드_왼쪽_시프트_키를_누르면_1P_플레이어가_물풍�
 	_main.handle_key_pressed(KEY_SHIFT, KEY_LOCATION_LEFT)
 	_main.tick(0.1)
 	assert_int(_main.water_balloon_views.get_child_count()).is_equal(1)
+
+# 캐릭터 색상
+func test_캐릭터의_색상에_맞게_뷰의_쉐이더_색상이_적용된다() -> void:
+	_main.start_battle(BattleMode.LOCAL_MULTI)
+	_main.tick(0.1)
+	var first_view := _main.view_by_character[_main.first_character]
+	var second_view := _main.view_by_character[_main.second_character]
+	assert_that((first_view.material as ShaderMaterial).get_shader_parameter("color")).is_equal(Color.RED)
+	assert_that((second_view.material as ShaderMaterial).get_shader_parameter("color")).is_equal(Color.BLUE)
+
+func test_캐릭터가_바라보는_방향의_마스크가_적용된다() -> void:
+	_main.start_battle(BattleMode.LOCAL_MULTI)
+	_main.tick(0.1)
+	var second_view = _main.view_by_character[_main.second_character]
+	_main.handle_key_pressed(KEY_UP)
+	_main.tick(0.1)
+	assert_that((second_view.material as ShaderMaterial).get_shader_parameter("mask_texture")).is_equal(second_view.masks["walk_up"])
