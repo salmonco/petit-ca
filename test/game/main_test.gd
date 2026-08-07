@@ -115,12 +115,25 @@ func test_아웃된_캐릭터는_화면에서_사라진다() -> void:
 	assert_int(_main.character_views.get_child_count()).is_equal(original_count - 1)
 
 # 게임 오버
-func test_게임에서_지면_졌다는_텍스트가_표시된다() -> void:
+func test_몬스터_모드에서_게임에서_지면_졌다는_텍스트가_표시된다() -> void:
 	_main.start_battle(BattleMode.MONSTER)
+	_main.tick(0.1)
 	assert_bool(_main.lose_label.visible).is_false()
 	_main.battle.get_map().let_character_out(_main.second_character)
 	_main.tick(0.1)
 	assert_bool(_main.lose_label.visible).is_true()
+
+func test_로컬멀티_모드에서_한_명이_이기면_해당_캐릭터가_이겼다는_텍스트가_표시된다() -> void:
+	_main.start_battle(BattleMode.LOCAL_MULTI)
+	_main.tick(0.1)
+	assert_bool(_main.win_label.visible).is_false()
+	_main.battle.get_map().let_character_out(_main.second_character)
+	_main.tick(0.1)
+	assert_bool(_main.win_label.visible).is_true()
+	assert_str(_main.win_label.text).contains("1P")
+	_main.battle.get_map().let_character_out(_main.first_character)
+	assert_bool(_main.win_label.visible).is_true()
+	assert_str(_main.win_label.text).contains("1P")
 
 # 게임 아이템
 func test_게임_시작_시_맵의_특정_위치에_게임_아이템이_표시된다() -> void:
@@ -143,6 +156,7 @@ func test_NPC가_놓은_물풍선은_플레이어의_것과_다른_텍스처로_
 # 로컬 멀티플레이어
 func test_키보드_위쪽_방향키를_누르면_2P_플레이어가_위쪽_방향으로_보인다() -> void:
 	_main.start_battle(BattleMode.LOCAL_MULTI)
+	_main.tick(0.1)
 	assert_vector(_main.second_character.facing).is_not_equal(Vector2i.UP)
 	_main.handle_key_pressed(KEY_UP)
 	_main.tick(0.1)
@@ -156,6 +170,7 @@ func test_키보드_아래쪽_방향키를_누르면_2P_플레이어가_아래�
 
 func test_키보드_왼쪽_방향키를_누르면_2P_플레이어가_왼쪽_방향으로_보인다() -> void:
 	_main.start_battle(BattleMode.LOCAL_MULTI)
+	_main.tick(0.1)
 	assert_vector(_main.second_character.facing).is_not_equal(Vector2i.LEFT)
 	_main.handle_key_pressed(KEY_LEFT)
 	_main.tick(0.1)
@@ -163,6 +178,7 @@ func test_키보드_왼쪽_방향키를_누르면_2P_플레이어가_왼쪽_방�
 
 func test_키보드_오른쪽_방향키를_누르면_2P_플레이어가_오른쪽_방향으로_보인다() -> void:
 	_main.start_battle(BattleMode.LOCAL_MULTI)
+	_main.tick(0.1)
 	assert_vector(_main.second_character.facing).is_not_equal(Vector2i.RIGHT)
 	_main.handle_key_pressed(KEY_RIGHT)
 	_main.tick(0.1)
@@ -170,6 +186,7 @@ func test_키보드_오른쪽_방향키를_누르면_2P_플레이어가_오른�
 
 func test_키보드_오른쪽_시프트_키를_누르면_2P_플레이어가_물풍선을_놓도록_보인다() -> void:
 	_main.start_battle(BattleMode.LOCAL_MULTI)
+	_main.tick(0.1)
 	assert_int(_main.water_balloon_views.get_child_count()).is_equal(0)
 	_main.handle_key_pressed(KEY_SHIFT, KEY_LOCATION_RIGHT)
 	_main.tick(0.1)
@@ -177,6 +194,7 @@ func test_키보드_오른쪽_시프트_키를_누르면_2P_플레이어가_물�
 
 func test_키보드_R_키를_누르면_1P_플레이어가_위쪽_방향으로_보인다() -> void:
 	_main.start_battle(BattleMode.LOCAL_MULTI)
+	_main.tick(0.1)
 	assert_vector(_main.first_character.facing).is_not_equal(Vector2i.UP)
 	_main.handle_key_pressed(KEY_R)
 	_main.tick(0.1)
@@ -190,6 +208,7 @@ func test_키보드_F_키를_누르면_1P_플레이어가_아래쪽_방향으로
 
 func test_키보드_D_키를_누르면_1P_플레이어가_왼쪽_방향으로_보인다() -> void:
 	_main.start_battle(BattleMode.LOCAL_MULTI)
+	_main.tick(0.1)
 	assert_vector(_main.first_character.facing).is_not_equal(Vector2i.LEFT)
 	_main.handle_key_pressed(KEY_D)
 	_main.tick(0.1)
@@ -197,6 +216,7 @@ func test_키보드_D_키를_누르면_1P_플레이어가_왼쪽_방향으로_�
 
 func test_키보드_G_키를_누르면_1P_플레이어가_오른쪽_방향으로_보인다() -> void:
 	_main.start_battle(BattleMode.LOCAL_MULTI)
+	_main.tick(0.1)
 	assert_vector(_main.first_character.facing).is_not_equal(Vector2i.RIGHT)
 	_main.handle_key_pressed(KEY_G)
 	_main.tick(0.1)
@@ -204,6 +224,7 @@ func test_키보드_G_키를_누르면_1P_플레이어가_오른쪽_방향으로
 
 func test_키보드_왼쪽_시프트_키를_누르면_1P_플레이어가_물풍선을_놓도록_보인다() -> void:
 	_main.start_battle(BattleMode.LOCAL_MULTI)
+	_main.tick(0.1)
 	assert_int(_main.water_balloon_views.get_child_count()).is_equal(0)
 	_main.handle_key_pressed(KEY_SHIFT, KEY_LOCATION_LEFT)
 	_main.tick(0.1)

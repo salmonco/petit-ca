@@ -37,13 +37,13 @@ func start_battle(mode: StringName) -> void:
 	battle = Battle.new(map, mode)
 	match mode:
 		BattleMode.MONSTER:
-			var monster := Npc.new(Vector2i(1, 6))
-			var human := Character.new(Vector2i(13, 6))
+			var monster := Npc.new(Vector2i(1, 6), 1, Color.BLUE)
+			var human := Character.new(Vector2i(13, 6), 2, Color.RED)
 			battle.get_map().add_character(monster)
 			battle.get_map().add_character(human)
 		BattleMode.LOCAL_MULTI:
-			var human1 := Character.new(Vector2i(1, 6), 1)
-			var human2 := Character.new(Vector2i(13, 6), 2)
+			var human1 := Character.new(Vector2i(1, 6), 1, Color.RED)
+			var human2 := Character.new(Vector2i(13, 6), 2, Color.BLUE)
 			battle.get_map().add_character(human1)
 			battle.get_map().add_character(human2)
 	_render_characters()
@@ -211,9 +211,18 @@ func _render_game_items() -> void:
 		game_item_views.add_child(view)
 
 func _render_game_over_label() -> void:
-	win_label.visible = battle.is_game_over() and battle.result_type == "win"
-	lose_label.visible = battle.is_game_over() and battle.result_type == "lose"
-	draw_label.visible = battle.is_game_over() and battle.result_type == "draw"
+	win_label.visible = battle.has_winner()
+	draw_label.visible = battle.is_draw
+	match battle.get_mode():
+		BattleMode.MONSTER:
+			lose_label.visible = battle.has_winner() and second_character not in battle.get_map().characters()
+		BattleMode.LOCAL_MULTI:
+			lose_label.visible = false
+			if battle.winner:
+				if first_character.color == battle.winner:
+					win_label.text = "1P WIN!!"
+				else:
+					win_label.text = "2P WIN!!"
 
 func _read_move_direction() -> Vector2i:
 	if pressed_move_keys.is_empty():
