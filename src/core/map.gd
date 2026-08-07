@@ -3,7 +3,6 @@ extends RefCounted
 
 const GRID_SIZE := Vector2i(15, 13)
 const PIXELS_PER_CELL := 64
-const TRAP_MARGIN := 0.35
 
 var _characters: Array[Character] = []
 var _water_balloons: Dictionary[Vector2i, WaterBalloon] = {}
@@ -44,7 +43,7 @@ func tick(delta: float) -> void:
 		if water_stream.tick(delta):
 			expired_water_streams.append(water_stream)
 		else:
-			check_trap_character_in_bubble(water_stream.position)
+			check_trap_character_in_bubble()
 	for water_stream: WaterStream in expired_water_streams:
 		_remove_water_stream(water_stream)
 	
@@ -53,7 +52,7 @@ func tick(delta: float) -> void:
 		if water_balloon.tick(delta):
 			_remove_water_balloon(water_balloon.position)
 			add_water_streams(water_balloon.position, water_balloon.stream_length)
-			check_trap_character_in_bubble(water_balloon.position)
+			check_trap_character_in_bubble()
 
 	# 물방울 tick
 	for character in _characters.duplicate():
@@ -69,7 +68,7 @@ func tick(delta: float) -> void:
 			break
 		for water_balloon: WaterBalloon in popped_water_balloons:
 			add_water_streams(water_balloon.position, water_balloon.stream_length)
-			check_trap_character_in_bubble(water_balloon.position)
+			check_trap_character_in_bubble()
 	
 	# 상대방 킬
 	var trapped_humans: Array[Character] = []
@@ -154,12 +153,13 @@ func character_positions() -> Array[Vector2i]:
 func characters() -> Array[Character]:
 	return _characters
 
-func check_trap_character_in_bubble(cell: Vector2i) -> void:
+func check_trap_character_in_bubble() -> void:
 	for character in _characters:
 		if character.is_trapped():
 			continue
-		if abs(character.continuous_position.x - cell.x) < TRAP_MARGIN and abs(character.continuous_position.y - cell.y) < TRAP_MARGIN:
+		if is_in_water_streams(character):
 			character.trapped()
+			break
 
 func has_character(position: Vector2i) -> bool:
 	return character_positions().has(position)
@@ -207,3 +207,9 @@ func water_balloon_count_by_character(character: Character) -> int:
 		if water_balloon.placed_by == character:
 			count += 1
 	return count
+
+func is_in_water_streams(character: Character) -> bool:
+	for water_stream in water_streams():
+		if water_stream.is_in(character.continuous_position):
+			return true
+	return false

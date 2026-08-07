@@ -119,6 +119,26 @@ func test_물방울에_갇힌_상태의_캐릭터가_물풍선을_놓아도_맵�
 	character.place_water_balloon(_map)
 	assert_int(_map.water_balloon_count()).is_equal(1)
 
+func test_가로_물줄기_위에서_x축만_두_칸에_걸쳐_있으면_물방울에_갇힌다() -> void:
+	var placer := Character.new(Vector2i(4, 2))
+	_map.add_water_balloon(WaterBalloon.new(Vector2i(4, 2), placer))
+	var victim := Character.new(Vector2i(3, 2))
+	victim.continuous_position = Vector2(3.47, 2.0)
+	_map.add_character(victim)
+	_map.tick(WaterBalloon.POP_AFTER_SECONDS)
+	_map.tick(0.1)
+	assert_bool(victim.is_trapped()).is_true()
+
+func test_물줄기_위에서_x축과_y축_모두_두_칸에_걸쳐_있으면_물방울에_갇히지_않는다() -> void:
+	var placer := Character.new(Vector2i(4, 2))
+	_map.add_water_balloon(WaterBalloon.new(Vector2i(4, 2), placer))
+	var victim := Character.new(Vector2i(3, 2))
+	victim.continuous_position = Vector2(3.47, 2.47)
+	_map.add_character(victim)
+	_map.tick(WaterBalloon.POP_AFTER_SECONDS)
+	_map.tick(0.1)
+	assert_bool(victim.is_trapped()).is_false()
+
 # 자동 아웃
 func test_캐릭터가_물방울에_갇힌_후_일정_시간이_지나면_자동_아웃되어_맵에서_사라진다() -> void:
 	var water_stream := WaterStream.new(Vector2i(4, 2), Vector2i.ZERO, "center")
