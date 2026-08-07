@@ -82,7 +82,7 @@ func tick(delta: float) -> void:
 	_render_game_over_label()
 
 func _ready() -> void:
-	start_battle(BattleMode.LOCAL_MULTI)
+	start_battle(BattleMode.MONSTER)
 	# 물풍선 아이템 배치	
 	battle.get_map().add_game_item(GameItem.INCREASE_WATER_BALLOON_COUNT, Vector2i(5, 4))
 	battle.get_map().add_game_item(GameItem.INCREASE_WATER_BALLOON_COUNT, Vector2i(1, 7))
@@ -211,15 +211,16 @@ func _render_game_items() -> void:
 		game_item_views.add_child(view)
 
 func _render_game_over_label() -> void:
-	win_label.visible = battle.has_winner()
 	draw_label.visible = battle.is_draw
 	match battle.get_mode():
 		BattleMode.MONSTER:
-			lose_label.visible = battle.has_winner() and second_character not in battle.get_map().characters()
+			win_label.visible = battle.winner == second_character.color
+			lose_label.visible = battle.winner == first_character.color
 		BattleMode.LOCAL_MULTI:
+			win_label.visible = battle.has_winner()
 			lose_label.visible = false
-			if battle.winner:
-				if first_character.color == battle.winner:
+			if battle.has_winner():
+				if battle.winner == first_character.color:
 					win_label.text = "1P WIN!!"
 				else:
 					win_label.text = "2P WIN!!"
