@@ -157,7 +157,7 @@ func check_trap_character_in_bubble() -> void:
 	for character in _characters:
 		if character.is_trapped():
 			continue
-		if is_in_water_streams(character):
+		if _can_water_streams_trap(character):
 			character.trapped()
 			break
 
@@ -208,8 +208,8 @@ func water_balloon_count_by_character(character: Character) -> int:
 			count += 1
 	return count
 
-func is_in_water_streams(character: Character) -> bool:
+func _can_water_streams_trap(character: Character) -> bool:
 	for water_stream in water_streams():
-		if water_stream.is_in(character.continuous_position):
+		if water_stream.can_trap(character.continuous_position):
 			return true
 	return false
