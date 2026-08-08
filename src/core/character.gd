@@ -3,6 +3,19 @@ extends RefCounted
 
 const SPEED_IN_BUBBLE := 1.0
 
+# 스프라이트(64x96)를 offset(0,-32)로 그린 결과라 아트가 바뀌면 같이 바뀐다.
+const FEET_FROM_ANCHOR := 0.5
+
+# 갇힘 판정 거리. 물줄기 칸 중심에서 이만큼 떨어져 있어도 갇힌다.
+const TRAP_REACH_BELOW := 0.8 # 물줄기가 캐릭터보다 아래
+const TRAP_REACH_ABOVE := 0.2 # 물줄기가 캐릭터보다 위
+const TRAP_REACH_SIDE := 0.35
+
+# 갇힘 판정 상자. 스프라이트 전체가 아니라 발 위쪽 하반신만 담는다.
+const TRAP_BOX_TOP := WaterStream.TRAP_REACH_EXPOSED - TRAP_REACH_ABOVE
+const TRAP_BOX_BOTTOM := TRAP_REACH_BELOW - WaterStream.TRAP_REACH_EXPOSED
+const TRAP_BOX_SIDE := TRAP_REACH_SIDE - WaterStream.TRAP_REACH_EXPOSED
+
 var continuous_position: Vector2
 var is_out: bool = false
 var bubble: Bubble = null
@@ -64,6 +77,12 @@ func position() -> Vector2i:
 
 func pixel_position() -> Vector2:
 	return continuous_position * Map.PIXELS_PER_CELL
+
+func trap_box() -> Rect2:
+	return Rect2(
+		continuous_position + Vector2(-TRAP_BOX_SIDE, TRAP_BOX_TOP),
+		Vector2(TRAP_BOX_SIDE * 2.0, TRAP_BOX_BOTTOM - TRAP_BOX_TOP)
+	)
 
 func is_trapped() -> bool:
 	return bubble != null

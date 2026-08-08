@@ -55,6 +55,8 @@ animations = [{
 material = SubResource("ShaderMaterial_1ki16")
 sprite_frames = SubResource("SpriteFrames_ov4ug")
 animation = &"walk_up"
+centered = false
+offset = Vector2(0, -32)
 script = ExtResource("1_lek68")
 masks = Dictionary[StringName, Texture2D]({
 &"bubble": ExtResource("7_v7y3l"),

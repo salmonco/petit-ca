@@ -136,6 +136,13 @@ func test_캐릭터는_칸에_걸쳐져_있는_상태에서_물줄기를_맞으�
 	map.tick(WaterBalloon.POP_AFTER_SECONDS * 1.5)
 	assert_bool(character.is_trapped()).is_false()
 
+# 물방울에 갇힘
+func test_갇힘_판정_상자는_앵커와_발_사이에_있다() -> void:
+	assert_bool(Character.TRAP_BOX_TOP >= 0.0).is_true()
+	assert_bool(Character.TRAP_BOX_TOP < Character.TRAP_BOX_BOTTOM).is_true()
+	assert_bool(Character.TRAP_BOX_BOTTOM <= Character.FEET_FROM_ANCHOR).is_true()
+	assert_bool(Character.TRAP_BOX_SIDE > 0.0).is_true()
+
 # 가두기
 func test_캐릭터는_다른_칸에_있는_물풍선_위치로_이동할_수_없다() -> void:
 	var map := Map.new()
@@ -293,3 +300,6 @@ func test_NPC는_물방울에_갇힌_인간_캐릭터의_위치로_이동하면_
 	npc.move(Vector2i.UP, 0.25, map.water_balloon_positions())
 	map.tick(0.25)
 	assert_bool(human.is_out).is_true()
+
+func 캐릭터는_물방울에_갇혀_있는_상대_팀의_캐릭터를_아웃시킬_수_있다() -> void:
+	return

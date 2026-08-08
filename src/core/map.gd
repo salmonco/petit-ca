@@ -210,6 +210,6 @@ func water_balloon_count_by_character(character: Character) -> int:
 
 func _can_water_streams_trap(character: Character) -> bool:
 	for water_stream in water_streams():
-		if water_stream.can_trap(character.continuous_position):
+		if water_stream.can_trap(character.trap_box()):
 			return true
 	return false
