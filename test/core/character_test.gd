@@ -280,7 +280,7 @@ func test_캐릭터의_이동_방향이_영벡터면_얼굴_방향을_바꾸지_
 func test_인간_캐릭터는_물방울에_갇힌_NPC의_위치로_이동하면_NPC를_아웃시킬_수_있다() -> void:
 	var map := Map.new()
 	var human := Character.new(Vector2i(5, 1))
-	var npc := Npc.new(Vector2i(5, 2))
+	var npc := Npc.new(Vector2i(5, 2), 0, Color.BLUE)
 	map.add_character(human)
 	map.add_character(npc)
 	npc.trapped()
@@ -292,7 +292,7 @@ func test_인간_캐릭터는_물방울에_갇힌_NPC의_위치로_이동하면_
 func test_NPC는_물방울에_갇힌_인간_캐릭터의_위치로_이동하면_인간_캐릭터를_아웃시킬_수_있다() -> void:
 	var map := Map.new()
 	var human := Character.new(Vector2i(5, 1))
-	var npc := Npc.new(Vector2i(5, 2))
+	var npc := Npc.new(Vector2i(5, 2), 0, Color.BLUE)
 	map.add_character(human)
 	map.add_character(npc)
 	human.trapped()
@@ -300,6 +300,3 @@ func test_NPC는_물방울에_갇힌_인간_캐릭터의_위치로_이동하면_
 	npc.move(Vector2i.UP, 0.25, map.water_balloon_positions())
 	map.tick(0.25)
 	assert_bool(human.is_out).is_true()
-
-func 캐릭터는_물방울에_갇혀_있는_상대_팀의_캐릭터를_아웃시킬_수_있다() -> void:
-	return

@@ -71,29 +71,7 @@ func tick(delta: float) -> void:
 			check_trap_character_in_bubble()
 	
 	# 상대방 킬
-	var trapped_humans: Array[Character] = []
-	var alive_humans: Array[Character] = []
-	var trapped_npcs: Array[Npc] = []
-	var alive_npcs: Array[Npc] = []
-	for character in _characters:
-		if character is Npc:
-			if character.is_trapped():
-				trapped_npcs.append(character)
-			else:
-				alive_npcs.append(character)
-		else:
-			if character.is_trapped():
-				trapped_humans.append(character)
-			else:
-				alive_humans.append(character)
-	for trapped_human in trapped_humans:
-		for alive_npc in alive_npcs:
-			if trapped_human.position() == alive_npc.position():
-				let_character_out(trapped_human)
-	for trapped_npc in trapped_npcs:
-		for alive_human in alive_humans:
-			if trapped_npc.position() == alive_human.position():
-				let_character_out(trapped_npc)
+	_check_out_by_enemy()
 
 	# 게임 아이템 먹음
 	for character in _characters:
@@ -213,3 +191,27 @@ func _can_water_streams_trap(character: Character) -> bool:
 		if water_stream.can_trap(character.trap_box()):
 			return true
 	return false
+
+func _check_out_by_enemy() -> void:
+	var original_characters: Array[Character] = _characters.duplicate()
+	var character_count := _characters.size()
+	var out: Array[Character] = []
+	for i in range(character_count - 1):
+		var character1 := original_characters[i]
+		if character1 in out:
+			continue
+		for j in range(i + 1, character_count):
+			var character2 := original_characters[j]
+			if character2 in out:
+				continue
+			if character1.position() != character2.position() \
+				or character1.color == character2.color \
+				or character1.is_trapped() and character2.is_trapped() \
+				or not character1.is_trapped() and not character2.is_trapped():
+				continue
+			if character1.is_trapped():
+				out.append(character1)
+			else:
+				out.append(character2)
+	for character in out:
+		let_character_out(character)
