@@ -60,7 +60,7 @@ func tick(delta: float) -> void:
 	
 	# 물줄기 연쇄
 	while true:
-		var popped_water_balloons := check_pop_water_balloons()
+		var popped_water_balloons := _check_pop_water_balloons()
 		if popped_water_balloons.is_empty():
 			break
 		for water_balloon: WaterBalloon in popped_water_balloons:
@@ -133,7 +133,7 @@ func has_character(position: Vector2i) -> bool:
 func _remove_character(character: Character) -> void:
 	_characters.erase(character)
 
-func check_pop_water_balloons() -> Array[WaterBalloon]:
+func _check_pop_water_balloons() -> Array[WaterBalloon]:
 	var popped_water_balloons: Array[WaterBalloon] = []
 	for water_balloon: WaterBalloon in _water_balloons.values():
 		if water_balloon.position in water_stream_positions():
