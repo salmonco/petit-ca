@@ -42,8 +42,6 @@ func tick(delta: float) -> void:
 	for water_stream: WaterStream in _water_streams:
 		if water_stream.tick(delta):
 			expired_water_streams.append(water_stream)
-		else:
-			check_trap_character_in_bubble()
 	for water_stream: WaterStream in expired_water_streams:
 		_remove_water_stream(water_stream)
 	
@@ -52,7 +50,6 @@ func tick(delta: float) -> void:
 		if water_balloon.tick(delta):
 			_remove_water_balloon(water_balloon.position)
 			add_water_streams(water_balloon.position, water_balloon.stream_length)
-			check_trap_character_in_bubble()
 
 	# 물방울 tick
 	for character in _characters.duplicate():
@@ -68,9 +65,8 @@ func tick(delta: float) -> void:
 			break
 		for water_balloon: WaterBalloon in popped_water_balloons:
 			add_water_streams(water_balloon.position, water_balloon.stream_length)
-			check_trap_character_in_bubble()
 	
-	# 상대방 킬
+	_check_trap_character_in_bubble()
 	_check_out_by_enemy()
 
 	# 게임 아이템 먹음
@@ -131,14 +127,6 @@ func character_positions() -> Array[Vector2i]:
 func characters() -> Array[Character]:
 	return _characters
 
-func check_trap_character_in_bubble() -> void:
-	for character in _characters:
-		if character.is_trapped():
-			continue
-		if _can_water_streams_trap(character):
-			character.trapped()
-			break
-
 func has_character(position: Vector2i) -> bool:
 	return character_positions().has(position)
 
@@ -191,6 +179,14 @@ func _can_water_streams_trap(character: Character) -> bool:
 		if water_stream.can_trap(character.trap_box()):
 			return true
 	return false
+
+func _check_trap_character_in_bubble() -> void:
+	for character in _characters:
+		if character.is_trapped():
+			continue
+		if _can_water_streams_trap(character):
+			character.trapped()
+			break
 
 func _check_out_by_enemy() -> void:
 	var original_characters: Array[Character] = _characters.duplicate()
