@@ -57,15 +57,8 @@ func tick(delta: float) -> void:
 			if character.bubble.tick(delta):
 				# 자동 아웃
 				let_character_out(character)
-	
-	# 물줄기 연쇄
-	while true:
-		var popped_water_balloons := _check_pop_water_balloons()
-		if popped_water_balloons.is_empty():
-			break
-		for water_balloon: WaterBalloon in popped_water_balloons:
-			add_water_streams(water_balloon.position, water_balloon.stream_length)
-	
+
+	_check_chain_water_streams()
 	_check_trap_character_in_bubble()
 	_check_out_by_enemy()
 
@@ -83,8 +76,8 @@ func tick(delta: float) -> void:
 		if water_stream_positions().has(game_item.position):
 			_remove_game_item(game_item)
 
-func add_water_streams(center_cell: Vector2i, length: int) -> void:
-	var center_water_stream := WaterStream.new(center_cell, Vector2i.ZERO, "center")
+func add_water_streams(center_cell: Vector2i, length: int, elapsed_time: float = 0.0) -> void:
+	var center_water_stream := WaterStream.new(center_cell, Vector2i.ZERO, "center", elapsed_time)
 	add_water_stream(center_water_stream)
 	for depth in range(1, length + 1):
 		for direction in WaterStream.DIRECTION:
@@ -94,7 +87,7 @@ func add_water_streams(center_cell: Vector2i, length: int) -> void:
 				position_type = "end"
 			else:
 				position_type = "straight"
-			var water_stream := WaterStream.new(cell, direction, position_type)
+			var water_stream := WaterStream.new(cell, direction, position_type, elapsed_time)
 			add_water_stream(water_stream)
 
 func add_water_stream(water_stream: WaterStream) -> void:
@@ -132,14 +125,6 @@ func has_character(position: Vector2i) -> bool:
 
 func _remove_character(character: Character) -> void:
 	_characters.erase(character)
-
-func _check_pop_water_balloons() -> Array[WaterBalloon]:
-	var popped_water_balloons: Array[WaterBalloon] = []
-	for water_balloon: WaterBalloon in _water_balloons.values():
-		if water_balloon.position in water_stream_positions():
-			_remove_water_balloon(water_balloon.position)
-			popped_water_balloons.append(water_balloon)
-	return popped_water_balloons
 
 func let_character_out(character: Character) -> void:
 	character.out()
@@ -211,3 +196,20 @@ func _check_out_by_enemy() -> void:
 				out.append(character2)
 	for character in out:
 		let_character_out(character)
+
+func _check_chain_water_streams() -> void:
+	while true:
+		var popped_water_balloons := _check_pop_water_balloons()
+		if popped_water_balloons.is_empty():
+			break
+		for water_balloon in popped_water_balloons:
+			add_water_streams(water_balloon.position, water_balloon.stream_length, popped_water_balloons[water_balloon])
+
+func _check_pop_water_balloons() -> Dictionary[WaterBalloon, float]:
+	var popped_water_balloons: Dictionary[WaterBalloon, float] = {}
+	for water_balloon: WaterBalloon in _water_balloons.values():
+		for water_stream: WaterStream in _water_streams:
+			if water_balloon.position == water_stream.position:
+				_remove_water_balloon(water_balloon.position)
+				popped_water_balloons[water_balloon] = water_stream.get_elapsed_time()
+	return popped_water_balloons

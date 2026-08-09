@@ -1,7 +1,7 @@
 class_name WaterStream
 extends RefCounted
 
-const DURATION := 1.0
+const DURATION := 0.2
 const DIRECTION: Array[Vector2i] = [
 	Vector2i.UP,
 	Vector2i.DOWN,
@@ -16,10 +16,11 @@ var position: Vector2i
 var direction: Vector2i
 var position_type: String # "center" | "straight" | "end"
 
-func _init(cell: Vector2i, dir: Vector2i, type: String) -> void:
+func _init(cell: Vector2i, dir: Vector2i, type: String, elapsed_time: float = 0.0) -> void:
 	position = cell
 	direction = dir
 	position_type = type
+	_elapsed_time = elapsed_time
 
 func tick(delta: float) -> bool:
 	_elapsed_time += delta
@@ -58,3 +59,6 @@ func _reach(face: Vector2i, axis: Vector2i, is_end: bool) -> float:
 		# 뻗어 나가는 면 - 끝 칸이 아니면 이어짐
 		return HALF_CELL
 	return TRAP_REACH_EXPOSED
+
+func get_elapsed_time() -> float:
+	return _elapsed_time

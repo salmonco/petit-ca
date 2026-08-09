@@ -63,7 +63,7 @@ func test_물줄기가_있는_동안에_캐릭터가_이전_물줄기_위치로_
 	map.add_character(character)
 	map.tick(WaterStream.DURATION * 0.5)
 	character.move(Vector2i.RIGHT, 0.25, [])
-	map.tick(0.1)
+	map.tick(WaterStream.DURATION * 0.1)
 	assert_bool(character.is_trapped()).is_true()
 
 func test_물줄기가_사라진_후에_캐릭터가_이전_물줄기_위치로_이동하면_물방울에_갇히지_않는다() -> void:

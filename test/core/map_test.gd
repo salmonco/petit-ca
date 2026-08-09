@@ -68,8 +68,8 @@ func test_물풍선은_터지고_나서_제_수명만큼_유지된다() -> void:
 	var water_balloon := WaterBalloon.new(Vector2i(4, 2), character)
 	_map.add_water_balloon(water_balloon)
 	_map.tick(WaterBalloon.POP_AFTER_SECONDS)
-	_map.tick(0.4)
-	_map.tick(0.4)
+	_map.tick(WaterStream.DURATION * 0.4)
+	_map.tick(WaterStream.DURATION * 0.4)
 	assert_bool(_map.has_water_stream(Vector2i(4, 2))).is_true()
 
 func test_물풍선이_터질_때만_물줄기가_생긴다() -> void:
@@ -245,6 +245,19 @@ func test_물풍선_하나가_터지면_물줄기_위치에_있는_물풍선도_
 	assert_array(_map.water_stream_positions()).contains(
 		[Vector2i(4, 2), Vector2i(4, 1), Vector2i(4, 3), Vector2i(3, 2), Vector2i(5, 2)
 		,Vector2i(5, 1), Vector2i(5, 3), Vector2i(6, 2)])
+
+func test_물줄기에_의해_같이_터진_물풍선의_물줄기_지속_시간은_인접한_물줄기의_지속_시간과_동일하다() -> void:
+	var character := Character.new(Vector2i(1, 0))
+	_map.add_water_streams(Vector2i(4, 2), 1)
+	_map.tick(WaterStream.DURATION * 0.5)
+	var water_balloon := WaterBalloon.new(Vector2i(5, 2), character)
+	_map.add_water_balloon(water_balloon)
+	_map.tick(WaterStream.DURATION * 0.3)
+	assert_bool(_map.has_water_stream(Vector2i(4, 2))).is_true()
+	assert_bool(_map.has_water_stream(Vector2i(5, 3))).is_true()
+	_map.tick(WaterStream.DURATION * 0.5)
+	assert_bool(_map.has_water_stream(Vector2i(4, 2))).is_false()
+	assert_bool(_map.has_water_stream(Vector2i(5, 3))).is_false()
 
 # 게임 아이템
 func test_맵의_특정_위치에_게임_아이템을_배치할_수_있다() -> void:
