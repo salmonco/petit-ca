@@ -112,9 +112,9 @@ func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventKey and not event.is_echo():
 		var key_event := (event as InputEventKey)
 		if key_event.is_pressed():
-			handle_key_pressed(key_event.keycode, key_event.location)
+			handle_key_pressed(key_event.physical_keycode, key_event.location)
 		else:
-			handle_key_released(key_event.keycode)
+			handle_key_released(key_event.physical_keycode)
 
 func _process(delta: float) -> void:
 	tick(delta)
