@@ -2,9 +2,19 @@
 
 [ext_resource type="Script" uid="uid://dyvc3d5gac1ca" path="res://src/game/character_view.gd" id="1_lek68"]
 [ext_resource type="Texture2D" uid="uid://dxl8615vet2v6" path="res://assets/npcs/zomkkan_bubble.png" id="1_pkdc6"]
+[ext_resource type="Shader" uid="uid://cnjhnjfh1msfw" path="res://src/game/character_recolor.gdshader" id="1_rvyx0"]
 [ext_resource type="Texture2D" uid="uid://lgd0qjypgmuh" path="res://assets/npcs/zomkkan_down.png" id="2_rvyx0"]
 [ext_resource type="Texture2D" uid="uid://bs2r2xv871f2w" path="res://assets/npcs/zomkkan_right.png" id="3_gamaw"]
 [ext_resource type="Texture2D" uid="uid://m2c6q8gwl08g" path="res://assets/npcs/zomkkan_up.png" id="4_i010c"]
+[ext_resource type="Texture2D" uid="uid://drry64n8c2n7i" path="res://assets/npcs/zomkkan_bubble_mask.png" id="7_v7y3l"]
+[ext_resource type="Texture2D" uid="uid://csyc6ao42ao4m" path="res://assets/npcs/zomkkan_down_mask.png" id="8_hllcp"]
+[ext_resource type="Texture2D" uid="uid://dvrhk72rfcpl2" path="res://assets/npcs/zomkkan_right_mask.png" id="9_flmst"]
+[ext_resource type="Texture2D" uid="uid://bi6nhgiu2q05t" path="res://assets/npcs/zomkkan_up_mask.png" id="10_c7gjm"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_1ki16"]
+resource_local_to_scene = true
+shader = ExtResource("1_rvyx0")
+shader_parameter/color = Color(1, 0, 0, 1)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_ov4ug"]
 animations = [{
@@ -42,6 +52,15 @@ animations = [{
 }]
 
 [node name="ZomkkanView" type="AnimatedSprite2D" unique_id=1174227929]
+material = SubResource("ShaderMaterial_1ki16")
 sprite_frames = SubResource("SpriteFrames_ov4ug")
 animation = &"walk_up"
+centered = false
+offset = Vector2(0, -32)
 script = ExtResource("1_lek68")
+masks = Dictionary[StringName, Texture2D]({
+&"bubble": ExtResource("7_v7y3l"),
+&"walk_down": ExtResource("8_hllcp"),
+&"walk_side": ExtResource("9_flmst"),
+&"walk_up": ExtResource("10_c7gjm")
+})

@@ -68,8 +68,8 @@ func test_물풍선은_터지고_나서_제_수명만큼_유지된다() -> void:
 	var water_balloon := WaterBalloon.new(Vector2i(4, 2), character)
 	_map.add_water_balloon(water_balloon)
 	_map.tick(WaterBalloon.POP_AFTER_SECONDS)
-	_map.tick(0.4)
-	_map.tick(0.4)
+	_map.tick(WaterStream.DURATION * 0.4)
+	_map.tick(WaterStream.DURATION * 0.4)
 	assert_bool(_map.has_water_stream(Vector2i(4, 2))).is_true()
 
 func test_물풍선이_터질_때만_물줄기가_생긴다() -> void:
@@ -119,6 +119,90 @@ func test_물방울에_갇힌_상태의_캐릭터가_물풍선을_놓아도_맵�
 	character.place_water_balloon(_map)
 	assert_int(_map.water_balloon_count()).is_equal(1)
 
+func test_가로_물줄기_위에서_x축만_두_칸에_걸쳐_있으면_물방울에_갇힌다() -> void:
+	var placer := Character.new(Vector2i(4, 2))
+	_map.add_water_balloon(WaterBalloon.new(Vector2i(4, 2), placer))
+	var victim := Character.new(Vector2i(3, 2))
+	victim.continuous_position = Vector2(3.47, 2.0)
+	_map.add_character(victim)
+	_map.tick(WaterBalloon.POP_AFTER_SECONDS)
+	_map.tick(0.1)
+	assert_bool(victim.is_trapped()).is_true()
+
+func test_물줄기_위에서_x축과_y축_모두_두_칸에_걸쳐_있으면_물방울에_갇히지_않는다() -> void:
+	var placer := Character.new(Vector2i(4, 2))
+	_map.add_water_balloon(WaterBalloon.new(Vector2i(4, 2), placer))
+	var victim := Character.new(Vector2i(3, 2))
+	victim.continuous_position = Vector2(3.47, 2.47)
+	_map.add_character(victim)
+	_map.tick(WaterBalloon.POP_AFTER_SECONDS)
+	_map.tick(0.1)
+	assert_bool(victim.is_trapped()).is_false()
+
+func test_캐릭터의_발이_아래_칸_물줄기에_들어가면_물방울에_갇힌다() -> void:
+	var character := Character.new(Vector2i(3, 5))
+	character.continuous_position = Vector2(3.0, 5.3)
+	_map.add_character(character)
+	_map.add_water_stream(WaterStream.new(Vector2i(3, 6), Vector2i.LEFT, "end"))
+	_map.tick(0.1)
+	assert_bool(character.is_trapped()).is_true()
+
+func test_캐릭터의_머리만_위_칸_물줄기에_닿으면_물방울에_갇히지_않는다() -> void:
+	var character := Character.new(Vector2i(3, 5))
+	character.continuous_position = Vector2(3.0, 4.7)
+	_map.add_character(character)
+	_map.add_water_stream(WaterStream.new(Vector2i(3, 4), Vector2i.LEFT, "end"))
+	_map.tick(0.1)
+	assert_bool(character.is_trapped()).is_false()
+
+func test_물줄기가_아래로_0_75칸_떨어져_있으면_물방울에_갇힌다() -> void:
+	var character := Character.new(Vector2i(3, 5))
+	character.continuous_position = Vector2(3.0, 5.25)
+	_map.add_character(character)
+	_map.add_water_stream(WaterStream.new(Vector2i(3, 6), Vector2i.LEFT, "end"))
+	_map.tick(0.1)
+	assert_bool(character.is_trapped()).is_true()
+
+func test_물줄기가_아래로_0_9칸_떨어져_있으면_물방울에_갇히지_않는다() -> void:
+	var character := Character.new(Vector2i(3, 5))
+	character.continuous_position = Vector2(3.0, 5.1)
+	_map.add_character(character)
+	_map.add_water_stream(WaterStream.new(Vector2i(3, 6), Vector2i.LEFT, "end"))
+	_map.tick(0.1)
+	assert_bool(character.is_trapped()).is_false()
+
+func test_물줄기가_위로_0_1칸_떨어져_있으면_물방울에_갇힌다() -> void:
+	var character := Character.new(Vector2i(3, 4))
+	character.continuous_position = Vector2(3.0, 4.1)
+	_map.add_character(character)
+	_map.add_water_stream(WaterStream.new(Vector2i(3, 4), Vector2i.LEFT, "end"))
+	_map.tick(0.1)
+	assert_bool(character.is_trapped()).is_true()
+
+func test_물줄기가_위로_0_3칸_떨어져_있으면_물방울에_갇히지_않는다() -> void:
+	var character := Character.new(Vector2i(3, 4))
+	character.continuous_position = Vector2(3.0, 4.3)
+	_map.add_character(character)
+	_map.add_water_stream(WaterStream.new(Vector2i(3, 4), Vector2i.LEFT, "end"))
+	_map.tick(0.1)
+	assert_bool(character.is_trapped()).is_false()
+
+func test_물줄기가_옆으로_0_25칸_떨어져_있으면_물방울에_갇힌다() -> void:
+	var character := Character.new(Vector2i(3, 6))
+	character.continuous_position = Vector2(2.75, 5.6)
+	_map.add_character(character)
+	_map.add_water_stream(WaterStream.new(Vector2i(3, 6), Vector2i.DOWN, "end"))
+	_map.tick(0.1)
+	assert_bool(character.is_trapped()).is_true()
+
+func test_물줄기가_옆으로_0_45칸_떨어져_있으면_물방울에_갇히지_않는다() -> void:
+	var character := Character.new(Vector2i(3, 6))
+	character.continuous_position = Vector2(2.55, 5.6)
+	_map.add_character(character)
+	_map.add_water_stream(WaterStream.new(Vector2i(3, 6), Vector2i.DOWN, "end"))
+	_map.tick(0.1)
+	assert_bool(character.is_trapped()).is_false()
+
 # 자동 아웃
 func test_캐릭터가_물방울에_갇힌_후_일정_시간이_지나면_자동_아웃되어_맵에서_사라진다() -> void:
 	var water_stream := WaterStream.new(Vector2i(4, 2), Vector2i.ZERO, "center")
@@ -161,6 +245,19 @@ func test_물풍선_하나가_터지면_물줄기_위치에_있는_물풍선도_
 	assert_array(_map.water_stream_positions()).contains(
 		[Vector2i(4, 2), Vector2i(4, 1), Vector2i(4, 3), Vector2i(3, 2), Vector2i(5, 2)
 		,Vector2i(5, 1), Vector2i(5, 3), Vector2i(6, 2)])
+
+func test_물줄기에_의해_같이_터진_물풍선의_물줄기_지속_시간은_인접한_물줄기의_지속_시간과_동일하다() -> void:
+	var character := Character.new(Vector2i(1, 0))
+	_map.add_water_streams(Vector2i(4, 2), 1)
+	_map.tick(WaterStream.DURATION * 0.5)
+	var water_balloon := WaterBalloon.new(Vector2i(5, 2), character)
+	_map.add_water_balloon(water_balloon)
+	_map.tick(WaterStream.DURATION * 0.3)
+	assert_bool(_map.has_water_stream(Vector2i(4, 2))).is_true()
+	assert_bool(_map.has_water_stream(Vector2i(5, 3))).is_true()
+	_map.tick(WaterStream.DURATION * 0.5)
+	assert_bool(_map.has_water_stream(Vector2i(4, 2))).is_false()
+	assert_bool(_map.has_water_stream(Vector2i(5, 3))).is_false()
 
 # 게임 아이템
 func test_맵의_특정_위치에_게임_아이템을_배치할_수_있다() -> void:
@@ -207,3 +304,28 @@ func test_캐릭터가_물줄기_아이템을_먹고_물풍선을_놓으면_맵�
 	assert_bool(_map.has_water_stream(Vector2i(3, 3))).is_true()
 	assert_bool(_map.has_water_stream(Vector2i(4, 3))).is_true()
 	assert_bool(_map.has_water_stream(Vector2i(5, 3))).is_false()
+
+# 상대방 아웃
+func test_캐릭터는_물방울에_갇혀_있는_상대_팀의_캐릭터를_아웃시킬_수_있다() -> void:
+	var character1 := Character.new(Vector2i(3, 4), 1, Color.RED)
+	var character2 := Character.new(Vector2i(2, 3), 2, Color.BLUE)
+	_map.add_character(character1)
+	_map.add_character(character2)
+	_map.add_water_streams(Vector2i(2, 3), 1)
+	_map.tick(WaterStream.DURATION * 0.5)
+	assert_bool(character2.is_trapped()).is_true()
+	assert_bool(character2.is_out).is_false()
+	assert_bool(_map.has_character(Vector2i(2, 3))).is_true()
+	_map.tick(WaterStream.DURATION * 1.5)
+	character1.move(Vector2i.UP, 0.25, _map.water_balloon_positions())
+	character1.move(Vector2i.LEFT, 0.25, _map.water_balloon_positions())
+	_map.tick(0.1)
+	assert_bool(character2.is_trapped()).is_false()
+	assert_bool(character2.is_out).is_true()
+	assert_bool(_map.has_character(Vector2i(2, 3))).is_true()
+	character1.move(Vector2i.RIGHT, 0.25, _map.water_balloon_positions())
+	character1.move(Vector2i.DOWN, 0.25, _map.water_balloon_positions())
+	_map.tick(0.1)
+	assert_bool(character2.is_trapped()).is_false()
+	assert_bool(character2.is_out).is_true()
+	assert_bool(_map.has_character(Vector2i(2, 3))).is_false()

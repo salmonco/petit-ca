@@ -63,7 +63,7 @@ func test_물줄기가_있는_동안에_캐릭터가_이전_물줄기_위치로_
 	map.add_character(character)
 	map.tick(WaterStream.DURATION * 0.5)
 	character.move(Vector2i.RIGHT, 0.25, [])
-	map.tick(0.1)
+	map.tick(WaterStream.DURATION * 0.1)
 	assert_bool(character.is_trapped()).is_true()
 
 func test_물줄기가_사라진_후에_캐릭터가_이전_물줄기_위치로_이동하면_물방울에_갇히지_않는다() -> void:
@@ -92,9 +92,12 @@ func test_물방울에_갇힌_상태의_캐릭터는_이동_속도가_느려진�
 	var map := Map.new()
 	var character := Character.new(Vector2i(1, 5))
 	map.add_character(character)
-	assert_float(character.speed).is_not_equal(Character.SPEED_IN_BUBBLE)
+	assert_vector(character.position()).is_equal(Vector2i(1, 5))
+	character.move(Vector2i.RIGHT, 0.25, map.water_balloon_positions())
+	assert_vector(character.position()).is_equal(Vector2i(2, 5))
 	character.trapped()
-	assert_float(character.speed).is_equal(Character.SPEED_IN_BUBBLE)
+	character.move(Vector2i.RIGHT, 0.25, map.water_balloon_positions())
+	assert_vector(character.position()).is_not_equal(Vector2i(3, 5))
 
 # 자동 아웃
 func test_캐릭터가_물방울에_갇히고_일정_시간이_지나면_자동_아웃된다() -> void:
@@ -132,6 +135,13 @@ func test_캐릭터는_칸에_걸쳐져_있는_상태에서_물줄기를_맞으�
 	character.move(Vector2i.LEFT, 0.125, map.water_balloon_positions())
 	map.tick(WaterBalloon.POP_AFTER_SECONDS * 1.5)
 	assert_bool(character.is_trapped()).is_false()
+
+# 물방울에 갇힘
+func test_갇힘_판정_상자는_앵커와_발_사이에_있다() -> void:
+	assert_bool(Character.TRAP_BOX_TOP >= 0.0).is_true()
+	assert_bool(Character.TRAP_BOX_TOP < Character.TRAP_BOX_BOTTOM).is_true()
+	assert_bool(Character.TRAP_BOX_BOTTOM <= Character.FEET_FROM_ANCHOR).is_true()
+	assert_bool(Character.TRAP_BOX_SIDE > 0.0).is_true()
 
 # 가두기
 func test_캐릭터는_다른_칸에_있는_물풍선_위치로_이동할_수_없다() -> void:
@@ -206,6 +216,28 @@ func test_캐릭터가_물줄기_아이템을_먹으면_물줄기가_한_칸_증
 	character.get_game_item(GameItem.INCREASE_WATER_STREAM_LENGTH)
 	assert_int(character.max_water_stream_length).is_equal(2)
 
+func test_캐릭터가_스피드_아이템을_먹으면_스피드가_증가한다() -> void:
+	var map := Map.new()
+	var character := Character.new(Vector2i(3, 4))
+	map.add_character(character)
+	assert_float(character.speed).is_equal(4.0)
+	character.get_game_item(GameItem.INCREASE_SPEED)
+	assert_float(character.speed).is_equal(4.5)
+
+func test_캐릭터가_물방울에_갇혔다가_풀려나면_원래의_스피드로_돌아온다() -> void:
+	var map := Map.new()
+	var character := Character.new(Vector2i(3, 4))
+	map.add_character(character)
+	character.move(Vector2i.RIGHT, 0.25, map.water_balloon_positions())
+	assert_vector(character.position()).is_equal(Vector2i(4, 4))
+	character.trapped()
+	character.move(Vector2i.RIGHT, 0.25, map.water_balloon_positions())
+	var position := Vector2(4, 4) + Vector2.RIGHT * Character.SPEED_IN_BUBBLE * 0.25
+	assert_vector(character.continuous_position).is_equal(position)
+	character.rescued()
+	character.move(Vector2i.RIGHT, 0.25, map.water_balloon_positions())
+	assert_vector(character.continuous_position).is_equal(position + Vector2.RIGHT * character.speed * 0.25)
+
 # 얼굴 방향
 func test_캐릭터가_위쪽으로_이동하면_얼굴_방향이_위쪽이_된다() -> void:
 	var map := Map.new()
@@ -248,7 +280,7 @@ func test_캐릭터의_이동_방향이_영벡터면_얼굴_방향을_바꾸지_
 func test_인간_캐릭터는_물방울에_갇힌_NPC의_위치로_이동하면_NPC를_아웃시킬_수_있다() -> void:
 	var map := Map.new()
 	var human := Character.new(Vector2i(5, 1))
-	var npc := Npc.new(Vector2i(5, 2))
+	var npc := Npc.new(Vector2i(5, 2), 0, Color.BLUE)
 	map.add_character(human)
 	map.add_character(npc)
 	npc.trapped()
@@ -260,7 +292,7 @@ func test_인간_캐릭터는_물방울에_갇힌_NPC의_위치로_이동하면_
 func test_NPC는_물방울에_갇힌_인간_캐릭터의_위치로_이동하면_인간_캐릭터를_아웃시킬_수_있다() -> void:
 	var map := Map.new()
 	var human := Character.new(Vector2i(5, 1))
-	var npc := Npc.new(Vector2i(5, 2))
+	var npc := Npc.new(Vector2i(5, 2), 0, Color.BLUE)
 	map.add_character(human)
 	map.add_character(npc)
 	human.trapped()

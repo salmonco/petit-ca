@@ -1,42 +1,142 @@
 extends GdUnitTestSuite
 
-var _map: Map
-var _battle: Battle
-var _human: Character
-var _npc: Npc
-
-func before_test() -> void:
-	_map = Map.new()
-	_battle = Battle.new(_map)
-	_human = Character.new(Vector2i(4, 2))
-	_npc = Npc.new(Vector2i(9, 10))
-	_map.add_character(_human)
-	_map.add_character(_npc)
-
 # 게임 오버
-func test_맵에_인간_캐릭터가_아웃되면_게임을_종료한다() -> void:
-	assert_bool(_battle.is_game_over()).is_false()
-	_map.let_character_out(_human)
-	assert_bool(_battle.is_game_over()).is_true()
+func test_몬스터_모드에서_맵에_인간_캐릭터가_아웃되면_게임을_종료한다() -> void:
+	var map := Map.new()
+	var battle := Battle.new(map, BattleMode.MONSTER)
+	var human := Character.new(Vector2i(4, 2))
+	var npc := Npc.new(Vector2i(9, 10))
+	map.add_character(human)
+	map.add_character(npc)
+	assert_bool(battle.is_game_over()).is_false()
+	battle.get_map().let_character_out(human)
+	battle.tick(0.1)
+	assert_bool(battle.is_game_over()).is_true()
 
-func test_맵에_NPC가_아웃되면_게임을_종료한다() -> void:
-	assert_bool(_battle.is_game_over()).is_false()
-	_map.let_character_out(_npc)
-	assert_bool(_battle.is_game_over()).is_true()
+func test_몬스터_모드에서_맵에_NPC가_아웃되면_게임을_종료한다() -> void:
+	var map := Map.new()
+	var battle := Battle.new(map, BattleMode.MONSTER)
+	var human := Character.new(Vector2i(4, 2))
+	var npc := Npc.new(Vector2i(9, 10))
+	map.add_character(human)
+	map.add_character(npc)
+	assert_bool(battle.is_game_over()).is_false()
+	battle.get_map().let_character_out(npc)
+	battle.tick(0.1)
+	assert_bool(battle.is_game_over()).is_true()
+
+func test_로컬멀티_모드에서_한_명이_아웃되면_게임이_종료된다() -> void:
+	var map := Map.new()
+	var battle := Battle.new(map, BattleMode.LOCAL_MULTI)
+	var human1 := Character.new(Vector2i(4, 2), 1, Color.RED)
+	var human2 := Character.new(Vector2i(9, 10), 2, Color.BLUE)
+	map.add_character(human1)
+	map.add_character(human2)
+	assert_bool(battle.is_game_over()).is_false()
+	battle.get_map().let_character_out(human1)
+	battle.tick(0.1)
+	assert_bool(battle.is_game_over()).is_true()
 
 # 승패
-func test_맵에_인간_캐릭터가_모두_아웃되면_게임에서_진다() -> void:
-	assert_bool(_battle.is_lose()).is_false()
-	_map.let_character_out(_human)
-	assert_bool(_battle.is_lose()).is_true()
+func test_하나의_배틀에서_승패가_난_후에_또_다시_승패가_나지_않는다() -> void:
+	var map := Map.new()
+	var battle := Battle.new(map, BattleMode.MONSTER)
+	var human := Character.new(Vector2i(4, 2))
+	var npc := Npc.new(Vector2i(9, 10), 0, Color.BLUE)
+	map.add_character(human)
+	map.add_character(npc)
+	assert_bool(battle.is_game_over()).is_false()
+	assert_that(battle.winner).is_not_equal(Color.BLUE)
+	battle.get_map().let_character_out(human)
+	battle.tick(0.1)
+	assert_bool(battle.is_game_over()).is_true()
+	assert_that(battle.winner).is_equal(Color.BLUE)
+	battle.get_map().let_character_out(npc)
+	battle.tick(0.1)
+	assert_bool(battle.is_game_over()).is_true()
+	assert_that(battle.winner).is_equal(Color.BLUE)
 
-func test_맵에_NPC가_모두_아웃되면_게임에서_이긴다() -> void:
-	assert_bool(_battle.is_win()).is_false()
-	_map.let_character_out(_npc)
-	assert_bool(_battle.is_win()).is_true()
+func test_몬스터_모드에서_맵에_인간_캐릭터가_모두_아웃되면_게임에서_진다() -> void:
+	var map := Map.new()
+	var battle := Battle.new(map, BattleMode.MONSTER)
+	var human := Character.new(Vector2i(4, 2))
+	var npc := Npc.new(Vector2i(9, 10), 0, Color.BLUE)
+	map.add_character(human)
+	map.add_character(npc)
+	assert_that(battle.winner).is_not_equal(Color.BLUE)
+	battle.get_map().let_character_out(human)
+	battle.tick(0.1)
+	assert_that(battle.winner).is_equal(Color.BLUE)
 
-func test_맵에_인간_캐릭터와_NPC_모두_아웃되면_무승부가_된다() -> void:
-	assert_bool(_battle.is_draw()).is_false()
-	_map.let_character_out(_npc)
-	_map.let_character_out(_human)
-	assert_bool(_battle.is_draw()).is_true()
+func test_몬스터_모드에서_맵에_NPC가_모두_아웃되면_게임에서_이긴다() -> void:
+	var map := Map.new()
+	var battle := Battle.new(map, BattleMode.MONSTER)
+	var human := Character.new(Vector2i(4, 2))
+	var npc := Npc.new(Vector2i(9, 10), 0, Color.BLUE)
+	map.add_character(human)
+	map.add_character(npc)
+	assert_that(battle.winner).is_not_equal(Color.RED)
+	battle.get_map().let_character_out(npc)
+	battle.tick(0.1)
+	assert_that(battle.winner).is_equal(Color.RED)
+
+func test_몬스터_모드에서_맵에_인간_캐릭터와_NPC_모두_아웃되면_무승부가_된다() -> void:
+	var map := Map.new()
+	var battle := Battle.new(map, BattleMode.MONSTER)
+	var human := Character.new(Vector2i(4, 2))
+	var npc := Npc.new(Vector2i(9, 10), 0, Color.BLUE)
+	map.add_character(human)
+	map.add_character(npc)
+	assert_bool(battle.is_draw).is_false()
+	battle.get_map().let_character_out(npc)
+	battle.get_map().let_character_out(human)
+	battle.tick(0.1)
+	assert_bool(battle.is_draw).is_true()
+
+func test_로컬멀티_모드에서_이긴_팀이_승리한다() -> void:
+	var map := Map.new()
+	var battle := Battle.new(map, BattleMode.LOCAL_MULTI)
+	var human1 := Character.new(Vector2i(4, 2), 1, Color.RED)
+	var human2 := Character.new(Vector2i(9, 10), 2, Color.BLUE)
+	map.add_character(human1)
+	map.add_character(human2)
+	battle.get_map().let_character_out(human1)
+	battle.tick(0.1)
+	assert_bool(battle.has_winner()).is_true()
+	assert_that(battle.winner).is_equal(Color.BLUE)
+
+func test_로컬멀티_모드에서_모든_팀이_아웃되면_무승부로_끝난다() -> void:
+	var map := Map.new()
+	var battle := Battle.new(map, BattleMode.LOCAL_MULTI)
+	var human1 := Character.new(Vector2i(4, 2), 1, Color.RED)
+	var human2 := Character.new(Vector2i(9, 10), 2, Color.BLUE)
+	map.add_character(human1)
+	map.add_character(human2)
+	battle.get_map().let_character_out(human1)
+	battle.get_map().let_character_out(human2)
+	battle.tick(0.1)
+	assert_bool(battle.has_winner()).is_false()
+	assert_bool(battle.is_draw).is_true()
+
+# 팀
+func test_캐릭터의_색상이_다르면_다른_팀이_된다() -> void:
+	var map := Map.new()
+	var battle := Battle.new(map, BattleMode.LOCAL_MULTI)
+	var human1 := Character.new(Vector2i(4, 2), 1, Color.RED)
+	var human2 := Character.new(Vector2i(9, 10), 2, Color.BLUE)
+	map.add_character(human1)
+	map.add_character(human2)
+	assert_int(battle.team_count()).is_equal(2)
+
+func test_캐릭터의_색상이_같으면_같은_팀이_된다() -> void:
+	var map := Map.new()
+	var battle := Battle.new(map, BattleMode.LOCAL_MULTI)
+	var human1 := Character.new(Vector2i(4, 2), 1, Color.RED)
+	var human2 := Character.new(Vector2i(9, 10), 2, Color.BLUE)
+	var human3 := Character.new(Vector2i(4, 2), 3, Color.RED)
+	var human4 := Character.new(Vector2i(9, 10), 4, Color.BLUE)
+	map.add_character(human1)
+	map.add_character(human2)
+	map.add_character(human3)
+	map.add_character(human4)
+	assert_int(battle.team_count()).is_equal(2)

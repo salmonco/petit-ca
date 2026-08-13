@@ -1,33 +1,45 @@
 class_name Battle
 extends RefCounted
 
+var winner: Color = Color.BLACK
+var is_draw: bool = false
 var _map: Map
+var _mode: StringName
 
-func _init(map: Map) -> void:
+func _init(map: Map, mode: StringName) -> void:
 	_map = map
+	_mode = mode
+
+func tick(delta: float) -> void:
+	_map.tick(delta)
+	if not is_game_over():
+		check_game_over()
 
 func is_game_over() -> bool:
-	return not _has_human() or not _has_npc()
+	return has_winner() or is_draw
 
-func is_win() -> bool:
-	return _has_human() and not _has_npc()
+func check_game_over() -> void:
+	if team_count() == 1:
+		winner = _teams()[0]
+	if team_count() == 0:
+		is_draw = true
 
-func is_lose() -> bool:
-	return _has_npc() and not _has_human()
-
-func is_draw() -> bool:
-	return not _has_human() and not _has_npc()
-
-func _has_human() -> bool:
-	var humans: Array[Character] = []
+func _teams() -> Array[Color]:
+	var colors: Array[Color] = []
 	for character in _map.characters():
-		if character is not Npc:
-			humans.append(character)
-	return not humans.is_empty()
+		var color = character.color
+		if color not in colors:
+			colors.append(color)
+	return colors
 
-func _has_npc() -> bool:
-	var npcs: Array[Npc] = []
-	for character in _map.characters():
-		if character is Npc:
-			npcs.append(character)
-	return not npcs.is_empty()
+func has_winner() -> bool:
+	return winner != Color.BLACK
+
+func team_count() -> int:
+	return _teams().size()
+
+func get_map() -> Map:
+	return _map
+
+func get_mode() -> StringName:
+	return _mode
