@@ -30,3 +30,9 @@ func test_두_팀_이상이어야_게임_시작이_가능하다() -> void:
 	room.add_character(character3)
 	assert_int(room.team_count()).is_equal(2)
 	assert_bool(room.can_game_start()).is_true()
+
+func test_몬스터_모드면_방에_NPC가_들어와_있는다() -> void:
+	var room := Room.new()
+	assert_bool(room.has_npc()).is_false()
+	room.set_battle_mode(BattleMode.MONSTER)
+	assert_bool(room.has_npc()).is_true()

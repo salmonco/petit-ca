@@ -26,6 +26,11 @@ func get_battle() -> Battle:
 
 func set_battle_mode(mode: StringName) -> void:
 	battle_mode = mode
+	if mode == BattleMode.MONSTER:
+		_add_npc()
+	else:
+		if has_npc():
+			_remove_npcs()
 
 func _teams() -> Array[Color]:
 	var colors: Array[Color] = []
@@ -40,3 +45,18 @@ func team_count() -> int:
 
 func can_game_start() -> bool:
 	return team_count() >= MINIMUM_TEAM_COUNT_TO_START_GAME
+
+func has_npc() -> bool:
+	for character in _characters:
+		if character is Npc:
+			return true
+	return false
+
+func _remove_npcs() -> void:
+	for character in _characters.duplicate():
+		if character is Npc:
+			_characters.erase(character)
+
+func _add_npc() -> void:
+	var npc := Npc.new(Vector2i(2, 3))
+	add_character(npc)
