@@ -300,3 +300,10 @@ func test_NPC는_물방울에_갇힌_인간_캐릭터의_위치로_이동하면_
 	npc.move(Vector2i.UP, 0.25, map.water_balloon_positions())
 	map.tick(0.25)
 	assert_bool(human.is_out).is_true()
+
+# 방
+func test_캐릭터는_방_ID_로_방에_입장할_수_있다() -> void:
+	var room := Room.new()
+	var character := Character.new(Vector2i(1, 2))
+	room.add_character(character)
+	assert_str(character.joined_room_id).is_equal(room.id)

@@ -27,6 +27,8 @@ var max_water_balloon_count := 1
 var max_water_stream_length := 1
 var speed := 4.0
 
+var joined_room_id: String
+
 func _init(start_position: Vector2i, seat_number: int = 0, team_color: Color = Color.RED) -> void:
 	continuous_position = start_position
 	number = seat_number

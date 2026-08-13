@@ -43,3 +43,6 @@ func get_map() -> Map:
 
 func get_mode() -> StringName:
 	return _mode
+
+func set_mode(mode: StringName) -> void:
+	_mode = mode
