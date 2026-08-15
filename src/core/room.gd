@@ -32,16 +32,8 @@ func set_battle_mode(mode: StringName) -> void:
 		if has_npc():
 			_remove_npcs()
 
-func _teams() -> Array[Color]:
-	var colors: Array[Color] = []
-	for character in _characters:
-		var color = character.color
-		if color not in colors:
-			colors.append(color)
-	return colors
-
 func team_count() -> int:
-	return _teams().size()
+	return Team.colors(_characters).size()
 
 func can_game_start() -> bool:
 	return team_count() >= MINIMUM_TEAM_COUNT_TO_START_GAME

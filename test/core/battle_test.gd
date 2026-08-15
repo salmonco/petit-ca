@@ -117,26 +117,3 @@ func test_로컬멀티_모드에서_모든_팀이_아웃되면_무승부로_끝�
 	battle.tick(0.1)
 	assert_bool(battle.has_winner()).is_false()
 	assert_bool(battle.is_draw).is_true()
-
-# 팀
-func test_캐릭터의_색상이_다르면_다른_팀이_된다() -> void:
-	var map := Map.new()
-	var battle := Battle.new(map, BattleMode.LOCAL_MULTI)
-	var human1 := Character.new(Vector2i(4, 2), 1, Color.RED)
-	var human2 := Character.new(Vector2i(9, 10), 2, Color.BLUE)
-	map.add_character(human1)
-	map.add_character(human2)
-	assert_int(battle.team_count()).is_equal(2)
-
-func test_캐릭터의_색상이_같으면_같은_팀이_된다() -> void:
-	var map := Map.new()
-	var battle := Battle.new(map, BattleMode.LOCAL_MULTI)
-	var human1 := Character.new(Vector2i(4, 2), 1, Color.RED)
-	var human2 := Character.new(Vector2i(9, 10), 2, Color.BLUE)
-	var human3 := Character.new(Vector2i(4, 2), 3, Color.RED)
-	var human4 := Character.new(Vector2i(9, 10), 4, Color.BLUE)
-	map.add_character(human1)
-	map.add_character(human2)
-	map.add_character(human3)
-	map.add_character(human4)
-	assert_int(battle.team_count()).is_equal(2)

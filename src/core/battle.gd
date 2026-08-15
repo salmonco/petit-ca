@@ -19,24 +19,16 @@ func is_game_over() -> bool:
 	return has_winner() or is_draw
 
 func check_game_over() -> void:
-	if team_count() == 1:
-		winner = _teams()[0]
-	if team_count() == 0:
+	if _team_count() == 1:
+		winner = Team.colors(_map.characters())[0]
+	if _team_count() == 0:
 		is_draw = true
 
-func _teams() -> Array[Color]:
-	var colors: Array[Color] = []
-	for character in _map.characters():
-		var color = character.color
-		if color not in colors:
-			colors.append(color)
-	return colors
+func _team_count() -> int:
+	return Team.colors(_map.characters()).size()
 
 func has_winner() -> bool:
 	return winner != Color.BLACK
-
-func team_count() -> int:
-	return _teams().size()
 
 func get_map() -> Map:
 	return _map
