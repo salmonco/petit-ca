@@ -4,6 +4,7 @@ extends Control
 const SLOT_TEXTURE: Texture2D = preload("res://assets/characters/bazzi_down.png")
 
 @onready var slots: HBoxContainer = $CenterContainer/VBoxContainer/Slots
+@onready var leave_button: Button = $CenterContainer/VBoxContainer/LeaveButton
 
 func render(room: Room) -> void:
 	_clear_slots()

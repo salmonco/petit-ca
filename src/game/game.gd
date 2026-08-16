@@ -9,9 +9,15 @@ var current_room: Room
 
 func _ready() -> void:
 	lobby_view.create_room_button.pressed.connect(create_room)
+	room_view.leave_button.pressed.connect(leave_room)
 
 func create_room() -> void:
 	enter_room(lobby.create_room().id)
+
+func leave_room() -> void:
+	current_room = null
+	room_view.visible = false
+	lobby_view.visible = true
 
 func enter_room(id: String) -> void:
 	var room := lobby.find_room(id)
