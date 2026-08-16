@@ -5,6 +5,7 @@ const PLAYER_SLOT_TEXTURE: Texture2D = preload("res://assets/characters/bazzi_do
 const NPC_SLOT_TEXTURE: Texture2D = preload("res://assets/npcs/zomkkan_down.png")
 
 @onready var slots: HBoxContainer = $CenterContainer/VBoxContainer/Slots
+@onready var add_second_player_button: Button = $CenterContainer/VBoxContainer/AddSecondPlayerButton
 @onready var monster_mode_check: CheckButton = $CenterContainer/VBoxContainer/MonsterModeCheck
 @onready var start_button: Button = $CenterContainer/VBoxContainer/StartButton
 @onready var leave_button: Button = $CenterContainer/VBoxContainer/LeaveButton

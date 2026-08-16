@@ -8,6 +8,7 @@ extends Node
 var lobby := Lobby.new()
 var current_room: Room
 var player_character := Character.new(Vector2i.ZERO, 0, Color.RED)
+var second_player_character: Character
 
 func _ready() -> void:
 	lobby_view.create_room_button.pressed.connect(create_room)
@@ -15,6 +16,7 @@ func _ready() -> void:
 	lobby_view.room_chosen.connect(enter_room)
 	room_view.monster_mode_check.toggled.connect(set_monster_mode)
 	room_view.start_button.pressed.connect(start_game)
+	room_view.add_second_player_button.pressed.connect(add_second_player)
 
 func create_room() -> void:
 	enter_room(lobby.create_room().id)
@@ -25,12 +27,22 @@ func start_game() -> void:
 	room_view.visible = false
 	battle_view.visible = true
 
+func add_second_player() -> void:
+	if second_player_character != null:
+		return
+	second_player_character = Character.new(Vector2i.ZERO, 0, Team.SECOND_PLAYER_COLOR)
+	current_room.add_character(second_player_character)
+	room_view.render(current_room)
+
 func set_monster_mode(enabled: bool) -> void:
 	current_room.set_battle_mode(BattleMode.MONSTER if enabled else BattleMode.LOCAL_MULTI)
 	room_view.render(current_room)
 
 func leave_room() -> void:
 	current_room.remove_character(player_character)
+	if second_player_character != null:
+		current_room.remove_character(second_player_character)
+		second_player_character = null
 	current_room = null
 	lobby_view.render(lobby)
 	room_view.visible = false

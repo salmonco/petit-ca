@@ -97,6 +97,28 @@ func test_몬스터_모드를_켜면_NPC_슬롯이_NPC로_그려진다() -> void
 	assert_object(_game.room_view.slot(0).texture).is_equal(RoomView.PLAYER_SLOT_TEXTURE)
 	assert_object(_game.room_view.slot(1).texture).is_equal(RoomView.NPC_SLOT_TEXTURE)
 
+func test_2P를_추가하면_방에_2P가_들어와_게임을_시작할_수_있다() -> void:
+	_game.create_room()
+	_game.add_second_player()
+	assert_int(_game.room_view.slot_count()).is_equal(2)
+	assert_bool(_game.room_view.start_button.disabled).is_false()
+
+func test_2P를_두_번_추가해도_2P는_하나다() -> void:
+	_game.create_room()
+	_game.add_second_player()
+	_game.add_second_player()
+	assert_int(_game.room_view.slot_count()).is_equal(2)
+
+func test_방에서_나가면_2P도_방에서_빠진다() -> void:
+	_game.create_room()
+	var room := _game.current_room
+	_game.add_second_player()
+	_game.leave_room()
+	assert_array(room.characters()).is_empty()
+
+func test_방의_2P_추가_버튼이_2P_추가에_연결되어_있다() -> void:
+	assert_bool(_game.room_view.add_second_player_button.pressed.is_connected(_game.add_second_player)).is_true()
+
 func test_방에서_몬스터_모드를_켜면_NPC가_슬롯에_늘어난다() -> void:
 	_game.create_room()
 	assert_int(_game.room_view.slot_count()).is_equal(1)
