@@ -1,6 +1,8 @@
 class_name Team
 extends RefCounted
 
+const MONSTER_COLOR := Color.BLUE
+
 static func colors(characters: Array[Character]) -> Array[Color]:
 	var team: Array[Color] = []
 	for character in characters:

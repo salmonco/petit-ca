@@ -57,5 +57,5 @@ func _remove_npcs() -> void:
 			_characters.erase(character)
 
 func _add_npc() -> void:
-	var npc := Npc.new(Vector2i(2, 3))
+	var npc := Npc.new(Vector2i(2, 3), 0, Team.MONSTER_COLOR)
 	add_character(npc)
