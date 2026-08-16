@@ -71,6 +71,17 @@ func test_방에_들어가면_캐릭터_수만큼_슬롯이_생긴다() -> void:
 	_game.enter_room(room.id)
 	assert_int(_game.room_view.slot_count()).is_equal(3)
 
+func test_한_팀뿐이면_시작_버튼이_비활성이다() -> void:
+	var room := _room_with_characters(2)
+	_game.enter_room(room.id)
+	assert_bool(_game.room_view.start_button.disabled).is_true()
+
+func test_두_팀_이상이면_시작_버튼이_활성이다() -> void:
+	var room := _room_with_characters(2)
+	room.add_character(Character.new(Vector2i(4, 6), 3, Color.BLUE))
+	_game.enter_room(room.id)
+	assert_bool(_game.room_view.start_button.disabled).is_false()
+
 func test_다른_방에_들어가면_이전_방의_슬롯이_남지_않는다() -> void:
 	var crowded_room := _room_with_characters(3)
 	var quiet_room := _room_with_characters(1)

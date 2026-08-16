@@ -4,12 +4,14 @@ extends Control
 const SLOT_TEXTURE: Texture2D = preload("res://assets/characters/bazzi_down.png")
 
 @onready var slots: HBoxContainer = $CenterContainer/VBoxContainer/Slots
+@onready var start_button: Button = $CenterContainer/VBoxContainer/StartButton
 @onready var leave_button: Button = $CenterContainer/VBoxContainer/LeaveButton
 
 func render(room: Room) -> void:
 	_clear_slots()
 	for _character in room.characters():
 		slots.add_child(_create_slot())
+	start_button.disabled = not room.can_game_start()
 
 func slot_count() -> int:
 	return slots.get_child_count()
