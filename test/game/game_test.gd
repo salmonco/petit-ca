@@ -91,6 +91,12 @@ func test_방을_나갔다_다시_들어가도_내_캐릭터는_하나다() -> v
 	_game.enter_room(room.id)
 	assert_int(_game.room_view.slot_count()).is_equal(1)
 
+func test_몬스터_모드를_켜면_NPC_슬롯이_NPC로_그려진다() -> void:
+	_game.create_room()
+	_game.set_monster_mode(true)
+	assert_object(_game.room_view.slot(0).texture).is_equal(RoomView.PLAYER_SLOT_TEXTURE)
+	assert_object(_game.room_view.slot(1).texture).is_equal(RoomView.NPC_SLOT_TEXTURE)
+
 func test_방에서_몬스터_모드를_켜면_NPC가_슬롯에_늘어난다() -> void:
 	_game.create_room()
 	assert_int(_game.room_view.slot_count()).is_equal(1)
