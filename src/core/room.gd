@@ -32,6 +32,9 @@ func set_battle_mode(mode: StringName) -> void:
 		if has_npc():
 			_remove_npcs()
 
+func characters() -> Array[Character]:
+	return _characters
+
 func team_count() -> int:
 	return Team.colors(_characters).size()
 
