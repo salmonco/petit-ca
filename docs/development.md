@@ -1,6 +1,6 @@
 # 개발 가이드
 
-Godot 4.7 + GDScript + GdUnit4 6.1.3.
+Godot 4.7 + GDScript + GdUnit4 6.1.3
 
 ## 셋업
 
