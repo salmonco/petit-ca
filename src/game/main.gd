@@ -41,6 +41,20 @@ func show_battle(new_battle: Battle) -> void:
 	_render_game_items()
 	_render_game_over_label()
 
+func _human_character() -> Character:
+	for character in battle.get_map().characters():
+		if character is Npc:
+			continue
+		return character
+	return null
+
+func _read_direction_for(character: Character) -> Vector2i:
+	if battle.get_mode() == BattleMode.MONSTER:
+		return _read_move_direction()
+	if character.number == 1:
+		return _read_move_direction_local_multi()
+	return _read_move_direction()
+
 func _character_at_seat(number: int) -> Character:
 	for character in battle.get_map().characters():
 		if character.number == number:
@@ -65,7 +79,7 @@ func start_battle(mode: StringName) -> void:
 func handle_key_pressed(key: Key, location: KeyLocation = KEY_LOCATION_UNSPECIFIED) -> void:
 	var game_key := GameKey.from_key(key, location)
 	if game_key == GameKey.SPACE and battle.get_mode() == BattleMode.MONSTER:
-		second_character.place_water_balloon(battle.get_map())
+		_human_character().place_water_balloon(battle.get_map())
 		_render_water_balloons()
 	if game_key == GameKey.SHIFT_LEFT and battle.get_mode() == BattleMode.LOCAL_MULTI:
 		first_character.place_water_balloon(battle.get_map())
@@ -137,12 +151,7 @@ func _handle_characters(delta: float) -> void:
 			if character.should_place_water_balloon(battle.get_map()):
 				character.place_water_balloon(battle.get_map())
 		else:
-			var direction: Vector2i
-			if character.number == 1:
-				direction = _read_move_direction_local_multi()
-			else:
-				direction = _read_move_direction()
-			character.move(direction, delta, battle.get_map().water_balloon_positions())
+			character.move(_read_direction_for(character), delta, battle.get_map().water_balloon_positions())
 
 func _render_characters() -> void:
 	# 사라진 캐릭터의 뷰 정리

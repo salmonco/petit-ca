@@ -123,6 +123,25 @@ func test_방에서_게임을_시작하면_배틀_화면이_된다() -> void:
 	assert_bool(_game.battle_view.visible).is_true()
 	assert_bool(_game.room_view.visible).is_false()
 
+func test_방에서_시작한_몬스터_배틀에서_스페이스로_내_캐릭터가_물풍선을_놓는다() -> void:
+	_start_monster_battle()
+	_game.battle_view.handle_key_pressed(KEY_SPACE)
+	var views := _game.battle_view.water_balloon_views.get_children()
+	assert_int(views.size()).is_equal(1)
+	assert_vector((views[0] as Sprite2D).position).is_equal(_game.player_character.pixel_position())
+
+func test_방에서_시작한_몬스터_배틀에서_방향키로_내_캐릭터가_움직인다() -> void:
+	_start_monster_battle()
+	var start_cell := _game.player_character.position()
+	_game.battle_view.handle_key_pressed(KEY_RIGHT)
+	_game.battle_view.tick(0.25)
+	assert_vector(_game.player_character.position()).is_equal(start_cell + Vector2i.RIGHT)
+
+func _start_monster_battle() -> void:
+	_game.create_room()
+	_game.set_monster_mode(true)
+	_game.start_game()
+
 func test_방의_시작_버튼이_게임_시작에_연결되어_있다() -> void:
 	assert_bool(_game.room_view.start_button.pressed.is_connected(_game.start_game)).is_true()
 
