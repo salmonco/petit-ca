@@ -97,31 +97,45 @@ func test_몬스터_모드를_켜면_NPC_슬롯이_NPC로_그려진다() -> void
 	assert_object(_game.room_view.slot(0).texture).is_equal(RoomView.PLAYER_SLOT_TEXTURE)
 	assert_object(_game.room_view.slot(1).texture).is_equal(RoomView.NPC_SLOT_TEXTURE)
 
-func test_2P를_추가하면_방에_2P가_들어와_게임을_시작할_수_있다() -> void:
+func test_로컬_멀티를_켜면_2P가_들어와_게임을_시작할_수_있다() -> void:
 	_game.create_room()
-	_game.add_second_player()
+	_game.set_local_multi(true)
 	assert_int(_game.room_view.slot_count()).is_equal(2)
 	assert_bool(_game.room_view.start_button.disabled).is_false()
 
-func test_2P를_두_번_추가해도_2P는_하나다() -> void:
+func test_로컬_멀티를_끄면_2P가_방에서_빠진다() -> void:
 	_game.create_room()
-	_game.add_second_player()
-	_game.add_second_player()
+	_game.set_local_multi(true)
+	_game.set_local_multi(false)
+	assert_array(_game.current_room.characters()).is_equal([_game.player_character])
+	assert_int(_game.room_view.slot_count()).is_equal(1)
+
+func test_로컬_멀티를_두_번_켜도_2P는_하나다() -> void:
+	_game.create_room()
+	_game.set_local_multi(true)
+	_game.set_local_multi(true)
 	assert_int(_game.room_view.slot_count()).is_equal(2)
 
 func test_방에서_나가면_2P도_방에서_빠진다() -> void:
 	_game.create_room()
 	var room := _game.current_room
-	_game.add_second_player()
+	_game.set_local_multi(true)
 	_game.leave_room()
 	assert_array(room.characters()).is_empty()
 
-func test_방의_2P_추가_버튼이_2P_추가에_연결되어_있다() -> void:
-	assert_bool(_game.room_view.add_second_player_button.pressed.is_connected(_game.add_second_player)).is_true()
+func test_다른_방에_들어가면_로컬_멀티_체크가_그_방을_따른다() -> void:
+	_game.create_room()
+	_game.room_view.local_multi_check.button_pressed = true
+	assert_int(_game.room_view.slot_count()).is_equal(2)
+	_game.create_room()
+	assert_bool(_game.room_view.local_multi_check.button_pressed).is_false()
+
+func test_방의_로컬_멀티_체크가_2P_추가에_연결되어_있다() -> void:
+	assert_bool(_game.room_view.local_multi_check.toggled.is_connected(_game.set_local_multi)).is_true()
 
 func test_몬스터_모드를_켜면_2P가_나와_같은_팀이_된다() -> void:
 	_game.create_room()
-	_game.add_second_player()
+	_game.set_local_multi(true)
 	assert_int(_game.current_room.team_count()).is_equal(2)
 	_game.set_monster_mode(true)
 	assert_that(_game.second_player_character.color).is_equal(_game.player_character.color)
@@ -129,16 +143,16 @@ func test_몬스터_모드를_켜면_2P가_나와_같은_팀이_된다() -> void
 
 func test_몬스터_모드를_끄면_2P가_다시_다른_팀이_된다() -> void:
 	_game.create_room()
-	_game.add_second_player()
+	_game.set_local_multi(true)
 	_game.set_monster_mode(true)
 	_game.set_monster_mode(false)
 	assert_that(_game.second_player_character.color).is_not_equal(_game.player_character.color)
 	assert_int(_game.current_room.team_count()).is_equal(2)
 
-func test_몬스터_모드에서_추가한_2P도_나와_같은_팀이다() -> void:
+func test_몬스터_모드에서_켠_로컬_멀티의_2P도_나와_같은_팀이다() -> void:
 	_game.create_room()
 	_game.set_monster_mode(true)
-	_game.add_second_player()
+	_game.set_local_multi(true)
 	assert_that(_game.second_player_character.color).is_equal(_game.player_character.color)
 	assert_int(_game.current_room.team_count()).is_equal(2)
 
@@ -233,7 +247,7 @@ func _npc_in_battle() -> Character:
 func _start_monster_battle_with_second_player() -> void:
 	_game.create_room()
 	_game.set_monster_mode(true)
-	_game.add_second_player()
+	_game.set_local_multi(true)
 	_game.start_game()
 
 func _start_monster_battle() -> void:

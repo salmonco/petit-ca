@@ -5,7 +5,7 @@ const PLAYER_SLOT_TEXTURE: Texture2D = preload("res://assets/characters/bazzi_do
 const NPC_SLOT_TEXTURE: Texture2D = preload("res://assets/npcs/zomkkan_down.png")
 
 @onready var slots: HBoxContainer = $CenterContainer/VBoxContainer/Slots
-@onready var add_second_player_button: Button = $CenterContainer/VBoxContainer/AddSecondPlayerButton
+@onready var local_multi_check: CheckButton = $CenterContainer/VBoxContainer/LocalMultiCheck
 @onready var monster_mode_check: CheckButton = $CenterContainer/VBoxContainer/MonsterModeCheck
 @onready var start_button: Button = $CenterContainer/VBoxContainer/StartButton
 @onready var leave_button: Button = $CenterContainer/VBoxContainer/LeaveButton
@@ -16,12 +16,21 @@ func render(room: Room) -> void:
 		slots.add_child(_create_slot(character))
 	start_button.disabled = not room.can_game_start()
 	monster_mode_check.set_pressed_no_signal(room.battle_mode == BattleMode.MONSTER)
+	local_multi_check.set_pressed_no_signal(_human_count(room) > 1)
 
 func slot_count() -> int:
 	return slots.get_child_count()
 
 func slot(index: int) -> TextureRect:
 	return slots.get_child(index)
+
+func _human_count(room: Room) -> int:
+	var count := 0
+	for character in room.characters():
+		if character is Npc:
+			continue
+		count += 1
+	return count
 
 func _clear_slots() -> void:
 	for slot in slots.get_children():

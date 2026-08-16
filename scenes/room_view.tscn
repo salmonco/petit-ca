@@ -39,9 +39,9 @@ custom_minimum_size = Vector2(0, 96)
 theme_override_constants/separation = 24
 alignment = 1
 
-[node name="AddSecondPlayerButton" type="Button" parent="CenterContainer/VBoxContainer"]
+[node name="LocalMultiCheck" type="CheckButton" parent="CenterContainer/VBoxContainer"]
 custom_minimum_size = Vector2(400, 48)
-text = "+ 2P 추가"
+text = "로컬 멀티 (2P)"
 
 [node name="MonsterModeCheck" type="CheckButton" parent="CenterContainer/VBoxContainer"]
 custom_minimum_size = Vector2(400, 48)

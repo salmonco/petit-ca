@@ -16,7 +16,7 @@ func _ready() -> void:
 	lobby_view.room_chosen.connect(enter_room)
 	room_view.monster_mode_check.toggled.connect(set_monster_mode)
 	room_view.start_button.pressed.connect(start_game)
-	room_view.add_second_player_button.pressed.connect(add_second_player)
+	room_view.local_multi_check.toggled.connect(set_local_multi)
 
 func create_room() -> void:
 	enter_room(lobby.create_room().id)
@@ -27,12 +27,24 @@ func start_game() -> void:
 	room_view.visible = false
 	battle_view.visible = true
 
-func add_second_player() -> void:
+func set_local_multi(enabled: bool) -> void:
+	if enabled:
+		_add_second_player()
+	else:
+		_remove_second_player()
+	room_view.render(current_room)
+
+func _add_second_player() -> void:
 	if second_player_character != null:
 		return
 	second_player_character = Character.new(Vector2i.ZERO, 0, _second_player_color())
 	current_room.add_character(second_player_character)
-	room_view.render(current_room)
+
+func _remove_second_player() -> void:
+	if second_player_character == null:
+		return
+	current_room.remove_character(second_player_character)
+	second_player_character = null
 
 func set_monster_mode(enabled: bool) -> void:
 	current_room.set_battle_mode(BattleMode.MONSTER if enabled else BattleMode.LOCAL_MULTI)
@@ -47,9 +59,7 @@ func _second_player_color() -> Color:
 
 func leave_room() -> void:
 	current_room.remove_character(player_character)
-	if second_player_character != null:
-		current_room.remove_character(second_player_character)
-		second_player_character = null
+	_remove_second_player()
 	current_room = null
 	lobby_view.render(lobby)
 	room_view.visible = false
