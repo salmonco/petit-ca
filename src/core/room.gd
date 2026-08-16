@@ -32,6 +32,10 @@ func set_battle_mode(mode: StringName) -> void:
 		if has_npc():
 			_remove_npcs()
 
+func remove_character(character: Character) -> void:
+	_characters.erase(character)
+	character.joined_room_id = ""
+
 func characters() -> Array[Character]:
 	return _characters
 

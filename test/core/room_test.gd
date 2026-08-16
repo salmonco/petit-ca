@@ -7,6 +7,22 @@ func test_방에서_게임을_시작하면_방에_있는_캐릭터가_맵에_추
 	room.game_start()
 	assert_bool(room.get_battle().get_map().has_character(Vector2i(1, 2))).is_true()
 
+func test_방에서_캐릭터가_나가면_그_캐릭터만_빠진다() -> void:
+	var room := Room.new()
+	var leaving := Character.new(Vector2i(1, 2))
+	var staying := Character.new(Vector2i(3, 5))
+	room.add_character(leaving)
+	room.add_character(staying)
+	room.remove_character(leaving)
+	assert_array(room.characters()).is_equal([staying])
+
+func test_방에서_나간_캐릭터는_방에_속하지_않는다() -> void:
+	var room := Room.new()
+	var character := Character.new(Vector2i(1, 2))
+	room.add_character(character)
+	room.remove_character(character)
+	assert_str(character.joined_room_id).is_not_equal(room.id)
+
 func test_방에서_배틀_모드를_변경할_수_있다() -> void:
 	var room := Room.new()
 	room.set_battle_mode(BattleMode.MONSTER)

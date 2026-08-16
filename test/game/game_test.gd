@@ -67,9 +67,21 @@ func test_로비의_방_만들기_버튼이_방_만들기에_연결되어_있다
 	assert_bool(_game.lobby_view.create_room_button.pressed.is_connected(_game.create_room)).is_true()
 
 func test_방에_들어가면_캐릭터_수만큼_슬롯이_생긴다() -> void:
-	var room := _room_with_characters(3)
+	var room := _room_with_characters(2)
 	_game.enter_room(room.id)
 	assert_int(_game.room_view.slot_count()).is_equal(3)
+
+func test_방에_입장하면_내_캐릭터가_슬롯에_보인다() -> void:
+	_game.create_room()
+	assert_array(_game.current_room.characters()).is_equal([_game.player_character])
+	assert_int(_game.room_view.slot_count()).is_equal(1)
+
+func test_방을_나갔다_다시_들어가도_내_캐릭터는_하나다() -> void:
+	_game.create_room()
+	var room := _game.current_room
+	_game.leave_room()
+	_game.enter_room(room.id)
+	assert_int(_game.room_view.slot_count()).is_equal(1)
 
 func test_한_팀뿐이면_시작_버튼이_비활성이다() -> void:
 	var room := _room_with_characters(2)
@@ -84,9 +96,10 @@ func test_두_팀_이상이면_시작_버튼이_활성이다() -> void:
 
 func test_다른_방에_들어가면_이전_방의_슬롯이_남지_않는다() -> void:
 	var crowded_room := _room_with_characters(3)
-	var quiet_room := _room_with_characters(1)
+	var empty_room := _room_with_characters(0)
 	_game.enter_room(crowded_room.id)
-	_game.enter_room(quiet_room.id)
+	_game.leave_room()
+	_game.enter_room(empty_room.id)
 	assert_int(_game.room_view.slot_count()).is_equal(1)
 
 func _create_room_and_leave() -> void:
