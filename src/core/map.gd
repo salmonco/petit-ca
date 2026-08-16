@@ -2,6 +2,12 @@ class_name Map
 extends RefCounted
 
 const GRID_SIZE := Vector2i(15, 13)
+const SEAT_START_CELLS: Array[Vector2i] = [
+	Vector2i(1, 6),
+	Vector2i(13, 6),
+	Vector2i(7, 1),
+	Vector2i(7, 11),
+]
 const PIXELS_PER_CELL := 64
 
 var _characters: Array[Character] = []

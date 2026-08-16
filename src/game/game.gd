@@ -5,11 +5,9 @@ extends Node
 @onready var room_view: RoomView = $RoomView
 @onready var battle_view: Main = $BattleView
 
-const PLAYER_START_CELL := Vector2i(1, 6)
-
 var lobby := Lobby.new()
 var current_room: Room
-var player_character := Character.new(PLAYER_START_CELL, 0, Color.RED)
+var player_character := Character.new(Vector2i.ZERO, 0, Color.RED)
 
 func _ready() -> void:
 	lobby_view.create_room_button.pressed.connect(create_room)

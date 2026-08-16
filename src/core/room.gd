@@ -28,6 +28,7 @@ func _empty_seat_number() -> int:
 func game_start() -> void:
 	var map := Map.new()
 	for character in _characters:
+		character.continuous_position = Map.SEAT_START_CELLS[character.number - 1]
 		map.add_character(character)
 	_battle = Battle.new(map, battle_mode)
 
@@ -67,5 +68,5 @@ func _remove_npcs() -> void:
 			_characters.erase(character)
 
 func _add_npc() -> void:
-	var npc := Npc.new(Vector2i(2, 3), 0, Team.MONSTER_COLOR)
+	var npc := Npc.new(Vector2i.ZERO, 0, Team.MONSTER_COLOR)
 	add_character(npc)
