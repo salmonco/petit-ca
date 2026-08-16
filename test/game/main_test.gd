@@ -15,6 +15,18 @@ func test_씬을_띄우기만_하면_배틀이_시작되지_않는다() -> void:
 	var main: Main = runner.scene()
 	assert_that(main.battle).is_null()
 
+func test_밖에서_만든_배틀을_받아_그린다() -> void:
+	var runner := scene_runner(SCENE_PATH)
+	var main: Main = runner.scene()
+	var map := Map.new()
+	map.add_character(Character.new(Vector2i(3, 5), 1, Color.RED))
+	map.add_character(Character.new(Vector2i(9, 2), 2, Color.BLUE))
+	var battle := Battle.new(map, BattleMode.LOCAL_MULTI)
+	main.show_battle(battle)
+	assert_that(main.battle).is_equal(battle)
+	assert_that(main.first_character).is_equal(map.characters()[0])
+	assert_int(main.view_by_character.size()).is_equal(2)
+
 func test_배틀이_없으면_tick해도_아무_일도_일어나지_않는다() -> void:
 	var runner := scene_runner(SCENE_PATH)
 	var main: Main = runner.scene()

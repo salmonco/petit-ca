@@ -32,26 +32,29 @@ var second_character: Character
 var pressed_move_keys: Array[Key] = []
 var pressed_move_keys_local_multi: Array[Key] = []
 
-func start_battle(mode: StringName) -> void:
-	var map := Map.new()
-	battle = Battle.new(map, mode)
-	match mode:
-		BattleMode.MONSTER:
-			var monster := Npc.new(Vector2i(1, 6), 1, Color.BLUE)
-			var human := Character.new(Vector2i(13, 6), 2, Color.RED)
-			battle.get_map().add_character(monster)
-			battle.get_map().add_character(human)
-		BattleMode.LOCAL_MULTI:
-			var human1 := Character.new(Vector2i(1, 6), 1, Color.RED)
-			var human2 := Character.new(Vector2i(13, 6), 2, Color.BLUE)
-			battle.get_map().add_character(human1)
-			battle.get_map().add_character(human2)
+func show_battle(new_battle: Battle) -> void:
+	battle = new_battle
 	_render_characters()
 	first_character = battle.get_map().characters()[0]
 	second_character = battle.get_map().characters()[1]
 	_place_game_items()
 	_render_game_items()
 	_render_game_over_label()
+
+func start_battle(mode: StringName) -> void:
+	var map := Map.new()
+	match mode:
+		BattleMode.MONSTER:
+			var monster := Npc.new(Vector2i(1, 6), 1, Team.MONSTER_COLOR)
+			var human := Character.new(Vector2i(13, 6), 2, Color.RED)
+			map.add_character(monster)
+			map.add_character(human)
+		BattleMode.LOCAL_MULTI:
+			var human1 := Character.new(Vector2i(1, 6), 1, Color.RED)
+			var human2 := Character.new(Vector2i(13, 6), 2, Color.BLUE)
+			map.add_character(human1)
+			map.add_character(human2)
+	show_battle(Battle.new(map, mode))
 
 func handle_key_pressed(key: Key, location: KeyLocation = KEY_LOCATION_UNSPECIFIED) -> void:
 	var game_key := GameKey.from_key(key, location)
