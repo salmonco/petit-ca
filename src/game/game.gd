@@ -16,6 +16,7 @@ func create_room() -> void:
 
 func leave_room() -> void:
 	current_room = null
+	lobby_view.render(lobby)
 	room_view.visible = false
 	lobby_view.visible = true
 

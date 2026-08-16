@@ -43,6 +43,12 @@ func test_방에서_나가도_방은_로비에_남는다() -> void:
 	_game.enter_room(left_room.id)
 	assert_that(_game.current_room).is_equal(left_room)
 
+func test_로비에_방_수만큼_목록이_보인다() -> void:
+	_create_room_and_leave()
+	_create_room_and_leave()
+	_create_room_and_leave()
+	assert_int(_game.lobby_view.room_count()).is_equal(3)
+
 func test_방의_나가기_버튼이_나가기에_연결되어_있다() -> void:
 	assert_bool(_game.room_view.leave_button.pressed.is_connected(_game.leave_room)).is_true()
 
@@ -60,6 +66,10 @@ func test_다른_방에_들어가면_이전_방의_슬롯이_남지_않는다() 
 	_game.enter_room(crowded_room.id)
 	_game.enter_room(quiet_room.id)
 	assert_int(_game.room_view.slot_count()).is_equal(1)
+
+func _create_room_and_leave() -> void:
+	_game.create_room()
+	_game.leave_room()
 
 func _room_with_characters(count: int) -> Room:
 	var room := Room.new()
