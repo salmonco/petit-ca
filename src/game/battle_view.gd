@@ -30,6 +30,7 @@ var view_by_character: Dictionary[Character, CharacterView] = {}
 var battle: Battle
 var first_character: Character
 var second_character: Character
+var humans: Array[Character] = []
 var pressed_move_keys: Array[Key] = []
 var pressed_move_keys_local_multi: Array[Key] = []
 
@@ -42,6 +43,7 @@ func sync_overlay() -> void:
 
 func show_battle(new_battle: Battle) -> void:
 	battle = new_battle
+	humans = _seated_humans()
 	_render_characters()
 	first_character = _character_at_seat(1)
 	second_character = _character_at_seat(2)
@@ -49,17 +51,16 @@ func show_battle(new_battle: Battle) -> void:
 	_render_game_items()
 	_render_game_over_label()
 
-func _humans() -> Array[Character]:
-	var humans: Array[Character] = []
+func _seated_humans() -> Array[Character]:
+	var seated: Array[Character] = []
 	for character in battle.get_map().characters():
 		if character is Npc:
 			continue
-		humans.append(character)
-	humans.sort_custom(func(a: Character, b: Character) -> bool: return a.number < b.number)
-	return humans
+		seated.append(character)
+	seated.sort_custom(func(a: Character, b: Character) -> bool: return a.number < b.number)
+	return seated
 
 func _read_direction_for(character: Character) -> Vector2i:
-	var humans := _humans()
 	if humans.size() == 1 or character != humans[0]:
 		return _read_move_direction()
 	return _read_move_direction_local_multi()
@@ -87,7 +88,6 @@ func start_battle(mode: StringName) -> void:
 
 func handle_key_pressed(key: Key, location: KeyLocation = KEY_LOCATION_UNSPECIFIED) -> void:
 	var game_key := GameKey.from_key(key, location)
-	var humans := _humans()
 	if game_key == GameKey.SPACE and humans.size() == 1:
 		humans[0].place_water_balloon(battle.get_map())
 		_render_water_balloons()
@@ -243,18 +243,14 @@ func _render_game_items() -> void:
 
 func _render_game_over_label() -> void:
 	draw_label.visible = battle.is_draw
-	match battle.get_mode():
-		BattleMode.MONSTER:
-			win_label.visible = battle.winner == second_character.color
-			lose_label.visible = battle.winner == first_character.color
-		BattleMode.LOCAL_MULTI:
-			win_label.visible = battle.has_winner()
-			lose_label.visible = false
-			if battle.has_winner():
-				if battle.winner == first_character.color:
-					win_label.text = "1P WIN!!"
-				else:
-					win_label.text = "2P WIN!!"
+	if Team.colors(humans).size() == 1:
+		win_label.visible = battle.has_winner() and battle.winner == humans[0].color
+		lose_label.visible = battle.has_winner() and battle.winner != humans[0].color
+		return
+	win_label.visible = battle.has_winner()
+	lose_label.visible = false
+	if battle.has_winner():
+		win_label.text = "1P WIN!!" if battle.winner == humans[0].color else "2P WIN!!"
 
 func _read_move_direction() -> Vector2i:
 	if pressed_move_keys.is_empty():

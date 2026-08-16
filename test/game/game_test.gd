@@ -210,6 +210,26 @@ func test_몬스터_모드에_2P가_있으면_좌우_시프트로_각자_물풍�
 	var cells := _game.battle_view.battle.get_map().water_balloon_positions()
 	assert_array(cells).contains([_game.player_character.position(), _game.second_player_character.position()])
 
+func test_방에서_시작한_몬스터_배틀에서_NPC를_이기면_WIN이_뜬다() -> void:
+	_start_monster_battle()
+	_game.battle_view.battle.get_map().let_character_out(_npc_in_battle())
+	_game.battle_view.tick(0.1)
+	assert_bool(_game.battle_view.win_label.visible).is_true()
+	assert_bool(_game.battle_view.lose_label.visible).is_false()
+
+func test_방에서_시작한_몬스터_배틀에서_지면_LOSE가_뜬다() -> void:
+	_start_monster_battle()
+	_game.battle_view.battle.get_map().let_character_out(_game.player_character)
+	_game.battle_view.tick(0.1)
+	assert_bool(_game.battle_view.lose_label.visible).is_true()
+	assert_bool(_game.battle_view.win_label.visible).is_false()
+
+func _npc_in_battle() -> Character:
+	for character in _game.battle_view.battle.get_map().characters():
+		if character is Npc:
+			return character
+	return null
+
 func _start_monster_battle_with_second_player() -> void:
 	_game.create_room()
 	_game.set_monster_mode(true)
