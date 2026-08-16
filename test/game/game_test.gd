@@ -97,6 +97,25 @@ func test_몬스터_모드를_켜면_NPC_슬롯이_NPC로_그려진다() -> void
 	assert_object(_game.room_view.slot(0).texture).is_equal(RoomView.PLAYER_SLOT_TEXTURE)
 	assert_object(_game.room_view.slot(1).texture).is_equal(RoomView.NPC_SLOT_TEXTURE)
 
+func test_로컬_멀티면_1P와_2P_슬롯이_다른_색으로_그려진다() -> void:
+	_game.create_room()
+	_game.set_local_multi(true)
+	assert_that(_slot_color(0)).is_equal(_game.player_character.color)
+	assert_that(_slot_color(1)).is_equal(_game.second_player_character.color)
+	assert_that(_slot_color(0)).is_not_equal(_slot_color(1))
+
+func test_몬스터_모드면_사람_슬롯은_같은_색이고_NPC만_다른_색이다() -> void:
+	_game.create_room()
+	_game.set_monster_mode(true)
+	_game.set_local_multi(true)
+	var npc_index := 1 if _game.current_room.characters()[1] is Npc else 2
+	var second_player_index := 2 if npc_index == 1 else 1
+	assert_that(_slot_color(second_player_index)).is_equal(_slot_color(0))
+	assert_that(_slot_color(npc_index)).is_not_equal(_slot_color(0))
+
+func _slot_color(index: int) -> Color:
+	return (_game.room_view.slot(index).material as ShaderMaterial).get_shader_parameter("color")
+
 func test_로컬_멀티를_켜면_2P가_들어와_게임을_시작할_수_있다() -> void:
 	_game.create_room()
 	_game.set_local_multi(true)

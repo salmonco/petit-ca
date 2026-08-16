@@ -2,7 +2,10 @@ class_name RoomView
 extends Control
 
 const PLAYER_SLOT_TEXTURE: Texture2D = preload("res://assets/characters/bazzi_down.png")
+const PLAYER_SLOT_MASK: Texture2D = preload("res://assets/characters/bazzi_down_mask.png")
 const NPC_SLOT_TEXTURE: Texture2D = preload("res://assets/npcs/zomkkan_down.png")
+const NPC_SLOT_MASK: Texture2D = preload("res://assets/npcs/zomkkan_down_mask.png")
+const RECOLOR_SHADER: Shader = preload("res://src/game/character_recolor.gdshader")
 
 @onready var slots: HBoxContainer = $CenterContainer/VBoxContainer/Slots
 @onready var local_multi_check: CheckButton = $CenterContainer/VBoxContainer/LocalMultiCheck
@@ -38,7 +41,13 @@ func _clear_slots() -> void:
 		slot.queue_free()
 
 func _create_slot(character: Character) -> TextureRect:
+	var is_npc := character is Npc
 	var slot := TextureRect.new()
-	slot.texture = NPC_SLOT_TEXTURE if character is Npc else PLAYER_SLOT_TEXTURE
+	slot.texture = NPC_SLOT_TEXTURE if is_npc else PLAYER_SLOT_TEXTURE
 	slot.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	var recolor := ShaderMaterial.new()
+	recolor.shader = RECOLOR_SHADER
+	recolor.set_shader_parameter("color", character.color)
+	recolor.set_shader_parameter("mask_texture", NPC_SLOT_MASK if is_npc else PLAYER_SLOT_MASK)
+	slot.material = recolor
 	return slot
