@@ -1,8 +1,9 @@
-[gd_scene load_steps=4 format=3]
+[gd_scene load_steps=5 format=3]
 
 [ext_resource type="Script" path="res://src/game/game.gd" id="1_game"]
 [ext_resource type="PackedScene" path="res://scenes/lobby_view.tscn" id="2_lobby"]
 [ext_resource type="PackedScene" path="res://scenes/room_view.tscn" id="3_room"]
+[ext_resource type="PackedScene" path="res://scenes/main.tscn" id="4_battle"]
 
 [node name="Game" type="Node"]
 script = ExtResource("1_game")
@@ -10,4 +11,7 @@ script = ExtResource("1_game")
 [node name="LobbyView" parent="." instance=ExtResource("2_lobby")]
 
 [node name="RoomView" parent="." instance=ExtResource("3_room")]
+visible = false
+
+[node name="BattleView" parent="." instance=ExtResource("4_battle")]
 visible = false

@@ -3,6 +3,7 @@ extends Node
 
 @onready var lobby_view: LobbyView = $LobbyView
 @onready var room_view: RoomView = $RoomView
+@onready var battle_view: Main = $BattleView
 
 const PLAYER_START_CELL := Vector2i(1, 6)
 const PLAYER_SEAT_NUMBER := 1
@@ -16,9 +17,16 @@ func _ready() -> void:
 	room_view.leave_button.pressed.connect(leave_room)
 	lobby_view.room_chosen.connect(enter_room)
 	room_view.monster_mode_check.toggled.connect(set_monster_mode)
+	room_view.start_button.pressed.connect(start_game)
 
 func create_room() -> void:
 	enter_room(lobby.create_room().id)
+
+func start_game() -> void:
+	current_room.game_start()
+	battle_view.show_battle(current_room.get_battle())
+	room_view.visible = false
+	battle_view.visible = true
 
 func set_monster_mode(enabled: bool) -> void:
 	current_room.set_battle_mode(BattleMode.MONSTER if enabled else BattleMode.LOCAL_MULTI)

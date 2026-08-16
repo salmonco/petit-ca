@@ -115,6 +115,17 @@ func test_다른_방에_들어가면_몬스터_모드_체크가_그_방을_따�
 func test_방의_몬스터_모드_체크가_모드_변경에_연결되어_있다() -> void:
 	assert_bool(_game.room_view.monster_mode_check.toggled.is_connected(_game.set_monster_mode)).is_true()
 
+func test_방에서_게임을_시작하면_배틀_화면이_된다() -> void:
+	_game.create_room()
+	_game.set_monster_mode(true)
+	_game.start_game()
+	assert_that(_game.battle_view.battle).is_equal(_game.current_room.get_battle())
+	assert_bool(_game.battle_view.visible).is_true()
+	assert_bool(_game.room_view.visible).is_false()
+
+func test_방의_시작_버튼이_게임_시작에_연결되어_있다() -> void:
+	assert_bool(_game.room_view.start_button.pressed.is_connected(_game.start_game)).is_true()
+
 func test_한_팀뿐이면_시작_버튼이_비활성이다() -> void:
 	var room := _room_with_characters(2)
 	_game.enter_room(room.id)
