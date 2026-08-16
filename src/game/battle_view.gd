@@ -22,6 +22,7 @@ var view_by_character: Dictionary[Character, CharacterView] = {}
 @onready var water_balloon_views: Node2D = $WaterBalloonViews
 @onready var water_stream_views: Node2D = $WaterStreamViews
 @onready var game_item_views: Node2D = $GameItemViews
+@onready var overlay: CanvasLayer = $CanvasLayer
 @onready var win_label: Label = $CanvasLayer/WinLabel
 @onready var lose_label: Label = $CanvasLayer/LoseLabel
 @onready var draw_label: Label = $CanvasLayer/DrawLabel
@@ -31,6 +32,13 @@ var first_character: Character
 var second_character: Character
 var pressed_move_keys: Array[Key] = []
 var pressed_move_keys_local_multi: Array[Key] = []
+
+func _ready() -> void:
+	visibility_changed.connect(sync_overlay)
+	sync_overlay()
+
+func sync_overlay() -> void:
+	overlay.visible = visible
 
 func show_battle(new_battle: Battle) -> void:
 	battle = new_battle

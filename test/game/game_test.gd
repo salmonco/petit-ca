@@ -123,6 +123,11 @@ func test_방에서_게임을_시작하면_배틀_화면이_된다() -> void:
 	assert_bool(_game.battle_view.visible).is_true()
 	assert_bool(_game.room_view.visible).is_false()
 
+func test_로비_화면에서는_승패_라벨이_보이지_않는다() -> void:
+	assert_bool(_game.battle_view.win_label.is_visible_in_tree()).is_false()
+	assert_bool(_game.battle_view.lose_label.is_visible_in_tree()).is_false()
+	assert_bool(_game.battle_view.draw_label.is_visible_in_tree()).is_false()
+
 func test_방에서_시작한_몬스터_배틀에서_스페이스로_내_캐릭터가_물풍선을_놓는다() -> void:
 	_start_monster_battle()
 	_game.battle_view.handle_key_pressed(KEY_SPACE)

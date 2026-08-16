@@ -37,6 +37,13 @@ func test_1P와_2P를_맵에_들어간_순서가_아니라_자리_번호로_찾�
 	assert_int(battle_view.first_character.number).is_equal(1)
 	assert_int(battle_view.second_character.number).is_equal(2)
 
+func test_배틀_화면을_숨기면_승패_라벨도_숨는다() -> void:
+	_battle_view.win_label.visible = true
+	_battle_view.visible = false
+	assert_bool(_battle_view.win_label.is_visible_in_tree()).is_false()
+	_battle_view.visible = true
+	assert_bool(_battle_view.win_label.is_visible_in_tree()).is_true()
+
 func test_배틀이_없으면_tick해도_아무_일도_일어나지_않는다() -> void:
 	var runner := scene_runner(SCENE_PATH)
 	var battle_view: BattleView = runner.scene()
