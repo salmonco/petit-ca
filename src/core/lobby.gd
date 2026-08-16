@@ -6,6 +6,11 @@ var rooms: Array[Room] = []
 func _init() -> void:
 	pass
 
+func create_room() -> Room:
+	var room := Room.new()
+	add_room(room)
+	return room
+
 func add_room(room: Room) -> void:
 	rooms.append(room)
 

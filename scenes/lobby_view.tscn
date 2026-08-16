@@ -34,11 +34,7 @@ theme_override_font_sizes/font_size = 48
 text = "PETIT CRAZY ARCADE"
 horizontal_alignment = 1
 
-[node name="RoomIdInput" type="LineEdit" parent="CenterContainer/VBoxContainer"]
+[node name="CreateRoomButton" type="Button" parent="CenterContainer/VBoxContainer"]
 custom_minimum_size = Vector2(400, 48)
-placeholder_text = "방 ID"
-alignment = 1
+text = "방 만들기"
 
-[node name="EnterButton" type="Button" parent="CenterContainer/VBoxContainer"]
-custom_minimum_size = Vector2(400, 48)
-text = "입장"

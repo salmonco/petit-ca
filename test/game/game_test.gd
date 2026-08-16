@@ -23,24 +23,14 @@ func test_없는_방_ID로는_입장하지_못한다() -> void:
 	assert_bool(_game.room_view.visible).is_false()
 	assert_bool(_game.lobby_view.visible).is_true()
 
-func test_로비에_입력한_방_ID로_입장한다() -> void:
-	var room := Room.new()
-	_game.lobby.add_room(room)
-	_game.lobby_view.room_id_input.text = room.id
-	_game.enter_typed_room()
-	assert_that(_game.current_room).is_equal(room)
+func test_방을_만들면_만든_방에_들어가_있다() -> void:
+	_game.create_room()
+	assert_that(_game.current_room).is_equal(_game.lobby.rooms[0])
 	assert_bool(_game.room_view.visible).is_true()
+	assert_bool(_game.lobby_view.visible).is_false()
 
-func test_로비에_없는_방_ID를_입력하면_입장하지_못한다() -> void:
-	var room := Room.new()
-	_game.lobby.add_room(room)
-	_game.lobby_view.room_id_input.text = "없는-방-id"
-	_game.enter_typed_room()
-	assert_that(_game.current_room).is_null()
-	assert_bool(_game.room_view.visible).is_false()
-
-func test_로비의_입장_버튼이_입장에_연결되어_있다() -> void:
-	assert_bool(_game.lobby_view.enter_button.pressed.is_connected(_game.enter_typed_room)).is_true()
+func test_로비의_방_만들기_버튼이_방_만들기에_연결되어_있다() -> void:
+	assert_bool(_game.lobby_view.create_room_button.pressed.is_connected(_game.create_room)).is_true()
 
 func test_방에_들어가면_캐릭터_수만큼_슬롯이_생긴다() -> void:
 	var room := _room_with_characters(3)

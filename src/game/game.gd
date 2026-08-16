@@ -8,10 +8,10 @@ var lobby := Lobby.new()
 var current_room: Room
 
 func _ready() -> void:
-	lobby_view.enter_button.pressed.connect(enter_typed_room)
+	lobby_view.create_room_button.pressed.connect(create_room)
 
-func enter_typed_room() -> void:
-	enter_room(lobby_view.room_id())
+func create_room() -> void:
+	enter_room(lobby.create_room().id)
 
 func enter_room(id: String) -> void:
 	var room := lobby.find_room(id)
