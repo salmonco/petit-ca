@@ -30,13 +30,20 @@ func start_game() -> void:
 func add_second_player() -> void:
 	if second_player_character != null:
 		return
-	second_player_character = Character.new(Vector2i.ZERO, 0, Team.SECOND_PLAYER_COLOR)
+	second_player_character = Character.new(Vector2i.ZERO, 0, _second_player_color())
 	current_room.add_character(second_player_character)
 	room_view.render(current_room)
 
 func set_monster_mode(enabled: bool) -> void:
 	current_room.set_battle_mode(BattleMode.MONSTER if enabled else BattleMode.LOCAL_MULTI)
+	if second_player_character != null:
+		second_player_character.color = _second_player_color()
 	room_view.render(current_room)
+
+func _second_player_color() -> Color:
+	if current_room.battle_mode == BattleMode.MONSTER:
+		return player_character.color
+	return Team.SECOND_PLAYER_COLOR
 
 func leave_room() -> void:
 	current_room.remove_character(player_character)

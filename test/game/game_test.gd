@@ -119,6 +119,29 @@ func test_방에서_나가면_2P도_방에서_빠진다() -> void:
 func test_방의_2P_추가_버튼이_2P_추가에_연결되어_있다() -> void:
 	assert_bool(_game.room_view.add_second_player_button.pressed.is_connected(_game.add_second_player)).is_true()
 
+func test_몬스터_모드를_켜면_2P가_나와_같은_팀이_된다() -> void:
+	_game.create_room()
+	_game.add_second_player()
+	assert_int(_game.current_room.team_count()).is_equal(2)
+	_game.set_monster_mode(true)
+	assert_that(_game.second_player_character.color).is_equal(_game.player_character.color)
+	assert_int(_game.current_room.team_count()).is_equal(2)
+
+func test_몬스터_모드를_끄면_2P가_다시_다른_팀이_된다() -> void:
+	_game.create_room()
+	_game.add_second_player()
+	_game.set_monster_mode(true)
+	_game.set_monster_mode(false)
+	assert_that(_game.second_player_character.color).is_not_equal(_game.player_character.color)
+	assert_int(_game.current_room.team_count()).is_equal(2)
+
+func test_몬스터_모드에서_추가한_2P도_나와_같은_팀이다() -> void:
+	_game.create_room()
+	_game.set_monster_mode(true)
+	_game.add_second_player()
+	assert_that(_game.second_player_character.color).is_equal(_game.player_character.color)
+	assert_int(_game.current_room.team_count()).is_equal(2)
+
 func test_방에서_몬스터_모드를_켜면_NPC가_슬롯에_늘어난다() -> void:
 	_game.create_room()
 	assert_int(_game.room_view.slot_count()).is_equal(1)
