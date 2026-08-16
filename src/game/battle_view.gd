@@ -1,4 +1,4 @@
-class_name Main
+class_name BattleView
 extends Node2D
 
 const WATER_STREAM_TEXTURES: Dictionary[String, Texture2D] = {

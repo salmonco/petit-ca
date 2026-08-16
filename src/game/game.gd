@@ -3,7 +3,7 @@ extends Node
 
 @onready var lobby_view: LobbyView = $LobbyView
 @onready var room_view: RoomView = $RoomView
-@onready var battle_view: Main = $BattleView
+@onready var battle_view: BattleView = $BattleView
 
 var lobby := Lobby.new()
 var current_room: Room
