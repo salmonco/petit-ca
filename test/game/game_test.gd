@@ -49,6 +49,17 @@ func test_로비에_방_수만큼_목록이_보인다() -> void:
 	_create_room_and_leave()
 	assert_int(_game.lobby_view.room_count()).is_equal(3)
 
+func test_로비_목록에서_방을_고르면_그_방에_입장한다() -> void:
+	_create_room_and_leave()
+	_create_room_and_leave()
+	var second_room := _game.lobby.rooms[1]
+	_game.lobby_view.room_entry(1).pressed.emit()
+	assert_that(_game.current_room).is_equal(second_room)
+	assert_bool(_game.room_view.visible).is_true()
+
+func test_로비_목록의_방_항목이_입장에_연결되어_있다() -> void:
+	assert_bool(_game.lobby_view.room_chosen.is_connected(_game.enter_room)).is_true()
+
 func test_방의_나가기_버튼이_나가기에_연결되어_있다() -> void:
 	assert_bool(_game.room_view.leave_button.pressed.is_connected(_game.leave_room)).is_true()
 

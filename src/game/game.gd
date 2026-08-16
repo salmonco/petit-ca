@@ -10,6 +10,7 @@ var current_room: Room
 func _ready() -> void:
 	lobby_view.create_room_button.pressed.connect(create_room)
 	room_view.leave_button.pressed.connect(leave_room)
+	lobby_view.room_chosen.connect(enter_room)
 
 func create_room() -> void:
 	enter_room(lobby.create_room().id)
