@@ -30,6 +30,8 @@ func enter_room(id: String) -> void:
 	var room := lobby.find_room(id)
 	if room == null:
 		return
+	if current_room != null:
+		leave_room()
 	current_room = room
 	room.add_character(player_character)
 	room_view.render(room)

@@ -76,6 +76,14 @@ func test_방에_입장하면_내_캐릭터가_슬롯에_보인다() -> void:
 	assert_array(_game.current_room.characters()).is_equal([_game.player_character])
 	assert_int(_game.room_view.slot_count()).is_equal(1)
 
+func test_방에_있는_채로_다른_방에_들어가면_이전_방에서_빠진다() -> void:
+	var first_room := _room_with_characters(0)
+	var second_room := _room_with_characters(0)
+	_game.enter_room(first_room.id)
+	_game.enter_room(second_room.id)
+	assert_array(first_room.characters()).is_empty()
+	assert_array(second_room.characters()).is_equal([_game.player_character])
+
 func test_방을_나갔다_다시_들어가도_내_캐릭터는_하나다() -> void:
 	_game.create_room()
 	var room := _game.current_room
@@ -98,7 +106,6 @@ func test_다른_방에_들어가면_이전_방의_슬롯이_남지_않는다() 
 	var crowded_room := _room_with_characters(3)
 	var empty_room := _room_with_characters(0)
 	_game.enter_room(crowded_room.id)
-	_game.leave_room()
 	_game.enter_room(empty_room.id)
 	assert_int(_game.room_view.slot_count()).is_equal(1)
 
