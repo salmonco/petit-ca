@@ -193,6 +193,29 @@ func test_방에서_시작한_몬스터_배틀에서_방향키로_내_캐릭터�
 	_game.battle_view.tick(0.25)
 	assert_vector(_game.player_character.position()).is_equal(start_cell + Vector2i.RIGHT)
 
+func test_몬스터_모드에_2P가_있으면_1P는_RFDG_2P는_방향키로_움직인다() -> void:
+	_start_monster_battle_with_second_player()
+	var my_start := _game.player_character.position()
+	var second_start := _game.second_player_character.position()
+	_game.battle_view.handle_key_pressed(KEY_G)
+	_game.battle_view.handle_key_pressed(KEY_DOWN)
+	_game.battle_view.tick(0.25)
+	assert_vector(_game.player_character.position()).is_equal(my_start + Vector2i.RIGHT)
+	assert_vector(_game.second_player_character.position()).is_equal(second_start + Vector2i.DOWN)
+
+func test_몬스터_모드에_2P가_있으면_좌우_시프트로_각자_물풍선을_놓는다() -> void:
+	_start_monster_battle_with_second_player()
+	_game.battle_view.handle_key_pressed(KEY_SHIFT, KEY_LOCATION_LEFT)
+	_game.battle_view.handle_key_pressed(KEY_SHIFT, KEY_LOCATION_RIGHT)
+	var cells := _game.battle_view.battle.get_map().water_balloon_positions()
+	assert_array(cells).contains([_game.player_character.position(), _game.second_player_character.position()])
+
+func _start_monster_battle_with_second_player() -> void:
+	_game.create_room()
+	_game.set_monster_mode(true)
+	_game.add_second_player()
+	_game.start_game()
+
 func _start_monster_battle() -> void:
 	_game.create_room()
 	_game.set_monster_mode(true)

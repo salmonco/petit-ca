@@ -49,19 +49,20 @@ func show_battle(new_battle: Battle) -> void:
 	_render_game_items()
 	_render_game_over_label()
 
-func _human_character() -> Character:
+func _humans() -> Array[Character]:
+	var humans: Array[Character] = []
 	for character in battle.get_map().characters():
 		if character is Npc:
 			continue
-		return character
-	return null
+		humans.append(character)
+	humans.sort_custom(func(a: Character, b: Character) -> bool: return a.number < b.number)
+	return humans
 
 func _read_direction_for(character: Character) -> Vector2i:
-	if battle.get_mode() == BattleMode.MONSTER:
+	var humans := _humans()
+	if humans.size() == 1 or character != humans[0]:
 		return _read_move_direction()
-	if character.number == 1:
-		return _read_move_direction_local_multi()
-	return _read_move_direction()
+	return _read_move_direction_local_multi()
 
 func _character_at_seat(number: int) -> Character:
 	for character in battle.get_map().characters():
@@ -86,14 +87,15 @@ func start_battle(mode: StringName) -> void:
 
 func handle_key_pressed(key: Key, location: KeyLocation = KEY_LOCATION_UNSPECIFIED) -> void:
 	var game_key := GameKey.from_key(key, location)
-	if game_key == GameKey.SPACE and battle.get_mode() == BattleMode.MONSTER:
-		_human_character().place_water_balloon(battle.get_map())
+	var humans := _humans()
+	if game_key == GameKey.SPACE and humans.size() == 1:
+		humans[0].place_water_balloon(battle.get_map())
 		_render_water_balloons()
-	if game_key == GameKey.SHIFT_LEFT and battle.get_mode() == BattleMode.LOCAL_MULTI:
-		first_character.place_water_balloon(battle.get_map())
+	if game_key == GameKey.SHIFT_LEFT and humans.size() > 1:
+		humans[0].place_water_balloon(battle.get_map())
 		_render_water_balloons()
-	if game_key == GameKey.SHIFT_RIGHT and battle.get_mode() == BattleMode.LOCAL_MULTI:
-		second_character.place_water_balloon(battle.get_map())
+	if game_key == GameKey.SHIFT_RIGHT and humans.size() > 1:
+		humans[1].place_water_balloon(battle.get_map())
 		_render_water_balloons()
 	if Direction.has(key) and key not in pressed_move_keys:
 		pressed_move_keys.append(key)
