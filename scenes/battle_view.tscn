@@ -3,6 +3,9 @@
 [ext_resource type="Script" uid="uid://djf8wpol6eu3x" path="res://src/game/battle_view.gd" id="1_o5qli"]
 [ext_resource type="Script" path="res://src/game/tile_view.gd" id="3_tile"]
 
+[sub_resource type="FontVariation" id="ResultFont"]
+variation_embolden = 0.7
+
 [node name="BattleView" type="Node2D" unique_id=1626530598]
 script = ExtResource("1_o5qli")
 
@@ -23,10 +26,18 @@ script = ExtResource("3_tile")
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_bottom = -416.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_colors/font_color = Color(0.74509805, 0.74509805, 0.74509805, 1)
-theme_override_font_sizes/font_size = 70
+theme_override_colors/font_color = Color(0.90196078, 0.90196078, 0.90196078, 1)
+theme_override_colors/font_outline_color = Color(0.27058824, 0.29411765, 0.33333333, 1)
+theme_override_colors/font_shadow_color = Color(1, 1, 1, 1)
+theme_override_constants/outline_size = 12
+theme_override_constants/shadow_offset_x = 0
+theme_override_constants/shadow_offset_y = 0
+theme_override_constants/shadow_outline_size = 26
+theme_override_fonts/font = SubResource("ResultFont")
+theme_override_font_sizes/font_size = 96
 text = "LOSE!!"
 horizontal_alignment = 1
 vertical_alignment = 1
@@ -35,10 +46,18 @@ vertical_alignment = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_bottom = -416.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_colors/font_color = Color(0, 0, 1, 1)
-theme_override_font_sizes/font_size = 70
+theme_override_colors/font_color = Color(0.53333333, 0.89019608, 1, 1)
+theme_override_colors/font_outline_color = Color(0.03921569, 0.20784314, 0.40000000, 1)
+theme_override_colors/font_shadow_color = Color(1, 1, 1, 1)
+theme_override_constants/outline_size = 12
+theme_override_constants/shadow_offset_x = 0
+theme_override_constants/shadow_offset_y = 0
+theme_override_constants/shadow_outline_size = 26
+theme_override_fonts/font = SubResource("ResultFont")
+theme_override_font_sizes/font_size = 96
 text = "WIN!!"
 horizontal_alignment = 1
 vertical_alignment = 1
@@ -47,10 +66,18 @@ vertical_alignment = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_bottom = -416.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_colors/font_color = Color(0, 1, 0, 1)
-theme_override_font_sizes/font_size = 70
+theme_override_colors/font_color = Color(0.54509804, 1, 0.30588235, 1)
+theme_override_colors/font_outline_color = Color(0.07843137, 0.30588235, 0.09803922, 1)
+theme_override_colors/font_shadow_color = Color(1, 1, 1, 1)
+theme_override_constants/outline_size = 12
+theme_override_constants/shadow_offset_x = 0
+theme_override_constants/shadow_offset_y = 0
+theme_override_constants/shadow_outline_size = 26
+theme_override_fonts/font = SubResource("ResultFont")
+theme_override_font_sizes/font_size = 96
 text = "DRAW!!"
 horizontal_alignment = 1
 vertical_alignment = 1

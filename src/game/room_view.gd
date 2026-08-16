@@ -7,25 +7,42 @@ const NPC_SLOT_TEXTURE: Texture2D = preload("res://assets/npcs/zomkkan_down.png"
 const NPC_SLOT_MASK: Texture2D = preload("res://assets/npcs/zomkkan_down_mask.png")
 const RECOLOR_SHADER: Shader = preload("res://src/game/character_recolor.gdshader")
 
-@onready var slots: HBoxContainer = $CenterContainer/VBoxContainer/Slots
-@onready var local_multi_check: CheckButton = $CenterContainer/VBoxContainer/LocalMultiCheck
-@onready var monster_mode_check: CheckButton = $CenterContainer/VBoxContainer/MonsterModeCheck
-@onready var start_button: Button = $CenterContainer/VBoxContainer/StartButton
-@onready var leave_button: Button = $CenterContainer/VBoxContainer/LeaveButton
+const SEAT_COUNT := 4
+const CARD_SIZE := Vector2(132, 214)
+const PORTRAIT_SIZE := Vector2(112, 160)
+
+@onready var slots: HBoxContainer = %Slots
+@onready var room_id_label: Label = %RoomIdLabel
+@onready var local_multi_check: Button = %LocalMultiCheck
+@onready var monster_mode_check: Button = %MonsterModeCheck
+@onready var start_button: Button = %StartButton
+@onready var leave_button: Button = %LeaveButton
 
 func render(room: Room) -> void:
 	_clear_slots()
-	for character in room.characters():
-		slots.add_child(_create_slot(character))
+	var characters := room.characters()
+	for seat in maxi(SEAT_COUNT, characters.size()):
+		if seat < characters.size():
+			slots.add_child(_create_slot(characters[seat]))
+		else:
+			slots.add_child(_create_empty_slot())
+	room_id_label.text = "방 %s" % room.id.substr(0, 8)
 	start_button.disabled = not room.can_game_start()
 	monster_mode_check.set_pressed_no_signal(room.battle_mode == BattleMode.MONSTER)
 	local_multi_check.set_pressed_no_signal(_human_count(room) > 1)
 
 func slot_count() -> int:
-	return slots.get_child_count()
+	return _taken_cards().size()
 
 func slot(index: int) -> TextureRect:
-	return slots.get_child(index)
+	return _taken_cards()[index].get_node("Box/Portrait")
+
+func _taken_cards() -> Array[Node]:
+	var taken: Array[Node] = []
+	for card in slots.get_children():
+		if card.has_meta("character"):
+			taken.append(card)
+	return taken
 
 func _human_count(room: Room) -> int:
 	var count := 0
@@ -36,18 +53,67 @@ func _human_count(room: Room) -> int:
 	return count
 
 func _clear_slots() -> void:
-	for slot in slots.get_children():
-		slots.remove_child(slot)
-		slot.queue_free()
+	for slot_node in slots.get_children():
+		slots.remove_child(slot_node)
+		slot_node.queue_free()
 
-func _create_slot(character: Character) -> TextureRect:
+func _create_slot(character: Character) -> Control:
+	var card := PanelContainer.new()
+	card.theme_type_variation = &"SlotCard"
+	card.custom_minimum_size = CARD_SIZE
+	card.set_meta("character", character)
+
+	var box := VBoxContainer.new()
+	box.name = "Box"
+	box.add_theme_constant_override("separation", 8)
+	card.add_child(box)
+	box.add_child(_create_portrait(character))
+	box.add_child(_create_name_plate(character))
+	return card
+
+func _create_portrait(character: Character) -> TextureRect:
 	var is_npc := character is Npc
-	var slot := TextureRect.new()
-	slot.texture = NPC_SLOT_TEXTURE if is_npc else PLAYER_SLOT_TEXTURE
-	slot.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	var portrait := TextureRect.new()
+	portrait.name = "Portrait"
+	portrait.texture = NPC_SLOT_TEXTURE if is_npc else PLAYER_SLOT_TEXTURE
+	portrait.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	portrait.custom_minimum_size = PORTRAIT_SIZE
+	portrait.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+
 	var recolor := ShaderMaterial.new()
 	recolor.shader = RECOLOR_SHADER
 	recolor.set_shader_parameter("color", character.color)
 	recolor.set_shader_parameter("mask_texture", NPC_SLOT_MASK if is_npc else PLAYER_SLOT_MASK)
-	slot.material = recolor
-	return slot
+	portrait.material = recolor
+	return portrait
+
+func _create_name_plate(character: Character) -> PanelContainer:
+	var plate := PanelContainer.new()
+	var style := StyleBoxFlat.new()
+	style.bg_color = character.color
+	style.set_corner_radius_all(8)
+	style.content_margin_top = 3
+	style.content_margin_bottom = 3
+	plate.add_theme_stylebox_override("panel", style)
+
+	var label := Label.new()
+	label.text = "NPC" if character is Npc else "%dP" % character.number
+	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	label.add_theme_color_override("font_color", Color.WHITE)
+	label.add_theme_font_size_override("font_size", 22)
+	plate.add_child(label)
+	return plate
+
+func _create_empty_slot() -> Control:
+	var card := PanelContainer.new()
+	card.theme_type_variation = &"SlotCardEmpty"
+	card.custom_minimum_size = CARD_SIZE
+
+	var label := Label.new()
+	label.text = "비어 있음"
+	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	label.add_theme_color_override("font_color", Color(0.53, 0.76, 0.95))
+	label.add_theme_font_size_override("font_size", 20)
+	card.add_child(label)
+	return card
