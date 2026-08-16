@@ -8,6 +8,18 @@ var _main: Main
 func before_test() -> void:
 	_runner = scene_runner(SCENE_PATH)
 	_main = _runner.scene()
+	_main.start_battle(BattleMode.LOCAL_MULTI)
+
+func test_씬을_띄우기만_하면_배틀이_시작되지_않는다() -> void:
+	var runner := scene_runner(SCENE_PATH)
+	var main: Main = runner.scene()
+	assert_that(main.battle).is_null()
+
+func test_배틀이_없으면_tick해도_아무_일도_일어나지_않는다() -> void:
+	var runner := scene_runner(SCENE_PATH)
+	var main: Main = runner.scene()
+	main.tick(4.0)
+	assert_that(main.battle).is_null()
 
 # 캐릭터 이동
 func test_시작_시_캐릭터가_맵의_시작_칸에_위치한다() -> void:

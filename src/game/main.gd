@@ -49,6 +49,9 @@ func start_battle(mode: StringName) -> void:
 	_render_characters()
 	first_character = battle.get_map().characters()[0]
 	second_character = battle.get_map().characters()[1]
+	_place_game_items()
+	_render_game_items()
+	_render_game_over_label()
 
 func handle_key_pressed(key: Key, location: KeyLocation = KEY_LOCATION_UNSPECIFIED) -> void:
 	var game_key := GameKey.from_key(key, location)
@@ -73,6 +76,8 @@ func handle_key_released(key: Key) -> void:
 		pressed_move_keys_local_multi.erase(key)
 
 func tick(delta: float) -> void:
+	if battle == null:
+		return
 	battle.tick(delta)
 	_handle_characters(delta)
 	_render_water_balloons()
@@ -81,9 +86,8 @@ func tick(delta: float) -> void:
 	_render_game_items()
 	_render_game_over_label()
 
-func _ready() -> void:
-	start_battle(BattleMode.LOCAL_MULTI)
-	# 물풍선 아이템 배치	
+func _place_game_items() -> void:
+	# 물풍선 아이템 배치
 	battle.get_map().add_game_item(GameItem.INCREASE_WATER_BALLOON_COUNT, Vector2i(5, 4))
 	battle.get_map().add_game_item(GameItem.INCREASE_WATER_BALLOON_COUNT, Vector2i(1, 7))
 	battle.get_map().add_game_item(GameItem.INCREASE_WATER_BALLOON_COUNT, Vector2i(8, 5))
@@ -105,8 +109,6 @@ func _ready() -> void:
 	battle.get_map().add_game_item(GameItem.INCREASE_SPEED, Vector2i(8, 10))
 	battle.get_map().add_game_item(GameItem.INCREASE_SPEED, Vector2i(14, 1))
 	battle.get_map().add_game_item(GameItem.INCREASE_SPEED, Vector2i(0, 1))
-	_render_game_items()
-	_render_game_over_label()
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventKey and not event.is_echo():
