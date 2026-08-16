@@ -15,9 +15,14 @@ func _ready() -> void:
 	lobby_view.create_room_button.pressed.connect(create_room)
 	room_view.leave_button.pressed.connect(leave_room)
 	lobby_view.room_chosen.connect(enter_room)
+	room_view.monster_mode_check.toggled.connect(set_monster_mode)
 
 func create_room() -> void:
 	enter_room(lobby.create_room().id)
+
+func set_monster_mode(enabled: bool) -> void:
+	current_room.set_battle_mode(BattleMode.MONSTER if enabled else BattleMode.LOCAL_MULTI)
+	room_view.render(current_room)
 
 func leave_room() -> void:
 	current_room.remove_character(player_character)

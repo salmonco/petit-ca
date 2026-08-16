@@ -39,6 +39,10 @@ custom_minimum_size = Vector2(0, 96)
 theme_override_constants/separation = 24
 alignment = 1
 
+[node name="MonsterModeCheck" type="CheckButton" parent="CenterContainer/VBoxContainer"]
+custom_minimum_size = Vector2(400, 48)
+text = "몬스터 모드"
+
 [node name="StartButton" type="Button" parent="CenterContainer/VBoxContainer"]
 custom_minimum_size = Vector2(400, 48)
 text = "게임 시작"

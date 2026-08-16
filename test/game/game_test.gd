@@ -91,6 +91,30 @@ func test_방을_나갔다_다시_들어가도_내_캐릭터는_하나다() -> v
 	_game.enter_room(room.id)
 	assert_int(_game.room_view.slot_count()).is_equal(1)
 
+func test_방에서_몬스터_모드를_켜면_NPC가_슬롯에_늘어난다() -> void:
+	_game.create_room()
+	assert_int(_game.room_view.slot_count()).is_equal(1)
+	_game.set_monster_mode(true)
+	assert_str(_game.current_room.battle_mode).is_equal(BattleMode.MONSTER)
+	assert_int(_game.room_view.slot_count()).is_equal(2)
+
+func test_방에서_몬스터_모드를_끄면_NPC가_슬롯에서_빠진다() -> void:
+	_game.create_room()
+	_game.set_monster_mode(true)
+	_game.set_monster_mode(false)
+	assert_str(_game.current_room.battle_mode).is_equal(BattleMode.LOCAL_MULTI)
+	assert_int(_game.room_view.slot_count()).is_equal(1)
+
+func test_다른_방에_들어가면_몬스터_모드_체크가_그_방을_따른다() -> void:
+	_game.create_room()
+	_game.room_view.monster_mode_check.button_pressed = true
+	assert_str(_game.current_room.battle_mode).is_equal(BattleMode.MONSTER)
+	_game.create_room()
+	assert_bool(_game.room_view.monster_mode_check.button_pressed).is_false()
+
+func test_방의_몬스터_모드_체크가_모드_변경에_연결되어_있다() -> void:
+	assert_bool(_game.room_view.monster_mode_check.toggled.is_connected(_game.set_monster_mode)).is_true()
+
 func test_한_팀뿐이면_시작_버튼이_비활성이다() -> void:
 	var room := _room_with_characters(2)
 	_game.enter_room(room.id)
