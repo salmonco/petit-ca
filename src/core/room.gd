@@ -12,8 +12,18 @@ func _init() -> void:
 	id = UUID.v4()
 
 func add_character(character: Character) -> void:
+	character.number = _empty_seat_number()
 	_characters.append(character)
 	character.joined_room_id = id
+
+func _empty_seat_number() -> int:
+	var taken: Array[int] = []
+	for character in _characters:
+		taken.append(character.number)
+	var number := 1
+	while number in taken:
+		number += 1
+	return number
 
 func game_start() -> void:
 	var map := Map.new()

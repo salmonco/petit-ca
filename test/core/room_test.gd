@@ -7,6 +7,28 @@ func test_방에서_게임을_시작하면_방에_있는_캐릭터가_맵에_추
 	room.game_start()
 	assert_bool(room.get_battle().get_map().has_character(Vector2i(1, 2))).is_true()
 
+func test_방에_들어온_순서대로_자리_번호를_받는다() -> void:
+	var room := Room.new()
+	var first := Character.new(Vector2i(1, 2), 7, Color.RED)
+	var second := Character.new(Vector2i(3, 5), 7, Color.BLUE)
+	room.add_character(first)
+	room.add_character(second)
+	assert_int(first.number).is_equal(1)
+	assert_int(second.number).is_equal(2)
+
+func test_가운데_자리가_비면_새로_들어온_캐릭터가_그_자리를_받는다() -> void:
+	var room := Room.new()
+	var first := Character.new(Vector2i(1, 2))
+	var second := Character.new(Vector2i(3, 5))
+	var third := Character.new(Vector2i(4, 7))
+	room.add_character(first)
+	room.add_character(second)
+	room.add_character(third)
+	room.remove_character(second)
+	var joined := Character.new(Vector2i(6, 9))
+	room.add_character(joined)
+	assert_int(joined.number).is_equal(2)
+
 func test_방에서_캐릭터가_나가면_그_캐릭터만_빠진다() -> void:
 	var room := Room.new()
 	var leaving := Character.new(Vector2i(1, 2))
