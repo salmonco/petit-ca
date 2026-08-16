@@ -35,11 +35,17 @@ var pressed_move_keys_local_multi: Array[Key] = []
 func show_battle(new_battle: Battle) -> void:
 	battle = new_battle
 	_render_characters()
-	first_character = battle.get_map().characters()[0]
-	second_character = battle.get_map().characters()[1]
+	first_character = _character_at_seat(1)
+	second_character = _character_at_seat(2)
 	_place_game_items()
 	_render_game_items()
 	_render_game_over_label()
+
+func _character_at_seat(number: int) -> Character:
+	for character in battle.get_map().characters():
+		if character.number == number:
+			return character
+	return null
 
 func start_battle(mode: StringName) -> void:
 	var map := Map.new()

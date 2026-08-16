@@ -27,6 +27,16 @@ func test_밖에서_만든_배틀을_받아_그린다() -> void:
 	assert_that(main.first_character).is_equal(map.characters()[0])
 	assert_int(main.view_by_character.size()).is_equal(2)
 
+func test_1P와_2P를_맵에_들어간_순서가_아니라_자리_번호로_찾는다() -> void:
+	var runner := scene_runner(SCENE_PATH)
+	var main: Main = runner.scene()
+	var map := Map.new()
+	map.add_character(Character.new(Vector2i(9, 2), 2, Color.BLUE))
+	map.add_character(Character.new(Vector2i(3, 5), 1, Color.RED))
+	main.show_battle(Battle.new(map, BattleMode.LOCAL_MULTI))
+	assert_int(main.first_character.number).is_equal(1)
+	assert_int(main.second_character.number).is_equal(2)
+
 func test_배틀이_없으면_tick해도_아무_일도_일어나지_않는다() -> void:
 	var runner := scene_runner(SCENE_PATH)
 	var main: Main = runner.scene()
