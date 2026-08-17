@@ -11,8 +11,11 @@ config_version=5
 [application]
 
 config/name="Petit Crazy Arcade"
-run/main_scene="res://scenes/main.tscn"
+run/main_scene="res://scenes/game.tscn"
 config/features=PackedStringArray("4.7", "GL Compatibility")
+config/icon="res://assets/icon.png"
+boot_splash/bg_color=Color(0.46666667, 0.61960784, 0.75686275, 1)
+boot_splash/image="res://assets/splash.jpg"
 
 [display]
 
@@ -23,6 +26,10 @@ window/stretch/mode="canvas_items"
 [editor_plugins]
 
 enabled=PackedStringArray("res://addons/gdUnit4/plugin.cfg")
+
+[gui]
+
+theme/custom_font="res://assets/fonts/Pretendard-Regular.woff2"
 
 [rendering]
 

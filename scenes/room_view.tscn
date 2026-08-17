@@ -1,0 +1,99 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://src/game/room_view.gd" id="1_room"]
+[ext_resource type="Theme" path="res://scenes/ui_theme.tres" id="2_theme"]
+
+[node name="RoomView" type="Control"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("2_theme")
+script = ExtResource("1_room")
+
+[node name="Background" type="ColorRect" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.03137255, 0.21960784, 0.50196078, 1)
+
+[node name="Center" type="CenterContainer" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Panel" type="PanelContainer" parent="Center"]
+
+[node name="Margin" type="MarginContainer" parent="Center/Panel"]
+theme_override_constants/margin_left = 30
+theme_override_constants/margin_top = 24
+theme_override_constants/margin_right = 30
+theme_override_constants/margin_bottom = 24
+
+[node name="Box" type="VBoxContainer" parent="Center/Panel/Margin"]
+theme_override_constants/separation = 18
+
+[node name="Header" type="HBoxContainer" parent="Center/Panel/Margin/Box"]
+
+[node name="TitleLabel" type="Label" parent="Center/Panel/Margin/Box/Header"]
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 36
+text = "대기실"
+
+[node name="RoomIdLabel" type="Label" parent="Center/Panel/Margin/Box/Header"]
+unique_name_in_owner = true
+theme_override_colors/font_color = Color(0.97254902, 0.81568627, 0.03137255, 1)
+theme_override_font_sizes/font_size = 24
+text = "방"
+vertical_alignment = 1
+
+[node name="SlotPanel" type="PanelContainer" parent="Center/Panel/Margin/Box"]
+theme_type_variation = &"SlotArea"
+
+[node name="SlotMargin" type="MarginContainer" parent="Center/Panel/Margin/Box/SlotPanel"]
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16
+
+[node name="Slots" type="HBoxContainer" parent="Center/Panel/Margin/Box/SlotPanel/SlotMargin"]
+unique_name_in_owner = true
+theme_override_constants/separation = 14
+alignment = 1
+
+[node name="Options" type="HBoxContainer" parent="Center/Panel/Margin/Box"]
+theme_override_constants/separation = 14
+alignment = 1
+
+[node name="LocalMultiCheck" type="Button" parent="Center/Panel/Margin/Box/Options"]
+unique_name_in_owner = true
+theme_type_variation = &"Toggle"
+toggle_mode = true
+text = "로컬 멀티 (2P)"
+
+[node name="MonsterModeCheck" type="Button" parent="Center/Panel/Margin/Box/Options"]
+unique_name_in_owner = true
+theme_type_variation = &"Toggle"
+toggle_mode = true
+text = "협공배틀"
+
+[node name="Buttons" type="HBoxContainer" parent="Center/Panel/Margin/Box"]
+theme_override_constants/separation = 16
+
+[node name="LeaveButton" type="Button" parent="Center/Panel/Margin/Box/Buttons"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(180, 62)
+text = "나가기"
+
+[node name="StartButton" type="Button" parent="Center/Panel/Margin/Box/Buttons"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 72)
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 32
+text = "게임 시작"

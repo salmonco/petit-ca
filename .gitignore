@@ -12,7 +12,8 @@ obj/
 *.sln.DotSettings.user
 
 # GdUnit4 리포트
-reports/
+/reports/*
+!/reports/.gdignore
 
 # tools/ 파이썬 스크립트용
 .venv/
@@ -25,4 +26,6 @@ __pycache__/
 .omc/
 
 # build
-web-build/
+/web-build/*
+!/web-build/.gdignore
+.gstack/

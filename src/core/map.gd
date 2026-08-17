@@ -2,6 +2,12 @@ class_name Map
 extends RefCounted
 
 const GRID_SIZE := Vector2i(15, 13)
+const SEAT_START_CELLS: Array[Vector2i] = [
+	Vector2i(1, 6),
+	Vector2i(13, 6),
+	Vector2i(7, 1),
+	Vector2i(7, 11),
+]
 const PIXELS_PER_CELL := 64
 
 var _characters: Array[Character] = []
@@ -171,7 +177,6 @@ func _check_trap_character_in_bubble() -> void:
 			continue
 		if _can_water_streams_trap(character):
 			character.trapped()
-			break
 
 func _check_out_by_enemy() -> void:
 	var original_characters: Array[Character] = _characters.duplicate()

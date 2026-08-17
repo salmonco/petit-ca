@@ -1,0 +1,77 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://src/game/lobby_view.gd" id="1_lobby"]
+[ext_resource type="Theme" path="res://scenes/ui_theme.tres" id="2_theme"]
+
+[node name="LobbyView" type="Control"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("2_theme")
+script = ExtResource("1_lobby")
+
+[node name="Background" type="ColorRect" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.03137255, 0.21960784, 0.50196078, 1)
+
+[node name="Center" type="CenterContainer" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Panel" type="PanelContainer" parent="Center"]
+
+[node name="Margin" type="MarginContainer" parent="Center/Panel"]
+theme_override_constants/margin_left = 26
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 26
+theme_override_constants/margin_bottom = 20
+
+[node name="Box" type="VBoxContainer" parent="Center/Panel/Margin"]
+theme_override_constants/separation = 16
+
+[node name="TopBar" type="HBoxContainer" parent="Center/Panel/Margin/Box"]
+theme_override_constants/separation = 20
+
+[node name="CreateRoomButton" type="Button" parent="Center/Panel/Margin/Box/TopBar"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 52)
+text = "방 만들기"
+
+[node name="RoomListPanel" type="PanelContainer" parent="Center/Panel/Margin/Box"]
+custom_minimum_size = Vector2(700, 300)
+theme_type_variation = &"SlotArea"
+
+[node name="RoomListMargin" type="MarginContainer" parent="Center/Panel/Margin/Box/RoomListPanel"]
+theme_override_constants/margin_left = 14
+theme_override_constants/margin_top = 14
+theme_override_constants/margin_right = 14
+theme_override_constants/margin_bottom = 14
+
+[node name="RoomList" type="GridContainer" parent="Center/Panel/Margin/Box/RoomListPanel/RoomListMargin"]
+unique_name_in_owner = true
+theme_override_constants/h_separation = 12
+theme_override_constants/v_separation = 12
+columns = 2
+
+[node name="NoticePanel" type="PanelContainer" parent="Center/Panel/Margin/Box"]
+theme_type_variation = &"SlotArea"
+
+[node name="NoticeMargin" type="MarginContainer" parent="Center/Panel/Margin/Box/NoticePanel"]
+theme_override_constants/margin_left = 14
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 14
+theme_override_constants/margin_bottom = 8
+
+[node name="NoticeLabel" type="Label" parent="Center/Panel/Margin/Box/NoticePanel/NoticeMargin"]
+theme_override_colors/font_color = Color(0.97254902, 0.81568627, 0.03137255, 1)
+theme_override_font_sizes/font_size = 20
+text = "방을 만들거나 목록에서 방을 골라 들어가세요"
