@@ -2,8 +2,10 @@
 
 [ext_resource type="Script" uid="uid://djf8wpol6eu3x" path="res://src/game/battle_view.gd" id="1_o5qli"]
 [ext_resource type="Script" path="res://src/game/tile_view.gd" id="3_tile"]
+[ext_resource type="FontFile" uid="uid://pgm00pyb6ply" path="res://assets/fonts/Pretendard-Regular.woff2" id="4_font"]
 
 [sub_resource type="FontVariation" id="ResultFont"]
+base_font = ExtResource("4_font")
 variation_embolden = 0.7
 
 [node name="BattleView" type="Node2D" unique_id=1626530598]

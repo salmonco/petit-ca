@@ -1,5 +1,6 @@
-[gd_resource type="Theme" load_steps=19 format=3]
+[gd_resource type="Theme" load_steps=20 format=3]
 
+[ext_resource type="FontFile" uid="uid://pgm00pyb6ply" path="res://assets/fonts/Pretendard-Regular.woff2" id="0_font"]
 [ext_resource type="Texture2D" path="res://assets/ui/button_normal.png" id="1_btn_normal"]
 [ext_resource type="Texture2D" path="res://assets/ui/button_hover.png" id="2_btn_hover"]
 [ext_resource type="Texture2D" path="res://assets/ui/button_pressed.png" id="3_btn_pressed"]
@@ -160,6 +161,7 @@ texture_margin_right = 18.0
 texture_margin_bottom = 18.0
 
 [sub_resource type="FontVariation" id="BoldFont"]
+base_font = ExtResource("0_font")
 variation_embolden = 0.5
 
 [sub_resource type="StyleBoxEmpty" id="Empty"]
