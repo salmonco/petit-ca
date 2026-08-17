@@ -27,7 +27,7 @@ CROP = (0, 15, 64, 64)
 SCALE = 4
 
 
-def write_rgba_png(path, size, rows):
+def write_rgba_png(path, width, height, rows):
     raw = b"".join(b"\x00" + bytes(row) for row in rows)
 
     def chunk(tag, data):
@@ -40,7 +40,7 @@ def write_rgba_png(path, size, rows):
 
     png = (
         b"\x89PNG\r\n\x1a\n"
-        + chunk(b"IHDR", struct.pack(">IIBBBBB", size, size, 8, 6, 0, 0, 0))
+        + chunk(b"IHDR", struct.pack(">IIBBBBB", width, height, 8, 6, 0, 0, 0))
         + chunk(b"IDAT", zlib.compress(raw, 9))
         + chunk(b"IEND", b"")
     )
@@ -65,7 +65,7 @@ def main():
             line += bytes(rows[y0 + y // SCALE][i : i + 4])
         out.append(line)
 
-    write_rgba_png(OUTPUT, size, out)
+    write_rgba_png(OUTPUT, size, size, out)
     print(f"{SOURCE} ({x0},{y0}) {span}x{span} -> {OUTPUT} {size}x{size}")
 
 

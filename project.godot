@@ -14,6 +14,9 @@ config/name="Petit Crazy Arcade"
 run/main_scene="res://scenes/game.tscn"
 config/features=PackedStringArray("4.7", "GL Compatibility")
 config/icon="res://assets/icon.png"
+boot_splash/bg_color=Color(0.03137255, 0.21960784, 0.50196078, 1)
+boot_splash/image="res://assets/splash.png"
+boot_splash/use_filter=false
 
 [display]
 
