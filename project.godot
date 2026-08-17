@@ -12,8 +12,8 @@ config_version=5
 
 config/name="Petit Crazy Arcade"
 run/main_scene="res://scenes/game.tscn"
-config/icon="res://assets/icon.png"
 config/features=PackedStringArray("4.7", "GL Compatibility")
+config/icon="res://assets/icon.png"
 
 [display]
 
@@ -21,13 +21,13 @@ window/size/viewport_width=960
 window/size/viewport_height=832
 window/stretch/mode="canvas_items"
 
-[gui]
-
-theme/custom_font="res://assets/fonts/Pretendard-Regular.woff2"
-
 [editor_plugins]
 
 enabled=PackedStringArray("res://addons/gdUnit4/plugin.cfg")
+
+[gui]
+
+theme/custom_font="res://assets/fonts/Pretendard-Regular.woff2"
 
 [rendering]
 
