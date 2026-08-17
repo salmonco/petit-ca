@@ -88,9 +88,10 @@ func test_몬스터_모드에서_맵에_인간_캐릭터와_NPC_모두_아웃되
 	map.add_character(human)
 	map.add_character(npc)
 	assert_bool(battle.is_draw).is_false()
-	battle.get_map().let_character_out(npc)
-	battle.get_map().let_character_out(human)
-	battle.tick(0.1)
+	human.place_water_balloon(map)
+	npc.place_water_balloon(map)
+	battle.tick(WaterBalloon.POP_AFTER_SECONDS)
+	battle.tick(Bubble.ALIVE_SECONDS * 2.0)
 	assert_bool(battle.is_draw).is_true()
 
 func test_로컬멀티_모드에서_이긴_팀이_승리한다() -> void:

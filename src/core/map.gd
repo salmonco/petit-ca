@@ -177,7 +177,6 @@ func _check_trap_character_in_bubble() -> void:
 			continue
 		if _can_water_streams_trap(character):
 			character.trapped()
-			break
 
 func _check_out_by_enemy() -> void:
 	var original_characters: Array[Character] = _characters.duplicate()
