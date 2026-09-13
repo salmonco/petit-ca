@@ -7,6 +7,7 @@ var _characters: Array[Character] = []
 var _battle: Battle
 var id: String
 var battle_mode: StringName = BattleMode.LOCAL_MULTI
+var messages: Array[Message] = []
 
 func _init() -> void:
 	id = UUID.v4()
@@ -23,6 +24,18 @@ func add_character(character: Character) -> void:
 	else:
 		_characters.append(character)
 	character.joined_room_id = id
+
+func find_character(peer_id: int) -> Character:
+	for character in _characters:
+		if character.id == peer_id:
+			return character
+	return null
+
+func send_message(character_id: int, contents: String) -> void:
+	var message := Message.new()
+	message.sender_id = character_id
+	message.contents = contents
+	messages.append(message)
 
 func _empty_seat_number() -> int:
 	var taken: Array[int] = []

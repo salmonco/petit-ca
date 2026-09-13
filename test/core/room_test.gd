@@ -92,3 +92,31 @@ func test_몬스터_모드면_방에_NPC가_들어와_있는다() -> void:
 	assert_bool(room.has_npc()).is_false()
 	room.set_battle_mode(BattleMode.MONSTER)
 	assert_bool(room.has_npc()).is_true()
+
+# 멀티 플레이어
+func test_접속된_피어_ID로_해당_캐릭터를_찾을_수_있다() -> void:
+	var peer_id := 1
+	var room := Room.new()
+	var character := Character.new((Vector2i(1, 2)), 1, Color.RED, peer_id)
+	room.add_character(character)
+	var found_character := room.find_character(peer_id)
+	assert_that(found_character).is_equal(character)
+
+func test_캐릭터가_방에_보낸_메시지는_순서대로_쌓인다() -> void:
+	var peer1_id := 1
+	var peer2_id := 2
+	var room := Room.new()
+	var character1 := Character.new(Vector2i(1, 2), 1, Color.RED, peer1_id)
+	var character2 := Character.new(Vector2i(1, 2), 2, Color.RED, peer2_id)
+	room.add_character(character1)
+	room.add_character(character2)
+	room.send_message(character1.id, "hi")
+	var message1 := Message.new()
+	message1.sender_id = character1.id
+	message1.contents = "hi"
+	assert_that(room.messages).is_equal([message1])
+	room.send_message(character2.id, "hello")
+	var message2 := Message.new()
+	message2.sender_id = character2.id
+	message2.contents = "hello"
+	assert_that(room.messages).is_equal([message1, message2])
